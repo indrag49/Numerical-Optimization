@@ -36,5 +36,5 @@ In case of a *minimization* problem, the optimum vector $\mathbf{x^*}$ is referr
 
 **Definition.** A point $\mathbf{x^*}$ is called a *global minimizer* of $f$ if $f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x$.
 
-**Definition.** A point $\mathbf{x^*}$ is called a *local minimizer* of $f$ if there is a neighborhood $\mathcal{N}$ of $\mathbf{x^*}$ such that $ f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}$.
+**Definition.** A point $\mathbf{x^*}$ is called a *local minimizer* of $f$ if there is a neighborhood $\mathcal{N}$ of $\mathbf{x^*}$ such that $f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}$.
 

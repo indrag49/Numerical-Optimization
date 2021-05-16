@@ -6,3 +6,4 @@ what-is-numerical-optimization
 eq:1
 a-solution
 a-solution-of-fbmx-is-a-point-bmx-which-denotes-the-optimum-vector-that-solves-equation-1-corresponding-to-the-optimum-value-fbmx.
+introduction-to-unconstrained-optimization
