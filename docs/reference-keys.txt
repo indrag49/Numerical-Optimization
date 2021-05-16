@@ -2,3 +2,7 @@ down-the-rabbit-hole
 the-pool-of-tears
 a-caucus-race-and-a-long-tale
 introduction-to-optimization
+what-is-numerical-optimization
+eq:1
+a-solution
+a-solution-of-fbmx-is-a-point-bmx-which-denotes-the-optimum-vector-that-solves-equation-1-corresponding-to-the-optimum-value-fbmx.

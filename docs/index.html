@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-16" />
+<meta name="date" content="2021-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -73,7 +73,10 @@
 <li><a href="./">Mathematical Optimization</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction to Optimization</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="the-pool-of-tears.html"><a href="the-pool-of-tears.html"><i class="fa fa-check"></i><b>2</b> The pool of tears</a></li>
 <li class="chapter" data-level="3" data-path="a-caucus-race-and-a-long-tale.html"><a href="a-caucus-race-and-a-long-tale.html"><i class="fa fa-check"></i><b>3</b> A caucus-race and a long tale</a></li>
 <li class="divider"></li>
@@ -99,11 +102,32 @@
 <h1 class="title">Introduction to Mathematical Optimization</h1>
 <h2 class="subtitle"><em>with Python</em></h2>
 <p class="author"><em>Indranil Ghosh</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-05-16</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-05-17</em></p>
 </div>
-<div id="introduction-to-optimization" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction to Optimization</h1>
+<div id="what-is-numerical-optimization" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> What is Numerical Optimization?</h1>
+<p>This chapter gives an introduction to the basics of numerical optimization and will help build the tools required for our in-depth understanding in the later chapters. Some fundamental linear algebra concepts will be touched which will be required for further studies in optimization along with introduction to simple Python codes.</p>
+<hr />
+<div id="introduction-to-optimization" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introduction to Optimization</h2>
+<p>Let <span class="math inline">\(f(\mathbf{x})\)</span> be a scalar function of a vector of variables <span class="math inline">\(\mathbf{x} = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} \in \mathbb{R}^n\)</span>. <em>Numerical Optimization</em> is the minimization or maximization of this function <span class="math inline">\(f\)</span> subject to constraints on <span class="math inline">\(\mathbf{x}\)</span>. This <span class="math inline">\(f\)</span> is a scalar function of <span class="math inline">\(\mathbf{x}\)</span>, also known as the <em>objective function</em> and the continuous components <span class="math inline">\(x_i \in \mathbf{x}\)</span> are called the <em>decision variables</em>.</p>
+<p>The optimization problem is formulated in the following way:</p>
+<p><span class="math display" id="eq:1">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; f(\mathbf{x}) \\
+&amp;\text{subject to} &amp;      &amp; g_k(\mathbf{x}) \leq 0,\ k=1,2,..., m\\
+&amp;                  &amp;      &amp; h_k(\mathbf{x}) = 0,\ k=1,2,..., r\\
+&amp;                  &amp;      &amp; m,r &lt; n.\tag{1.1}
+\end{align}\]</span></p>
+<p>Here, <span class="math inline">\(g_k(\mathbf{x})\)</span> and <span class="math inline">\(h_k(\mathbf{x})\)</span> are scalar functions too (like <span class="math inline">\(f(\mathbf{x})\)</span>) and are called <em>constraint functions</em>. The constraint functions define some specific equations and/or inequalities that <span class="math inline">\(\mathbf{x}\)</span> should satisfy.</p>
+</div>
+<div id="a-solution" class="section level2">
+<h2><span class="header-section-number">1.2</span> A Solution</h2>
+<p><strong>Definition.</strong> A <em>solution</em> of <span class="math inline">\(f(\mathbf{x})\)</span> is a point <span class="math inline">\(\mathbf{x^*}\)</span> which denotes the optimum vector that solves equation <a href="index.html#eq:1">(1.1)</a>, corresponding to the optimum value <span class="math inline">\(f(\mathbf{x^*})\)</span>.</p>
+<p>In case of a <em>minimization</em> problem, the optimum vector <span class="math inline">\(\mathbf{x^*}\)</span> is referred to as the <em>global minimizer</em> of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f\)</span> attains the least possible value at <span class="math inline">\(\mathbf{x^*}\)</span>. To design an algorithm that finds out the global minimizer for a function is quite difficult, as in most cases we do not have the idea of the overall shape of <span class="math inline">\(f\)</span>. Mostly our knowledge is restricted to a local portion of <span class="math inline">\(f\)</span>.</p>
+<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x\)</span>.</p>
+<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that $ f() f()  x $.</p>
 
+</div>
 </div>
             </section>
 
@@ -162,6 +186,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
