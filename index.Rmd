@@ -38,3 +38,70 @@ In case of a *minimization* problem, the optimum vector $\mathbf{x^*}$ is referr
 
 **Definition.** A point $\mathbf{x^*}$ is called a *local minimizer* of $f$ if there is a neighborhood $\mathcal{N}$ of $\mathbf{x^*}$ such that $f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}$.
 
+**Definition.** A point $\mathbf{x^*}$ is called a *strong local minimizer* of $f$ if there is a neighborhood $\mathcal{N}$ of $\mathbf{x^*}$ such that $f(\mathbf{x^*}) < f(\mathbf{x}) \forall\ x \in \mathcal{N}$, with $\mathbf{x} \neq \mathbf{x}^*$.
+
+**Definition.** For an objective function $f(\mathbf{x})$ where, $\mathbf{x} \in \mathbb{R}^2$, a point $\mathbf{x}^s=\begin{bmatrix} x_1^s \\ x_2^s \end{bmatrix}$ is called a *saddle point* if $\forall\ \mathbf{x}$, there exists an $\epsilon>0$, such that the following conditions are satisfied:
+
+* $\frac{\partial f}{\partial x_1}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} < \epsilon$,
+* $\frac{\partial f}{\partial x_2}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} < \epsilon$, and
+* $[\frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) - (\frac{\partial^2f}{\partial x_1 \partial x_2}(\mathbf{x}))^2]\mid_{(x_1^s, x_2^s)} < 0$
+
+generating the following chain of inequalities: $f(\mathbf{x})\mid_{(x_1, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2)}$. An example of a saddle point is shown below:
+
+```{python, echo=FALSE, results=FALSE}
+import numpy as np
+
+import matplotlib.pyplot as plt
+import pylab
+
+
+X, Y = [], []
+
+for v in range(-10, 12):
+    X += [v, ]
+    Y += [v, ]
+    
+l_X, l_Y = len(X), len(Y)
+
+Z = np.ndarray((l_X,l_Y))
+   
+for x in range(0, l_X):
+    for y in range(0, l_Y):
+        Z[x][y] = X[x]**2 - Y[y]**2
+
+# Set the x axis and y axis limits
+plt.xlim([-10,10])
+plt.ylim([-10,10])
+
+plt.xlabel('X')
+plt.ylabel('Y')
+
+contours=plt.contour(X, Y, Z, 10, cmap=plt.cm.gnuplot)
+plt.clabel(contours, inline=1, fontsize=10)
+plt.plot([0], [0], 'ro')
+plt.title("Saddle point $(0, 0)$ can be seen on the saddle surface given by the equation $f(\mathbf{x}) = x^2 - y ^2$", size = 10)
+plt.show()
+```
+
+## Maximization
+We just defined a \textit{minimization} problem as our optimization task. We could do the same with a \textit{maximization} problem with little tweaks. The problem $\underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x})$ can be formulated as:
+\begin{equation}
+    \underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x}) = - \underset{\mathbf{x} \in \mathbb{R}^n}{min}\{- f(\mathbf{x})\}
+    (\#eq:2)
+\end{equation}
+We then apply any minimization technique after setting $\hat{f}(\mathbf{x}) = - f(\mathbf{x})$. Further, for the inequality constraints for the maximization problem, given by $g_k(\mathbf{x}) \geq 0$, we set 
+\begin{equation}
+    \hat{g}_k(\mathbf{x})=-g_k(\mathbf{x})
+    (\#eq:3)
+\end{equation}
+
+The problem thus has become,
+
+\begin{align}
+&\!\min_{\mathbf{x} \in \mathbb{R}^n}        &\qquad& \hat{f}(\mathbf{x})\\ 
+&\text{subject to} &      & \hat{g}_k(\mathbf{x}) \leq 0,\ k=1,2,..., m\\
+&                  &      & h_k(\mathbf{x}) = 0,\ k=1,2,..., r\\
+&                  &      & m,r < n.(\#eq:4)
+\end{align}
+
+After the solution $\mathbf{x^*}$ is computed, the maximum value of the problem is given by: $-\hat{f}(\mathbf{x^*})$.

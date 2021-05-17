@@ -76,6 +76,7 @@
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a></li>
 <li class="divider"></li>
@@ -125,6 +126,36 @@
 <p>In case of a <em>minimization</em> problem, the optimum vector <span class="math inline">\(\mathbf{x^*}\)</span> is referred to as the <em>global minimizer</em> of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f\)</span> attains the least possible value at <span class="math inline">\(\mathbf{x^*}\)</span>. To design an algorithm that finds out the global minimizer for a function is quite difficult, as in most cases we do not have the idea of the overall shape of <span class="math inline">\(f\)</span>. Mostly our knowledge is restricted to a local portion of <span class="math inline">\(f\)</span>.</p>
 <p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x\)</span>.</p>
 <p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>.</p>
+<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>strong local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) &lt; f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>, with <span class="math inline">\(\mathbf{x} \neq \mathbf{x}^*\)</span>.</p>
+<p><strong>Definition.</strong> For an objective function <span class="math inline">\(f(\mathbf{x})\)</span> where, <span class="math inline">\(\mathbf{x} \in \mathbb{R}^2\)</span>, a point <span class="math inline">\(\mathbf{x}^s=\begin{bmatrix} x_1^s \\ x_2^s \end{bmatrix}\)</span> is called a <em>saddle point</em> if <span class="math inline">\(\forall\ \mathbf{x}\)</span>, there exists an <span class="math inline">\(\epsilon&gt;0\)</span>, such that the following conditions are satisfied:</p>
+<ul>
+<li><span class="math inline">\(\frac{\partial f}{\partial x_1}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>,</li>
+<li><span class="math inline">\(\frac{\partial f}{\partial x_2}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>, and</li>
+<li><span class="math inline">\([\frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) - (\frac{\partial^2f}{\partial x_1 \partial x_2}(\mathbf{x}))^2]\mid_{(x_1^s, x_2^s)} &lt; 0\)</span></li>
+</ul>
+<p>generating the following chain of inequalities: <span class="math inline">\(f(\mathbf{x})\mid_{(x_1, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2)}\)</span>. An example of a saddle point is shown below:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="maximization" class="section level2">
+<h2><span class="header-section-number">1.3</span> Maximization</h2>
+<p>We just defined a  problem as our optimization task. We could do the same with a  problem with little tweaks. The problem <span class="math inline">\(\underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x})\)</span> can be formulated as:
+<span class="math display" id="eq:2">\[\begin{equation}
+    \underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x}) = - \underset{\mathbf{x} \in \mathbb{R}^n}{min}\{- f(\mathbf{x})\}
+    \tag{1.2}
+\end{equation}\]</span>
+We then apply any minimization technique after setting <span class="math inline">\(\hat{f}(\mathbf{x}) = - f(\mathbf{x})\)</span>. Further, for the inequality constraints for the maximization problem, given by <span class="math inline">\(g_k(\mathbf{x}) \geq 0\)</span>, we set
+<span class="math display" id="eq:3">\[\begin{equation}
+    \hat{g}_k(\mathbf{x})=-g_k(\mathbf{x})
+    \tag{1.3}
+\end{equation}\]</span></p>
+<p>The problem thus has become,</p>
+<p><span class="math display" id="eq:4">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; \hat{f}(\mathbf{x})\\ 
+&amp;\text{subject to} &amp;      &amp; \hat{g}_k(\mathbf{x}) \leq 0,\ k=1,2,..., m\\
+&amp;                  &amp;      &amp; h_k(\mathbf{x}) = 0,\ k=1,2,..., r\\
+&amp;                  &amp;      &amp; m,r &lt; n.\tag{1.4}
+\end{align}\]</span></p>
+<p>After the solution <span class="math inline">\(\mathbf{x^*}\)</span> is computed, the maximum value of the problem is given by: <span class="math inline">\(-\hat{f}(\mathbf{x^*})\)</span>.</p>
 
 </div>
 </div>
