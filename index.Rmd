@@ -97,7 +97,7 @@ plt.show()
 ```
 
 ## Maximization
-We just defined a \textit{minimization} problem as our optimization task. We could do the same with a \textit{maximization} problem with little tweaks. The problem $\underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x})$ can be formulated as:
+We just defined a *minimization* problem as our optimization task. We could do the same with a *maximization* problem with little tweaks. The problem $\underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x})$ can be formulated as:
 \begin{equation}
     \underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x}) = - \underset{\mathbf{x} \in \mathbb{R}^n}{min}\{- f(\mathbf{x})\}
     (\#eq:2)
@@ -161,7 +161,7 @@ While formulating optimization problems, it must be guaranteed that the scale of
 ## Gradient Vector and Hessian Matrix of the Objective Function
 
 ```{definition} 
-For a differentiable objective function $f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}$, its \textit{gradient vector} given by $\nabla f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}^n$, is defined at the point $\mathbf{x}$ in the $n$-dimensional space as the vector of first order partial derivatives:
+For a differentiable objective function $f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}$, its *gradient vector* given by $\nabla f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}^n$, is defined at the point $\mathbf{x}$ in the $n$-dimensional space as the vector of first order partial derivatives:
 
 \begin{equation}
 \nabla f(\mathbf{x})= \begin{pmatrix} \frac{\partial f}{\partial x_1}(\mathbf{x})\\
@@ -200,7 +200,7 @@ plt.show()
 ```
 
 ```{definition} 
-For a twice continuously differentiable function $f: \mathbb{R}^n \rightarrow \mathbb{R}$, its \textit{Hessian matrix} given by $\mathbf{H}(f(\mathbf{x}))$ is defined at the point $\mathbf{x}$ in the $n \times n$-dimensional space as the matrix of second order partial derivatives:
+For a twice continuously differentiable function $f: \mathbb{R}^n \rightarrow \mathbb{R}$, its *Hessian matrix* given by $\mathbf{H}(f(\mathbf{x}))$ is defined at the point $\mathbf{x}$ in the $n \times n$-dimensional space as the matrix of second order partial derivatives:
 \begin{equation}
     \mathbf{H} f(\mathbf{x})=\frac{\partial ^2 f}{\partial x_i \partial x_j} = \begin{pmatrix} \frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) & \frac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) & \ldots & \frac{\partial^2 f}{\partial x_1 \partial x_n}(\mathbf{x})\\
     \frac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) & \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) & \ldots & \frac{\partial^2 f}{\partial x_2 \partial x_n}(\mathbf{x}) \\
@@ -210,7 +210,7 @@ For a twice continuously differentiable function $f: \mathbb{R}^n \rightarrow \m
 \end{equation}
 ```
 
-One important relation that we will keep in mind is that the \textit{Hessian matrix} is the \textit{Jacobian} of the \textit{gradient vector} of $f(\mathbf{x})$, where the \textit{Jacobian matrix} of a vector-valued function $\mathbf{F}(\mathbf{x})$ is the matrix of all its first order partial derivatives, given by, $\mathbf{JF}(\mathbf{x})= \begin{pmatrix} \frac{\partial \mathbf{F}}{\partial x_1} & \ldots \frac{\partial \mathbf{F}}{\partial x_n} \end{pmatrix}$. The relation is as followed:
+One important relation that we will keep in mind is that the *Hessian matrix* is the *Jacobian* of the *gradient vector* of $f(\mathbf{x})$, where the *Jacobian matrix* of a vector-valued function $\mathbf{F}(\mathbf{x})$ is the matrix of all its first order partial derivatives, given by, $\mathbf{JF}(\mathbf{x})= \begin{pmatrix} \frac{\partial \mathbf{F}}{\partial x_1} & \ldots \frac{\partial \mathbf{F}}{\partial x_n} \end{pmatrix}$. The relation is as followed:
 \begin{equation}
     \mathbf{H} f(\mathbf{x}) = \mathbf{J}(\nabla f(\mathbf{x})) (\#eq:8)
 \end{equation}
@@ -241,4 +241,177 @@ hessian_f = jacobian(grad_f) # Hessian of the objective function
 
 print("gradient vector:",grad_f(p))
 print("Hessian matrix:\n",hessian_f(p))
+```
+
+## Directional Derivative of the Objective Function
+
+```{definition}
+For a real valued objective function $f(\mathbf{x})$ and a feasible direction $\mathbf{\delta}$, the *directional derivative* of $f(\mathbf{x})$ in the direction $\mathbf{\delta}$ is given by:
+\begin{equation}
+    \frac{\partial f}{\partial \mathbf{\delta}}(\mathbf{x}) = \lim_{\alpha \to 0} \frac{f(\mathbf{x} + \alpha \mathbf{\delta}) - f(\mathbf{x})}{\alpha} (\#eq:9)
+\end{equation}
+where $\|\mathbf{\delta}\| = 1$.
+```
+
+Now for $\mathbf{x} \in \mathbb{R}^n$, let us consider the differential equation:
+\begin{equation}
+    df(\mathbf{x}) = \frac{\partial f(\mathbf{x})}{\partial x_1}dx_1 + \ldots + \frac{\partial f(\mathbf{x})}{\partial x_n}dx_n = \nabla^Tf(\mathbf{x})d\mathbf{x} = \langle \nabla f(\mathbf{x}), d\mathbf{x} \rangle (\#eq:10)
+\end{equation}
+
+where $\langle .,. \rangle$ denotes the dot product between two matrices and/or vectors. Now let us consider a function $\hat{f}(\mathbf{x}) = f(\hat{\mathbf{x}} + \alpha \mathbf{\delta})$, such that for a point $\mathbf{x}$ passing through the point $\hat{\mathbf{x}}$ on the line through $\hat{\mathbf{x}}$ in the direction $\mathbf{\delta}$ is given by $\mathbf{x}(\alpha) = \hat{\mathbf{x}} + \alpha \mathbf{\delta}$. now, for an infinitesimal change $d\alpha$, we have $d\mathbf{x}=\mathbf{\delta}d\alpha$. Thus, the differential at the point $\mathbf{x}$ in the given direction is $d\hat{f}=\nabla^Tf(\mathbf{x})\delta d\alpha$ So, the directional derivative now can be written as:
+\begin{equation}
+    \frac{\partial f}{\partial \mathbf{\delta}}(\mathbf{x}) = \frac{d}{d\alpha}f(\mathbf{x}+\alpha\mathbf{\delta})|_{\alpha=0} = \nabla^Tf(\mathbf{x})\mathbf{\delta} (\#eq:11)
+\end{equation}
+
+Now,let us look into a simple example:
+
+```{example}
+Let an objective function be $f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1$. We will find out the gradient vector $\nabla f(\mathbf{x})$ at the point $\mathbf{p} = \begin{pmatrix} 1 & 2 & 3 \end{pmatrix}$ and then calculate the directional derivative in the direction $\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} & \frac{3}{\sqrt{35}} & \frac{5}{\sqrt{35}} \end{pmatrix}$. We will use the same \texttt{autograd} package to calculate the same using Python.
+```
+
+```{python}
+p = np.array([1, 2, 3], dtype=float)
+delta = np.array([1, 3, 5], dtype=float)/np.sqrt(35)
+def f(x):
+    return 2*x[0]*x[1]**3+3*x[1]**2*x[2]+x[2]**3*x[0]
+grad_f = grad(f)
+
+print("directional derivative:", grad_f(p).dot(delta))
+```
+
+We will see that the directional derivative is $\approx 70.655$. 
+
+## Positive Definite and Positive Semi-definite Matrices
+
+```{definition}
+A real matrix $\mathbf{M}\in \mathbb{R}^{N\times N}$ is a *positive definite* matrix if for any real vector $\mathbf{v} \in \mathbb{R}^n$ other than the null vector, the following is satisfied:
+\begin{equation}
+    \mathbf{v}^T\mathbf{M}\mathbf{v} > 0 (\#eq:12)
+\end{equation}
+```
+
+```{definition}
+A real matrix $\mathbf{M}\in \mathbb{R}^{N\times N}$ is a *positive semi-definite* matrix if for any real vector $\mathbf{v} \in \mathbb{R}^n$, the following is satisfied:
+\begin{equation}
+    \mathbf{v}^T\mathbf{M}\mathbf{v} \geq 0 (\#eq:13)
+\end{equation}
+```
+
+```{theorem}
+All the eigenvalues of a positive definite matrix are positive.
+```
+
+```{proof}
+If $\lambda$ be an eigenvalue (real) of $\mathbf{M}$ and $\mathbf{v}$ be the corresponding eigenvector, then we have the following well known equation:
+\begin{equation}
+    \mathbf{Mv}=\lambda\mathbf{v} (\#eq:14)
+\end{equation}
+Now multiplying the equation with $\mathbf{v}^T$ on the left, we get the following:
+
+\begin{align}
+\mathbf{v}^T\mathbf{Mv}&=\lambda\mathbf{v}^T\mathbf{v}\\ 
+&=\lambda \|\mathbf{v}\|^2 (\#eq:15)
+\end{align}
+
+Now the $L.H.S$ is positive as $\mathbf{M}$ is positive definite and $\|bm{v}\|^2$ is positive too. This implies that the eigenvalue $\lambda$ is positive.
+```
+
+The above proof can be extended to positive semi-definite matrix too in which case the eigenvalues are non-negative, i.e, either 0 or positive and we will exploit these properties in our python script to check for positive definiteness or positive semi-definiteness of a given matrix. 
+
+```{example}
+We use a Python script to compute the eigenvalues and check whether the following matrices are positive definite, positive semi-definite or negative-definite:
+    
+* $\begin{pmatrix}2 & -1 & 0 \\ -1 & 2 & -1\\ 0 & -1 & 2 \end{pmatrix}$
+* $\begin{pmatrix} -2 & 4\\ 4 & -8 \end{pmatrix}$
+* $\begin{pmatrix} -2 & 2\\ 2 & -4 \end{pmatrix}$
+```
+
+```{python}
+M = np.array(([2, -1, 0], [-1, 2, -1], [0, -1, 2]), dtype=float)
+#M = np.array(([-2, 4], [4, -8]), dtype=float)
+#M = np.array(([-2, 2], [2, -4]), dtype=float)
+
+eigs = np.linalg.eigvals(M)
+print("The eigenvalues of M:", eigs)
+
+if (np.all(eigs>0)):
+    print("M is positive definite")
+elif (np.all(eigs>=0)):
+    print("M is positive semi-definite")
+else:
+    print("M is negative definite")
+```
+
+Running the script for the first matrix tells us that it is positive definite. The Reader is asked to try out the code for the other two matrices.
+
+## What is Convexity?
+
+```{definition}
+A set $\mathbf{X} \subset \mathbb{R}^n$ is said to be a *convex set* if $\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X} \text{ and } \alpha \in [0, 1]$, the following is satisfied:
+\begin{equation}
+    (1-\alpha)\mathbf{x} + \alpha \mathbf{y} \in \mathbf{X} (\#eq:16)
+\end{equation}
+If the above condition is not satisfied, the set is a *non-convex set*.
+```
+
+```{definition}
+A function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is called a *convex function* if for every two points $\mathbf{x}, \mathbf{y} \in \mathbb{R}^n$ and $\alpha \in [0,1]$, the following condition is satisfied:
+\begin{equation}
+
+f(\alpha \mathbf{x} + (1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{x})+(1-\alpha)f(\mathbf{y}) (\#eq:17)
+\end{equation}
+```
+
+```{definition}
+The function is *strictly convex* if $\leq$ symbol is replaced by $<$. In the similar way, one can define a *concave function* too.
+```
+
+```{definition}
+A constrained optimization problem is called a *convex programming problem* if the following properties are satisfied:
+
+* the objective function $f(\mathbf{x})$ is convex,
+* the equality constraint functions $h_k(\mathbf{x})$ are linear, and
+* the inequality constraint functions $g_k(\mathbf{x})$ are concave
+
+```
+
+This concept of convexity is used in practically solving many optimization problems in the real world. Now to test for convexity of $f(\mathbf{x})$ we study the following two theorems:
+
+```{theorem}
+If $f(\mathbf{x})$ is a differentiable objective function defined over the convex set $\mathbf{S} \subseteq \mathbb{R}^n$, then $\forall\ \mathbf{y}, \mathbf{z} \in \mathbf{S}$, $f(\mathbf{x})$ is convex over $\mathbf{S}$ if and only if
+\begin{equation}
+    f(\mathbf{y})+\nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z}) (\#eq:18)
+\end{equation}
+```
+
+```{proof}
+$f(\mathbf{x})$ is convex over $\mathbf{S}$ implies that $\forall\ \mathbf{y}, \mathbf{z} \in \mathbf{S}$ and $\forall\ \alpha \in [0,1]$ the following equation is hold:
+\begin{equation}
+    f(\alpha \mathbf{z} + (1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{y}) + (1-\alpha)f(\mathbf{y}) (\#eq:19)
+\end{equation}
+implying,
+\begin{equation}
+    \frac{f(\mathbf{y} + \alpha(\mathbf{z}-\mathbf{y})) - f(\mathbf{y})}{\alpha} \leq f(\mathbf{z}) - f(\mathbf{y}) (\#eq:20)
+\end{equation}
+Now, the difference inequality can be turned into a differential inequality by taking $\lim_{\alpha \to 0}$:
+\begin{equation}
+    \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} \leq f(\mathbf{z}) - f(\mathbf{y}) (\#eq:21)
+\end{equation}
+The $L.H.S$ is the \textit{directional derivative} and thus from \@ref(eq:11) this can be written as:
+\begin{equation}
+    \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} = \nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{y}) (\#eq:22)
+\end{equation}
+Now from \@ref(eq:17) and \@ref(eq:18), the following inequality can be written: $f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})$. Now, to work on the other way round, if \@ref(eq:14) is true, then for $\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S} \text{ and } \alpha \in [0,1]$, we will have the following inequalities:
+\begin{equation}
+    f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{x}) \leq f(\mathbf{z}) (\#eq:23)
+\end{equation}
+and 
+\begin{equation}
+    f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x}) \leq f(\mathbf{y}) (\#eq:24)
+\end{equation}
+Now (\@ref(eq:23) $\times \alpha) +$ \@ref(eq:24)$\times (1-\alpha)) \implies$
+\begin{equation}
+    \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{x}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}) - f(\mathbf{x}) (\#eq:25)
+\end{equation}
+now $L.H.S = 0$ since $\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0$. So we get, $f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y})$. The converse relation is also satisfied, which completes our proof.
 ```
