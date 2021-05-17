@@ -55,6 +55,70 @@
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -77,6 +141,12 @@
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#feasible-region"><i class="fa fa-check"></i><b>1.4</b> Feasible Region</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#discrete-optimization-problems"><i class="fa fa-check"></i><b>1.5</b> Discrete Optimization Problems</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#linear-programming-problems"><i class="fa fa-check"></i><b>1.6</b> Linear Programming Problems</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#stochastic-optimization-problems"><i class="fa fa-check"></i><b>1.7</b> Stochastic Optimization Problems</a></li>
+<li class="chapter" data-level="1.8" data-path="index.html"><a href="index.html#scaling-of-decision-variables"><i class="fa fa-check"></i><b>1.8</b> Scaling of Decision Variables</a></li>
+<li class="chapter" data-level="1.9" data-path="index.html"><a href="index.html#gradient-vector-and-hessian-matrix-of-the-objective-function"><i class="fa fa-check"></i><b>1.9</b> Gradient Vector and Hessian Matrix of the Objective Function</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a></li>
 <li class="divider"></li>
@@ -122,19 +192,40 @@
 </div>
 <div id="a-solution" class="section level2">
 <h2><span class="header-section-number">1.2</span> A Solution</h2>
-<p><strong>Definition.</strong> A <em>solution</em> of <span class="math inline">\(f(\mathbf{x})\)</span> is a point <span class="math inline">\(\mathbf{x^*}\)</span> which denotes the optimum vector that solves equation <a href="index.html#eq:1">(1.1)</a>, corresponding to the optimum value <span class="math inline">\(f(\mathbf{x^*})\)</span>.</p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-1" class="definition"><strong>Definition 1.1  </strong></span>A <em>solution</em> of <span class="math inline">\(f(\mathbf{x})\)</span> is a point <span class="math inline">\(\mathbf{x^*}\)</span> which denotes the optimum vector that solves equation <a href="index.html#eq:1">(1.1)</a>, corresponding to the optimum value <span class="math inline">\(f(\mathbf{x^*})\)</span>.
+</div>
+
 <p>In case of a <em>minimization</em> problem, the optimum vector <span class="math inline">\(\mathbf{x^*}\)</span> is referred to as the <em>global minimizer</em> of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f\)</span> attains the least possible value at <span class="math inline">\(\mathbf{x^*}\)</span>. To design an algorithm that finds out the global minimizer for a function is quite difficult, as in most cases we do not have the idea of the overall shape of <span class="math inline">\(f\)</span>. Mostly our knowledge is restricted to a local portion of <span class="math inline">\(f\)</span>.</p>
-<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x\)</span>.</p>
-<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>.</p>
-<p><strong>Definition.</strong> A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>strong local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) &lt; f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>, with <span class="math inline">\(\mathbf{x} \neq \mathbf{x}^*\)</span>.</p>
-<p><strong>Definition.</strong> For an objective function <span class="math inline">\(f(\mathbf{x})\)</span> where, <span class="math inline">\(\mathbf{x} \in \mathbb{R}^2\)</span>, a point <span class="math inline">\(\mathbf{x}^s=\begin{bmatrix} x_1^s \\ x_2^s \end{bmatrix}\)</span> is called a <em>saddle point</em> if <span class="math inline">\(\forall\ \mathbf{x}\)</span>, there exists an <span class="math inline">\(\epsilon&gt;0\)</span>, such that the following conditions are satisfied:</p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-2" class="definition"><strong>Definition 1.2  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x\)</span>.
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-3" class="definition"><strong>Definition 1.3  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>.
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-4" class="definition"><strong>Definition 1.4  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>strong local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) &lt; f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>, with <span class="math inline">\(\mathbf{x} \neq \mathbf{x}^*\)</span>.
+</div>
+
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-5" class="definition"><strong>Definition 1.5  </strong></span>For an objective function <span class="math inline">\(f(\mathbf{x})\)</span> where, <span class="math inline">\(\mathbf{x} \in \mathbb{R}^2\)</span>, a point <span class="math inline">\(\mathbf{x}^s=\begin{bmatrix} x_1^s \\ x_2^s \end{bmatrix}\)</span> is called a <em>saddle point</em> if <span class="math inline">\(\forall\ \mathbf{x}\)</span>, there exists an <span class="math inline">\(\epsilon&gt;0\)</span>, such that the following conditions are satisfied:</p>
 <ul>
 <li><span class="math inline">\(\frac{\partial f}{\partial x_1}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>,</li>
 <li><span class="math inline">\(\frac{\partial f}{\partial x_2}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>, and</li>
 <li><span class="math inline">\([\frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) - (\frac{\partial^2f}{\partial x_1 \partial x_2}(\mathbf{x}))^2]\mid_{(x_1^s, x_2^s)} &lt; 0\)</span></li>
 </ul>
-<p>generating the following chain of inequalities: <span class="math inline">\(f(\mathbf{x})\mid_{(x_1, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2)}\)</span>. An example of a saddle point is shown below:</p>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+generating the following chain of inequalities: <span class="math inline">\(f(\mathbf{x})\mid_{(x_1, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2)}\)</span>.
+</div>
+
+<p>An example of a saddle point is shown below:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="maximization" class="section level2">
 <h2><span class="header-section-number">1.3</span> Maximization</h2>
@@ -156,6 +247,104 @@ We then apply any minimization technique after setting <span class="math inline"
 &amp;                  &amp;      &amp; m,r &lt; n.\tag{1.4}
 \end{align}\]</span></p>
 <p>After the solution <span class="math inline">\(\mathbf{x^*}\)</span> is computed, the maximum value of the problem is given by: <span class="math inline">\(-\hat{f}(\mathbf{x^*})\)</span>.</p>
+</div>
+<div id="feasible-region" class="section level2">
+<h2><span class="header-section-number">1.4</span> Feasible Region</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-7" class="definition"><strong>Definition 1.6  </strong></span>A <em>feasible region</em> is the set of those points which satisfy all the constraints provided.
+</div>
+
+</div>
+<div id="discrete-optimization-problems" class="section level2">
+<h2><span class="header-section-number">1.5</span> Discrete Optimization Problems</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-8" class="definition"><strong>Definition 1.7  </strong></span>The optimization problems whose variables <span class="math inline">\(\mathbf{x}\)</span> take on integer values, and the constraints have the form either <span class="math inline">\(x_i \in \mathcal{Z}\)</span> or <span class="math inline">\(x_i \in \{0, 1\}\)</span> are called <em>discrete optimization problems</em>.
+</div>
+
+<p>The above class of problems are also sometimes called <em>integer programming</em> problems. The fundamental characteristic of a discrete optimization problem is that, <span class="math inline">\(x_i\)</span> is drawn from a countable set.</p>
+</div>
+<div id="linear-programming-problems" class="section level2">
+<h2><span class="header-section-number">1.6</span> Linear Programming Problems</h2>
+<p>The class of optimization problems where both the objective function <span class="math inline">\(f(\mathbf{x})\)</span> and the constraints are linear functions of the variable vector <span class="math inline">\(\mathbf{x}\)</span>, are called the <em>linear programming problems</em>.</p>
+<p>A linear programming problem can be formulated in the following way:</p>
+<p><span class="math display" id="eq:5">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; f(\mathbf{x})=\mathbf{c}^T\mathbf{x},\\ 
+&amp;\text{subject to} &amp;      &amp; \mathbf{A}\mathbf{x} \leq \mathbf{b},\\
+&amp;                  &amp;      &amp; \mathbf{x} \geq \mathbf{0},\\
+&amp;                  &amp;      &amp; \mathbf{c} \in \mathbb{R}^n, \mathbf{b} \in \mathbb{R}^m, \mathbf{A}\in \mathbb{R}^{m \times n}. \tag{1.5}
+\end{align}\]</span></p>
+</div>
+<div id="stochastic-optimization-problems" class="section level2">
+<h2><span class="header-section-number">1.7</span> Stochastic Optimization Problems</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-9" class="definition"><strong>Definition 1.8  </strong></span>The class of optimization problems, where the decision variables <span class="math inline">\(x_i \in \mathbf{x}\)</span> depend on the outcomes of a random phenomenon besides consisting of random objective function and constraints are called <em>stochastic optimization problems</em>.
+</div>
+
+<p>Some examples of stochastic optimization methods are: <em>simulated annealing</em>, <em>quantum annealing</em>, <em>genetic algorithms</em>, etc.</p>
+</div>
+<div id="scaling-of-decision-variables" class="section level2">
+<h2><span class="header-section-number">1.8</span> Scaling of Decision Variables</h2>
+<p>While formulating optimization problems, it must be guaranteed that the scale of the decision variables are approximately of the same order. If this is not taken care of, some optimization algorithms that are sensitive to scaling will perform poorly and will flounder to converge to the solution. Two of the fundamental fields that get disturbed due to poor scaling are computing the optimized step lengths and the numerical gradients. One of the widely accepted best practices is to make the decision variables dimensionless and vary them approximately between 0 and 1. One should always prefer optimization algorithms that are not sensitive to scaling.</p>
+</div>
+<div id="gradient-vector-and-hessian-matrix-of-the-objective-function" class="section level2">
+<h2><span class="header-section-number">1.9</span> Gradient Vector and Hessian Matrix of the Objective Function</h2>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-10" class="definition"><strong>Definition 1.9  </strong></span>For a differentiable objective function <span class="math inline">\(f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, its  given by <span class="math inline">\(\nabla f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span>, is defined at the point <span class="math inline">\(\mathbf{x}\)</span> in the <span class="math inline">\(n\)</span>-dimensional space as the vector of first order partial derivatives:</p>
+<span class="math display" id="eq:6">\[\begin{equation}
+\nabla f(\mathbf{x})= \begin{pmatrix} \frac{\partial f}{\partial x_1}(\mathbf{x})\\
+    \vdots \\
+    \frac{\partial f}{\partial x_n}(\mathbf{x})
+    \end{pmatrix}\tag{1.6}
+\end{equation}\]</span>
+</div>
+
+<p>Now, if <span class="math inline">\(f(\mathbf{x})\)</span> is smooth, the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> is always perpendicular to the contours at the point <span class="math inline">\(\mathbf{x}\)</span>. The gradient vector is thus in the direction of the maximum increase of <span class="math inline">\(f(\mathbf{x})\)</span>. Look at the figure below.</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-12" class="definition"><strong>Definition 1.10  </strong></span>For a twice continuously differentiable function <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, its  given by <span class="math inline">\(\mathbf{H}(f(\mathbf{x}))\)</span> is defined at the point <span class="math inline">\(\mathbf{x}\)</span> in the <span class="math inline">\(n \times n\)</span>-dimensional space as the matrix of second order partial derivatives:
+<span class="math display" id="eq:7">\[\begin{equation}
+    \mathbf{H} f(\mathbf{x})=\frac{\partial ^2 f}{\partial x_i \partial x_j} = \begin{pmatrix} \frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_1 \partial x_n}(\mathbf{x})\\
+    \frac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_2 \partial x_n}(\mathbf{x}) \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+    \frac{\partial^2 f}{\partial x_n \partial x_1}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_n \partial x_2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_n^2}(\mathbf{x})
+    \end{pmatrix}\tag{1.7}
+\end{equation}\]</span>
+</div>
+
+<p>One important relation that we will keep in mind is that the  is the  of the  of <span class="math inline">\(f(\mathbf{x})\)</span>, where the  of a vector-valued function <span class="math inline">\(\mathbf{F}(\mathbf{x})\)</span> is the matrix of all its first order partial derivatives, given by, <span class="math inline">\(\mathbf{JF}(\mathbf{x})= \begin{pmatrix} \frac{\partial \mathbf{F}}{\partial x_1} &amp; \ldots \frac{\partial \mathbf{F}}{\partial x_n} \end{pmatrix}\)</span>. The relation is as followed:
+<span class="math display" id="eq:8">\[\begin{equation}
+    \mathbf{H} f(\mathbf{x}) = \mathbf{J}(\nabla f(\mathbf{x})) \tag{1.8}
+\end{equation}\]</span></p>
+<p>Let us consider an example now.</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-13" class="example"><strong>Example 1.1  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> and the Hessian matrix <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span>. The gradient vector is <span class="math inline">\(\nabla f(\mathbf{x}) = \begin{pmatrix} 2x_2^3+x_3^3 \\ 6x_1x_2^2+6x_2x_3 \\ 3x_2^2+3x_3^2x_1 \end{pmatrix}\)</span>. So <span class="math inline">\(\nabla f(\mathbf{x})| \mathbf{p} = \begin{pmatrix} 43 \\ 60 \\ 39 \end{pmatrix}\)</span>. The Hessian matrix is therefore given by, <span class="math inline">\(\mathbf{H}f(\mathbf{x}) = \begin{pmatrix} 0 &amp; 6x_2^2 &amp; 3x_3^2 \\ 6x_2^2 &amp; 12x_1x_2+6x_3 &amp; 6x_2 \\ 3x_3^2 &amp; 6x_2 &amp; 6x_3x_1 \end{pmatrix}\)</span> and at point <span class="math inline">\(\mathbf{p}\)</span>, <span class="math inline">\(\mathbf{H} f(\mathbf{x})|\mathbf{p} = \begin{pmatrix} 0 &amp; 24 &amp; 27 \\ 24 &amp; 42 &amp; 12 \\ 27 &amp; 12 &amp; 18 \end{pmatrix}\)</span>.
+</div>
+
+<p>We will try to work out the same example with Python scripting now. For that we need an extra package called <code>autograd</code> [<a href="https://github.com/HIPS/autograd" class="uri">https://github.com/HIPS/autograd</a>], besides the <code>numpy</code>[<a href="https://numpy.org/" class="uri">https://numpy.org/</a>] package. The <code>autograd</code> package is used for automatically differentiating native Python and Numpy code. Fundamentally <code>autograd</code> is used in <em>gradient-based optimization</em>. First <code>pip</code> install the <code>autograd package</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="index.html#cb1-1"></a>pip install autograd</span></code></pre></div>
+<p>Now, after it is downloaded, we type the following in our notebook:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="index.html#cb2-1"></a><span class="im">import</span> autograd.numpy <span class="im">as</span> au</span>
+<span id="cb2-2"><a href="index.html#cb2-2"></a><span class="im">from</span> autograd <span class="im">import</span> grad, jacobian </span>
+<span id="cb2-3"><a href="index.html#cb2-3"></a></span>
+<span id="cb2-4"><a href="index.html#cb2-4"></a>p <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb2-5"><a href="index.html#cb2-5"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
+<span id="cb2-6"><a href="index.html#cb2-6"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>]<span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">3</span><span class="op">+</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span><span class="op">*</span>x[<span class="dv">2</span>]<span class="op">+</span>x[<span class="dv">2</span>]<span class="op">**</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">0</span>]</span>
+<span id="cb2-7"><a href="index.html#cb2-7"></a>grad_f <span class="op">=</span> grad(f) <span class="co"># gradient of the objective function</span></span>
+<span id="cb2-8"><a href="index.html#cb2-8"></a>hessian_f <span class="op">=</span> jacobian(grad_f) <span class="co"># Hessian of the objective function</span></span>
+<span id="cb2-9"><a href="index.html#cb2-9"></a></span>
+<span id="cb2-10"><a href="index.html#cb2-10"></a><span class="bu">print</span>(<span class="st">&quot;gradient vector:&quot;</span>,grad_f(p))</span></code></pre></div>
+<pre><code>## gradient vector: [43. 60. 39.]</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="index.html#cb4-1"></a><span class="bu">print</span>(<span class="st">&quot;Hessian matrix:</span><span class="ch">\n</span><span class="st">&quot;</span>,hessian_f(p))</span></code></pre></div>
+<pre><code>## Hessian matrix:
+##  [[ 0. 24. 27.]
+##  [24. 42. 12.]
+##  [27. 12. 18.]]</code></pre>
 
 </div>
 </div>
