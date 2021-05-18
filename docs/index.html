@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-17" />
+<meta name="date" content="2021-05-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -150,6 +150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.10" data-path="index.html"><a href="index.html#directional-derivative-of-the-objective-function"><i class="fa fa-check"></i><b>1.10</b> Directional Derivative of the Objective Function</a></li>
 <li class="chapter" data-level="1.11" data-path="index.html"><a href="index.html#positive-definite-and-positive-semi-definite-matrices"><i class="fa fa-check"></i><b>1.11</b> Positive Definite and Positive Semi-definite Matrices</a></li>
 <li class="chapter" data-level="1.12" data-path="index.html"><a href="index.html#what-is-convexity"><i class="fa fa-check"></i><b>1.12</b> What is Convexity?</a></li>
+<li class="chapter" data-level="1.13" data-path="index.html"><a href="index.html#numerical-optimization-algorithms"><i class="fa fa-check"></i><b>1.13</b> Numerical Optimization Algorithms</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a></li>
 <li class="divider"></li>
@@ -175,7 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">Introduction to Mathematical Optimization</h1>
 <h2 class="subtitle"><em>with Python</em></h2>
 <p class="author"><em>Indranil Ghosh</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-05-17</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-05-18</em></p>
 </div>
 <div id="what-is-numerical-optimization" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> What is Numerical Optimization?</h1>
@@ -371,7 +372,7 @@ where <span class="math inline">\(\|\mathbf{\delta}\| = 1\)</span>.
 <p>Now,let us look into a simple example:</p>
 
 <div class="example">
-<span id="exm:unnamed-chunk-17" class="example"><strong>Example 1.2  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span> and then calculate the directional derivative in the direction <span class="math inline">\(\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} &amp; \frac{3}{\sqrt{35}} &amp; \frac{5}{\sqrt{35}} \end{pmatrix}\)</span>. We will use the same  package to calculate the same using Python.
+<span id="exm:unnamed-chunk-17" class="example"><strong>Example 1.2  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span> and then calculate the directional derivative in the direction <span class="math inline">\(\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} &amp; \frac{3}{\sqrt{35}} &amp; \frac{5}{\sqrt{35}} \end{pmatrix}\)</span>. We will use the same <code>autograd</code> package to calculate the same using Python.
 </div>
 
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="index.html#cb6-1"></a>p <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
@@ -451,7 +452,7 @@ Now the <span class="math inline">\(L.H.S\)</span> is positive as <span class="m
 <h2><span class="header-section-number">1.12</span> What is Convexity?</h2>
 
 <div class="definition">
-<span id="def:unnamed-chunk-25" class="definition"><strong>Definition 1.14  </strong></span>A set <span class="math inline">\(\mathbf{X} \subset \mathbb{R}^n\)</span> is said to be a <em>convex set</em> if <span class="math inline">\(\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X} \text{ and } \alpha \in [0, 1]\)</span>, the following is satisfied:
+<span id="def:unnamed-chunk-25" class="definition"><strong>Definition 1.14  </strong></span>A set <span class="math inline">\(\mathbf{X} \subset \mathbb{R}^n\)</span> is said to be a <em>convex set</em> if <span class="math inline">\(\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X}\)</span> and <span class="math inline">\(\alpha \in [0, 1]\)</span>, the following is satisfied:
 <span class="math display" id="eq:16">\[\begin{equation}
     (1-\alpha)\mathbf{x} + \alpha \mathbf{y} \in \mathbf{X} \tag{1.16}
 \end{equation}\]</span>
@@ -505,11 +506,11 @@ Now, the difference inequality can be turned into a differential inequality by t
 <span class="math display" id="eq:21">\[\begin{equation}
     \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} \leq f(\mathbf{z}) - f(\mathbf{y}) \tag{1.21}
 \end{equation}\]</span>
-The <span class="math inline">\(L.H.S\)</span> is the  and thus from <a href="index.html#eq:11">(1.11)</a> this can be written as:
+The <span class="math inline">\(L.H.S\)</span> is the <em>directional derivative</em> and thus from <a href="index.html#eq:11">(1.11)</a> this can be written as:
 <span class="math display" id="eq:22">\[\begin{equation}
     \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} = \nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{y}) \tag{1.22}
 \end{equation}\]</span>
-Now from <a href="index.html#eq:17">(1.17)</a> and <a href="index.html#eq:18">(1.18)</a>, the following inequality can be written: <span class="math inline">\(f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})\)</span>. Now, to work on the other way round, if <a href="index.html#eq:14">(1.14)</a> is true, then for <span class="math inline">\(\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S} \text{ and } \alpha \in [0,1]\)</span>, we will have the following inequalities:
+Now from <a href="index.html#eq:17">(1.17)</a> and <a href="index.html#eq:18">(1.18)</a>, the following inequality can be written: <span class="math inline">\(f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})\)</span>. Now, to work on the other way round, if <a href="index.html#eq:14">(1.14)</a> is true, then for <span class="math inline">\(\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S}\)</span> and <span class="math inline">\(\alpha \in [0,1]\)</span>, we will have the following inequalities:
 <span class="math display" id="eq:23">\[\begin{equation}
     f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{x}) \leq f(\mathbf{z}) \tag{1.23}
 \end{equation}\]</span>
@@ -521,9 +522,41 @@ Now (<a href="index.html#eq:23">(1.23)</a> <span class="math inline">\(\times \a
 <span class="math display" id="eq:25">\[\begin{equation}
     \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{x}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}) - f(\mathbf{x}) \tag{1.25}
 \end{equation}\]</span>
-now <span class="math inline">\(L.H.S = 0\)</span> since <span class="math inline">\(\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0\)</span>. So we get, <span class="math inline">\(f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y})\)</span>. The converse relation is also satisfied, which completes our proof.
+now <span class="math inline">\(L.H.S = 0\)</span> since <span class="math inline">\(\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0\)</span>. So we get,
+<span class="math display">\[f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}).\]</span> The converse relation is also satisfied, which completes our proof.
 </div>
 
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-31" class="theorem"><strong>Theorem 1.3  </strong></span>If <span class="math inline">\(f(\mathbf{x})\)</span> is defined over an open convex set <span class="math inline">\(\mathbf{S} \subseteq \mathbb{R}^n\)</span> and if the Hessian matrix <span class="math inline">\(\mathbf{H}f(\mathbf{x})\)</span> is positive definite <span class="math inline">\(\forall\ \mathbf{x} \in \mathbf{S}\)</span>, then <span class="math inline">\(f(\mathbf{x})\)</span> is <em>strictly convex</em> over the set <span class="math inline">\(\mathbf{S}\)</span>.
+</div>
+
+
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> Let <span class="math inline">\(\mathbf{x}, \mathbf{y} \in \mathbf{S}\)</span>. Using Taylor expansion, the function <span class="math inline">\(f(\mathbf{y})\)</span> can be written as,
+<span class="math display" id="eq:26">\[\begin{align}
+f(\mathbf{y})&amp;=f(\mathbf{x} + (\mathbf{y} - \mathbf{x}))\\ 
+&amp;=f(\mathbf{x}) + \nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x}) + \frac{1}{2}(\mathbf{y}-\mathbf{x})^T\mathbf{H}f(\mathbf{x} + \alpha(\mathbf{y} - \mathbf{x}))(\mathbf{y} - \mathbf{x}) \tag{1.26}
+\end{align}\]</span>
+where <span class="math inline">\(\alpha \in [0,1]\)</span>. Now positive definite Hessian matrix implies that <span class="math inline">\(f(\mathbf{y}) &gt; f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x})\)</span>. Now from Theorem 1.2 it can be said that <span class="math inline">\(f(\mathbf{x})\)</span> is strictly convex, thus proving the theorem.
+</div>
+
+</div>
+<div id="numerical-optimization-algorithms" class="section level2">
+<h2><span class="header-section-number">1.13</span> Numerical Optimization Algorithms</h2>
+<p>Optimization Algorithms are iterative techniques that follow the following fundamental steps:</p>
+<ul>
+<li>Initialize with a guess of the decision variables <span class="math inline">\(\mathbf{x}\)</span>,</li>
+<li>Iterate through the process of generating a list of improving estimates,</li>
+<li>check whether the terminating conditions are met, and the estimates will be probably stop at the solution point <span class="math inline">\(\mathbf{x}^*\)</span>.</li>
+</ul>
+<p>The book by Nocedal and Wright [<em>Nocedal, Jorge, and Stephen Wright. Numerical optimization. Springer Science &amp; Business Media, 2006.</em>] states that most of the optimization strategies make use of either the objective function <span class="math inline">\(f(\mathbf{x})\)</span>, the constraint functions <span class="math inline">\(g(\mathbf{x})\)</span> and <span class="math inline">\(h(\mathbf{x})\)</span>, the first or second derivatives of these said functions, information collected during previous iterations and/or local information gathered at the present point. As Nocedal and Wright mentions, a good optimization algorithm should have the following fundamental properties:</p>
+<ul>
+<li><strong>Robustness</strong>: For all acceptable initial points chosen, the algorithm should operate well on a broad range of problems, in their particular class.</li>
+<li><strong>Efficiency</strong>: The time complexity and the space complexity of the algorithm should be practicable</li>
+<li><strong>Accuracy</strong>: The solution should be as precise as possible, with the caveat that it should not be too much delicate to errors in the data or to numerical rounding and/or truncating errors while it is being executed on a machine.</li>
+</ul>
+<p>There might be some trade offs allowed between speed and memory, between speed and robustness, etc.</p>
 
 </div>
 </div>

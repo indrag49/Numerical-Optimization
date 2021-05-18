@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-17" />
+<meta name="date" content="2021-05-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -76,8 +76,26 @@
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#feasible-region"><i class="fa fa-check"></i><b>1.4</b> Feasible Region</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#discrete-optimization-problems"><i class="fa fa-check"></i><b>1.5</b> Discrete Optimization Problems</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#linear-programming-problems"><i class="fa fa-check"></i><b>1.6</b> Linear Programming Problems</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#stochastic-optimization-problems"><i class="fa fa-check"></i><b>1.7</b> Stochastic Optimization Problems</a></li>
+<li class="chapter" data-level="1.8" data-path="index.html"><a href="index.html#scaling-of-decision-variables"><i class="fa fa-check"></i><b>1.8</b> Scaling of Decision Variables</a></li>
+<li class="chapter" data-level="1.9" data-path="index.html"><a href="index.html#gradient-vector-and-hessian-matrix-of-the-objective-function"><i class="fa fa-check"></i><b>1.9</b> Gradient Vector and Hessian Matrix of the Objective Function</a></li>
+<li class="chapter" data-level="1.10" data-path="index.html"><a href="index.html#directional-derivative-of-the-objective-function"><i class="fa fa-check"></i><b>1.10</b> Directional Derivative of the Objective Function</a></li>
+<li class="chapter" data-level="1.11" data-path="index.html"><a href="index.html#positive-definite-and-positive-semi-definite-matrices"><i class="fa fa-check"></i><b>1.11</b> Positive Definite and Positive Semi-definite Matrices</a></li>
+<li class="chapter" data-level="1.12" data-path="index.html"><a href="index.html#what-is-convexity"><i class="fa fa-check"></i><b>1.12</b> What is Convexity?</a></li>
+<li class="chapter" data-level="1.13" data-path="index.html"><a href="index.html#numerical-optimization-algorithms"><i class="fa fa-check"></i><b>1.13</b> Numerical Optimization Algorithms</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a></li>
+<li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#the-unconstrained-optimization-problem"><i class="fa fa-check"></i><b>2.1</b> The Unconstrained Optimization Problem</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#smooth-functions"><i class="fa fa-check"></i><b>2.2</b> Smooth Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#taylors-theorem"><i class="fa fa-check"></i><b>2.3</b> Taylor’s Theorem</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -99,7 +117,84 @@
             <section class="normal" id="section-">
 <div id="introduction-to-unconstrained-optimization" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Introduction to Unconstrained Optimization</h1>
+<p>This chapter introduces what exactly an unconstrained optimization problem is. A detailed discussion of Taylor’s Theorem is provided and has been use to study the first order and second order necessary and sufficient conditions for local minimizer in an unconstrained optimization tasks. Examples have been supplied too in view of understanding the necessary and sufficient conditions better. The Python package <code>scipy.optimize</code>, which will form an integral part in solving many optimization problems in the later chapters of this book, is introduced too. The chapter ends with an overview of how an algorithm to solve unconstrained minimization problem works, covering briefly two procedures: <strong>line search descent method</strong> and <strong>trust region method</strong>.</p>
+<hr />
+<div id="the-unconstrained-optimization-problem" class="section level2">
+<h2><span class="header-section-number">2.1</span> The Unconstrained Optimization Problem</h2>
+<p>As we have discussed in the first chapter, an unconstrained optimization problem deals with finding the local minimizer <span class="math inline">\(\mathbf{x}^*\)</span> of a real valued and smooth objective function <span class="math inline">\(f(\mathbf{x})\)</span> of <span class="math inline">\(n\)</span> variables, given by <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, formulated as,</p>
+<p><span class="math display" id="eq:1">\[\begin{equation}
+    \underset{\mathbf{x} \in \mathbb{R}^n}{\min f(\mathbf{x})} \tag{2.1}
+\end{equation}\]</span>
+with no restrictions on the decision variables <span class="math inline">\(\mathbf{x}\)</span>. We work towards computing <span class="math inline">\(\mathbf{x}^*\)</span>, such that <span class="math inline">\(\forall\ \mathbf{x}\)</span> near <span class="math inline">\(\mathbf{x}^*\)</span>, the following inequality is satisfied:
+<span class="math display" id="eq:2">\[\begin{equation}
+    f(\mathbf{x}^*) \leq f(\mathbf{x}) \tag{2.2}
+\end{equation}\]</span></p>
+</div>
+<div id="smooth-functions" class="section level2">
+<h2><span class="header-section-number">2.2</span> Smooth Functions</h2>
+<p>In terms of analysis, the measure of the number of continuous derivative a function has, characterizes the <em>smoothness</em> of a function.</p>
 
+<div class="definition">
+<span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  </strong></span>A function <span class="math inline">\(f\)</span> is <em>smooth</em> if it can be differentiated everywhere, i.e, the function has continuous derivatives up to some desired order over particular domain [Weisstein, Eric W. “Smooth Function.” <a href="https://mathworld.wolfram.com/SmoothFunction.html" class="uri">https://mathworld.wolfram.com/SmoothFunction.html</a>].
+</div>
+
+<p>Some examples of smooth functions are , <span class="math inline">\(f(x) = x\)</span>, <span class="math inline">\(f(x)=e^x\)</span>, <span class="math inline">\(f(x)=\sin(x)\)</span>, etc. To study the local minima <span class="math inline">\(\mathbf{x}^*\)</span> of a smooth objective function <span class="math inline">\(f(\mathbf{x})\)</span>, we emphasize on <em>Taylor’s theorem for a multivariate function</em>, thus focusing on the computations of the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> and the Hessian matrix <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span>.</p>
+</div>
+<div id="taylors-theorem" class="section level2">
+<h2><span class="header-section-number">2.3</span> Taylor’s Theorem</h2>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-2" class="theorem"><strong>Theorem 2.1  </strong></span>For a smooth function of a single variable given by <span class="math inline">\(f: \mathbb{R} \rightarrow \mathbb{R}\)</span>, <span class="math inline">\(m(\geq 1)\)</span> times differentiable at the point <span class="math inline">\(p \in \mathbb{R}\)</span>, there exists a function <span class="math inline">\(j_m: \mathbb{R} \rightarrow \mathbb{R}\)</span>, such that the following equations are satisfied:
+<span class="math display" id="eq:3">\[\begin{align}
+    f(x) &amp;= f(p) + (x - p)f^{&#39;}(p) + \frac{(x-p)^2}{2!}f^{&#39;&#39;}(p) + \ldots \\ &amp;+ \frac{(x-p)^m}{m!}f^m(p) + (x-p)^m j_m(x) \tag{2.3}
+\end{align}\]</span>
+and
+<span class="math display" id="eq:4">\[\begin{equation}
+    \lim_{x \to p}j_m(x)=0 \tag{2.4}
+\end{equation}\]</span>
+</div>
+
+<p>The <span class="math inline">\(m-\)</span>th order Taylor polynomial of the function <span class="math inline">\(f\)</span> around the point <span class="math inline">\(p\)</span> is given by:
+<span class="math display" id="eq:5">\[\begin{align}
+    P_m(x)&amp;=f(p) + (x - p)f^{&#39;}(p) + \frac{(x-p)^2}{2!}f^{&#39;&#39;}(p) + \ldots \\ &amp;+ \frac{(x-p)^m}{m!}f^m(p) \tag{2.5}
+\end{align}\]</span></p>
+<p>Now let <span class="math inline">\(f\)</span> be a smooth, continuously differentiable function that takes in multiple variables, i.e, <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> and <span class="math inline">\(\mathbf{x}, \mathbf{p}, \mathbf{\delta} \in \mathbb{R}^n\)</span>, where <span class="math inline">\(\mathbf{\delta}\)</span> is the direction in which the line <span class="math inline">\(\mathbf{x} = \mathbf{p}+\alpha \mathbf{\delta}\)</span> passes through the point <span class="math inline">\(\mathbf{p}\)</span> [<em>Snyman, Jan A. Practical mathematical optimization. Springer Science+ Business Media, Incorporated, 2005.</em>]. Here, <span class="math inline">\(\alpha \in [0,1]\)</span>. We have,
+<span class="math display" id="eq:6">\[\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p} + \alpha \mathbf{\delta}) \tag{2.6}
+\end{equation}\]</span></p>
+<p>From the definition of the <em>directional derivative</em>, we get,
+<span class="math display" id="eq:7">\[\begin{equation}
+    \frac{df(\mathbf{x})}{d\alpha}|\mathbf{\delta} = \nabla^T f(\mathbf{x})\mathbf{\delta}=\hat{f}(\mathbf{x}) \tag{2.7}
+\end{equation}\]</span>
+Again, differentiating <span class="math inline">\(\hat{f}(\mathbf{x})\)</span> with respect to <span class="math inline">\(\alpha\)</span>.</p>
+<p><span class="math display" id="eq:8">\[\begin{equation}
+    \frac{d \hat{f}(\mathbf{x})}{d \alpha}|\mathbf{\delta} = \frac{d^2 f(\mathbf{x})}{d \alpha^2}=\nabla^T\hat{f}(\mathbf{x})\mathbf{\delta}=\mathbf{\delta}^T\mathbf{H}f(\mathbf{x})\mathbf{\delta} \tag{2.8}
+\end{equation}\]</span></p>
+<p>So, using equations <a href="introduction-to-unconstrained-optimization.html#eq:5">(2.5)</a> and <a href="introduction-to-unconstrained-optimization.html#eq:6">(2.6)</a> we can generate the Taylor expansion for a multivariable function at a point <span class="math inline">\(\mathbf{p}\)</span>. So, around <span class="math inline">\(\alpha = 0\)</span>, we get,
+<span class="math display" id="eq:9">\[\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p}+\alpha \mathbf{\delta}) = f(\mathbf{p}) + \nabla^Tf(\mathbf{p})\alpha \mathbf{\delta} + \frac{1}{2}\alpha \mathbf{\delta}^T\mathbf{H} f(\mathbf{p})\alpha \mathbf{\delta} + \ldots \tag{2.9}
+\end{equation}\]</span></p>
+<p>The truncated Taylor expansion of the multivariable function, where the higher order terms are ignored, can be written as,
+<span class="math display" id="eq:10">\[\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p}+\alpha \mathbf{\delta}) = f(\mathbf{p}) + \nabla^Tf(\mathbf{p})\alpha \mathbf{\delta} + \frac{1}{2}\alpha \mathbf{\delta}^T\mathbf{H} f(\mathbf{p}+\beta\mathbf{\delta})\alpha \mathbf{\delta} \tag{2.10} 
+\end{equation}\]</span>
+where, <span class="math inline">\(\beta \in [0,1]\)</span>.</p>
+</div>
+<div id="necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization" class="section level2">
+<h2><span class="header-section-number">2.4</span> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</h2>
+<div id="first-order-necessary-condition" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> First-Order Necessary Condition</h3>
+<p>If there exists a local minimizer <span class="math inline">\(\mathbf{x}^*\)</span> for a real-valued smooth function <span class="math inline">\(f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, in an open neighborhood <span class="math inline">\(\subset \mathbb{R}^n\)</span> of <span class="math inline">\(\mathbf{x}^*\)</span> along the direction <span class="math inline">\(\mathbf{\delta}\)</span>, then the <em>first order necessary condition</em> for the minimizer is given by:
+<span class="math display" id="eq:11">\[\begin{equation}
+    \nabla^Tf(\mathbf{x}^*)\mathbf{\delta}=0\ \forall\ \mathbf{\delta} \neq 0 \tag{2.11}
+\end{equation}\]</span>
+i.e, the  is <span class="math inline">\(0\)</span>, which ultimately reduces to the equation:
+<span class="math display" id="eq:12">\[\begin{equation}
+    \nabla f(\mathbf{x}^*)=0 \tag{2.12}
+\end{equation}\]</span></p>
+
+</div>
+</div>
 </div>
             </section>
 
@@ -158,6 +253,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

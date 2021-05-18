@@ -1,2 +1,84 @@
 # Introduction to Unconstrained Optimization
 
+This chapter introduces what exactly an unconstrained optimization problem is. A detailed discussion of Taylor's Theorem is provided and has been use to study the first order and second order necessary and sufficient conditions for local minimizer in an unconstrained optimization tasks. Examples have been supplied too in view of understanding the necessary and sufficient conditions better. The Python package `scipy.optimize`, which will form an integral part in solving many optimization problems in the later chapters of this book, is introduced too. The chapter ends with an overview of how an algorithm to solve unconstrained minimization problem works, covering briefly two procedures: **line search descent method** and **trust region method**.
+
+---
+
+## The Unconstrained Optimization Problem
+
+As we have discussed in the first chapter, an unconstrained optimization problem deals with finding the local minimizer $\mathbf{x}^*$ of a real valued and smooth objective function $f(\mathbf{x})$ of $n$ variables, given by $f: \mathbb{R}^n \rightarrow \mathbb{R}$, formulated as,
+
+\begin{equation}
+    \underset{\mathbf{x} \in \mathbb{R}^n}{\min f(\mathbf{x})} (\#eq:1)
+\end{equation}
+with no restrictions on the decision variables $\mathbf{x}$. We work towards computing $\mathbf{x}^*$, such that $\forall\ \mathbf{x}$ near $\mathbf{x}^*$, the following inequality is satisfied:
+\begin{equation}
+    f(\mathbf{x}^*) \leq f(\mathbf{x}) (\#eq:2)
+\end{equation}
+
+## Smooth Functions
+
+In terms of analysis, the measure of the number of continuous derivative a function has, characterizes the *smoothness* of a function.
+
+```{definition}
+A function $f$ is *smooth* if it can be differentiated everywhere, i.e, the function has continuous derivatives up to some desired order over particular domain [Weisstein, Eric W. "Smooth Function." https://mathworld.wolfram.com/SmoothFunction.html].
+```
+
+Some examples of smooth functions are , $f(x) = x$, $f(x)=e^x$, $f(x)=\sin(x)$, etc. To study the local minima $\mathbf{x}^*$ of a smooth objective function $f(\mathbf{x})$, we emphasize on *Taylor's theorem for a multivariate function*, thus  focusing on the computations of the gradient vector $\nabla f(\mathbf{x})$ and the Hessian matrix $\mathbf{H} f(\mathbf{x})$.
+
+## Taylor's Theorem
+
+```{theorem}
+For a smooth function of a single variable given by $f: \mathbb{R} \rightarrow \mathbb{R}$, $m(\geq 1)$ times differentiable at the point $p \in \mathbb{R}$, there exists a function $j_m: \mathbb{R} \rightarrow \mathbb{R}$, such that the following equations are satisfied:
+\begin{align}
+    f(x) &= f(p) + (x - p)f^{'}(p) + \frac{(x-p)^2}{2!}f^{''}(p) + \ldots \\ &+ \frac{(x-p)^m}{m!}f^m(p) + (x-p)^m j_m(x) (\#eq:3)
+\end{align}
+and 
+\begin{equation}
+    \lim_{x \to p}j_m(x)=0 (\#eq:4)
+\end{equation}
+```
+
+The $m-$th order Taylor polynomial of the function $f$ around the point $p$ is given by:
+\begin{align}
+    P_m(x)&=f(p) + (x - p)f^{'}(p) + \frac{(x-p)^2}{2!}f^{''}(p) + \ldots \\ &+ \frac{(x-p)^m}{m!}f^m(p) (\#eq:5)
+\end{align}
+
+Now let $f$ be a smooth, continuously differentiable function that takes in multiple variables, i.e, $f: \mathbb{R}^n \rightarrow \mathbb{R}$ and $\mathbf{x}, \mathbf{p}, \mathbf{\delta} \in \mathbb{R}^n$, where $\mathbf{\delta}$ is the direction in which the line $\mathbf{x} = \mathbf{p}+\alpha \mathbf{\delta}$ passes through the point $\mathbf{p}$ [*Snyman, Jan A. Practical mathematical optimization. Springer Science+ Business Media, Incorporated, 2005.*]. Here, $\alpha \in [0,1]$. We have,
+\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p} + \alpha \mathbf{\delta}) (\#eq:6)
+\end{equation}
+
+From the definition of the *directional derivative*, we get,
+\begin{equation}
+    \frac{df(\mathbf{x})}{d\alpha}|\mathbf{\delta} = \nabla^T f(\mathbf{x})\mathbf{\delta}=\hat{f}(\mathbf{x}) (\#eq:7)
+\end{equation}
+Again, differentiating $\hat{f}(\mathbf{x})$ with respect to $\alpha$.
+
+\begin{equation}
+    \frac{d \hat{f}(\mathbf{x})}{d \alpha}|\mathbf{\delta} = \frac{d^2 f(\mathbf{x})}{d \alpha^2}=\nabla^T\hat{f}(\mathbf{x})\mathbf{\delta}=\mathbf{\delta}^T\mathbf{H}f(\mathbf{x})\mathbf{\delta} (\#eq:8)
+\end{equation}
+
+So, using equations \@ref(eq:5) and \@ref(eq:6) we can generate the Taylor expansion for a multivariable function at a point $\mathbf{p}$. So, around $\alpha = 0$, we get,
+\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p}+\alpha \mathbf{\delta}) = f(\mathbf{p}) + \nabla^Tf(\mathbf{p})\alpha \mathbf{\delta} + \frac{1}{2}\alpha \mathbf{\delta}^T\mathbf{H} f(\mathbf{p})\alpha \mathbf{\delta} + \ldots (\#eq:9)
+\end{equation}
+
+The truncated Taylor expansion of the multivariable function, where the higher order terms are ignored, can be written as,
+\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{p}+\alpha \mathbf{\delta}) = f(\mathbf{p}) + \nabla^Tf(\mathbf{p})\alpha \mathbf{\delta} + \frac{1}{2}\alpha \mathbf{\delta}^T\mathbf{H} f(\mathbf{p}+\beta\mathbf{\delta})\alpha \mathbf{\delta} (\#eq:10) 
+\end{equation}
+where, $\beta \in [0,1]$.
+
+## Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization
+
+### First-Order Necessary Condition
+
+If there exists a local minimizer $\mathbf{x}^*$ for a real-valued smooth function $f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}$, in an open neighborhood $\subset \mathbb{R}^n$ of $\mathbf{x}^*$ along the direction $\mathbf{\delta}$, then the *first order necessary condition* for the minimizer is given by:
+\begin{equation}
+    \nabla^Tf(\mathbf{x}^*)\mathbf{\delta}=0\ \forall\ \mathbf{\delta} \neq 0 (\#eq:11)
+\end{equation}
+i.e, the \textit{directional derivative} is $0$, which ultimately reduces to the equation:
+\begin{equation}
+    \nabla f(\mathbf{x}^*)=0 (\#eq:12)
+\end{equation}

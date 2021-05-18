@@ -63,3 +63,12 @@ eq:22
 eq:23
 eq:24
 eq:25
+thm:unnamed-chunk-31
+eq:26
+numerical-optimization-algorithms
+the-unconstrained-optimization-problem
+smooth-functions
+thm:unnamed-chunk-2
+taylors-theorem
+necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization
+first-order-necessary-condition

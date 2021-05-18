@@ -266,7 +266,7 @@ where $\langle .,. \rangle$ denotes the dot product between two matrices and/or 
 Now,let us look into a simple example:
 
 ```{example}
-Let an objective function be $f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1$. We will find out the gradient vector $\nabla f(\mathbf{x})$ at the point $\mathbf{p} = \begin{pmatrix} 1 & 2 & 3 \end{pmatrix}$ and then calculate the directional derivative in the direction $\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} & \frac{3}{\sqrt{35}} & \frac{5}{\sqrt{35}} \end{pmatrix}$. We will use the same \texttt{autograd} package to calculate the same using Python.
+Let an objective function be $f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1$. We will find out the gradient vector $\nabla f(\mathbf{x})$ at the point $\mathbf{p} = \begin{pmatrix} 1 & 2 & 3 \end{pmatrix}$ and then calculate the directional derivative in the direction $\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} & \frac{3}{\sqrt{35}} & \frac{5}{\sqrt{35}} \end{pmatrix}$. We will use the same `autograd` package to calculate the same using Python.
 ```
 
 ```{python}
@@ -316,6 +316,7 @@ Now multiplying the equation with $\mathbf{v}^T$ on the left, we get the followi
 Now the $L.H.S$ is positive as $\mathbf{M}$ is positive definite and $\|bm{v}\|^2$ is positive too. This implies that the eigenvalue $\lambda$ is positive.
 ```
 
+
 The above proof can be extended to positive semi-definite matrix too in which case the eigenvalues are non-negative, i.e, either 0 or positive and we will exploit these properties in our python script to check for positive definiteness or positive semi-definiteness of a given matrix. 
 
 ```{example}
@@ -347,7 +348,7 @@ Running the script for the first matrix tells us that it is positive definite. T
 ## What is Convexity?
 
 ```{definition}
-A set $\mathbf{X} \subset \mathbb{R}^n$ is said to be a *convex set* if $\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X} \text{ and } \alpha \in [0, 1]$, the following is satisfied:
+A set $\mathbf{X} \subset \mathbb{R}^n$ is said to be a *convex set* if $\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X}$ and $\alpha \in [0, 1]$, the following is satisfied:
 \begin{equation}
     (1-\alpha)\mathbf{x} + \alpha \mathbf{y} \in \mathbf{X} (\#eq:16)
 \end{equation}
@@ -397,11 +398,11 @@ Now, the difference inequality can be turned into a differential inequality by t
 \begin{equation}
     \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} \leq f(\mathbf{z}) - f(\mathbf{y}) (\#eq:21)
 \end{equation}
-The $L.H.S$ is the \textit{directional derivative} and thus from \@ref(eq:11) this can be written as:
+The $L.H.S$ is the *directional derivative* and thus from \@ref(eq:11) this can be written as:
 \begin{equation}
     \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} = \nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{y}) (\#eq:22)
 \end{equation}
-Now from \@ref(eq:17) and \@ref(eq:18), the following inequality can be written: $f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})$. Now, to work on the other way round, if \@ref(eq:14) is true, then for $\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S} \text{ and } \alpha \in [0,1]$, we will have the following inequalities:
+Now from \@ref(eq:17) and \@ref(eq:18), the following inequality can be written: $f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})$. Now, to work on the other way round, if \@ref(eq:14) is true, then for $\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S}$ and $\alpha \in [0,1]$, we will have the following inequalities:
 \begin{equation}
     f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{x}) \leq f(\mathbf{z}) (\#eq:23)
 \end{equation}
@@ -413,5 +414,37 @@ Now (\@ref(eq:23) $\times \alpha) +$ \@ref(eq:24)$\times (1-\alpha)) \implies$
 \begin{equation}
     \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{x}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}) - f(\mathbf{x}) (\#eq:25)
 \end{equation}
-now $L.H.S = 0$ since $\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0$. So we get, $f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y})$. The converse relation is also satisfied, which completes our proof.
+now $L.H.S = 0$ since $\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0$. So we get,
+$$f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}).$$ The converse relation is also satisfied, which completes our proof.
 ```
+
+
+```{theorem}
+If $f(\mathbf{x})$ is defined over an open convex set $\mathbf{S} \subseteq \mathbb{R}^n$ and if the Hessian matrix $\mathbf{H}f(\mathbf{x})$ is positive definite $\forall\ \mathbf{x} \in \mathbf{S}$, then $f(\mathbf{x})$ is *strictly convex* over the set $\mathbf{S}$.
+```
+
+```{proof}
+Let $\mathbf{x}, \mathbf{y} \in \mathbf{S}$. Using Taylor expansion, the function $f(\mathbf{y})$ can be written as, 
+\begin{align}
+f(\mathbf{y})&=f(\mathbf{x} + (\mathbf{y} - \mathbf{x}))\\ 
+&=f(\mathbf{x}) + \nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x}) + \frac{1}{2}(\mathbf{y}-\mathbf{x})^T\mathbf{H}f(\mathbf{x} + \alpha(\mathbf{y} - \mathbf{x}))(\mathbf{y} - \mathbf{x}) (\#eq:26)
+\end{align}
+where $\alpha \in [0,1]$. Now positive definite Hessian matrix implies that $f(\mathbf{y}) > f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x})$. Now from Theorem 1.2 it can be said that $f(\mathbf{x})$ is strictly convex, thus proving the theorem.
+```
+
+
+## Numerical Optimization Algorithms
+
+Optimization Algorithms are iterative techniques that follow the following fundamental steps:
+
+* Initialize with a guess of the decision variables $\mathbf{x}$,
+* Iterate through the process of generating a list of improving estimates, 
+* check whether the terminating conditions are met, and the estimates will be probably stop at the solution point $\mathbf{x}^*$.
+
+The book by Nocedal and Wright [*Nocedal, Jorge, and Stephen Wright. Numerical optimization. Springer Science & Business Media, 2006.*] states that most of the optimization strategies make use of either the objective function $f(\mathbf{x})$, the constraint functions $g(\mathbf{x})$ and $h(\mathbf{x})$, the first or second derivatives of these said functions, information collected during previous iterations and/or local information gathered at the present point. As Nocedal and Wright mentions, a good optimization algorithm should have the following fundamental properties:
+
+* **Robustness**: For all acceptable initial points chosen, the algorithm should operate well on a broad range of problems, in their particular class.
+* **Efficiency**: The time complexity and the space complexity of the algorithm should be practicable
+* **Accuracy**: The solution should be as precise as possible, with the caveat that it should not be too much delicate to errors in the data or to numerical rounding and/or truncating errors while it is being executed on a machine.
+
+There might be some trade offs allowed between speed and memory, between speed and robustness, etc.
