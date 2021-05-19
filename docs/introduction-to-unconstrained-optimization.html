@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-18" />
+<meta name="date" content="2021-05-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,70 @@
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -94,6 +158,7 @@
 <li class="chapter" data-level="2.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#taylors-theorem"><i class="fa fa-check"></i><b>2.3</b> Taylor’s Theorem</a></li>
 <li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-necessary-conditions"><i class="fa fa-check"></i><b>2.4.2</b> Second-Order Necessary Conditions</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -188,9 +253,87 @@ where, <span class="math inline">\(\beta \in [0,1]\)</span>.</p>
 <span class="math display" id="eq:11">\[\begin{equation}
     \nabla^Tf(\mathbf{x}^*)\mathbf{\delta}=0\ \forall\ \mathbf{\delta} \neq 0 \tag{2.11}
 \end{equation}\]</span>
-i.e, the  is <span class="math inline">\(0\)</span>, which ultimately reduces to the equation:
+i.e, the <em>directional derivative</em> is <span class="math inline">\(0\)</span>, which ultimately reduces to the equation:
 <span class="math display" id="eq:12">\[\begin{equation}
     \nabla f(\mathbf{x}^*)=0 \tag{2.12}
+\end{equation}\]</span></p>
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> Let a real-valued smooth function <span class="math inline">\(f(\mathbf{x})\)</span> be differentiable at the point <span class="math inline">\(\mathbf{x}^* \in \mathbb{R}^n\)</span>. Using the <em>Taylor expansion</em>, we can write:</p>
+<p><span class="math display" id="eq:13">\[\begin{equation}
+    f(\mathbf{x})=f(\mathbf{x}^*) + \nabla^T f(\mathbf{x}^*) (\mathbf{x} - \mathbf{x}^*)+\sum_{|\gamma|\leq m}\frac{\mathfrak{D}^{\gamma}f(\mathbf{x}^*)}{\gamma!}(\mathbf{x}-\mathbf{x}^*)^{\gamma} + \sum_{|\gamma|=m}j_{\gamma}(\mathbf{x})(\mathbf{x} - \mathbf{x}^*)^{\gamma} \tag{2.13}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathfrak{D}\)</span> represents the differential and <span class="math inline">\(m\)</span> is the smoothness of the objective function <span class="math inline">\(f\)</span>. Also <span class="math inline">\(\lim_{\mathbf{x} \to \mathbf{x}^*}j_{\gamma(\mathbf{X})}=0\)</span>. Clubbing together the higher order terms, we can write Eq.<a href="introduction-to-unconstrained-optimization.html#eq:13">(2.13)</a> as,
+<span class="math display" id="eq:14">\[\begin{equation}
+    \label{eq:2.14}
+    f(\mathbf{x})=f(\mathbf{x}^*) + \nabla^T f(\mathbf{x}^*) (\mathbf{x} - \mathbf{x}^*)+ \mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|) \tag{2.14}
+\end{equation}\]</span></p>
+<p>In this case,
+<span class="math display" id="eq:15">\[\begin{equation}
+\lim_{\mathbf{x} \to \mathbf{x}^*}\frac{\mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|)}{\|\mathbf{x} - \mathbf{x}^*\|}=0 \tag{2.15}
+\end{equation}\]</span>
+Let us consider, <span class="math inline">\(\mathbf{x} = \mathbf{x}^*-\beta \nabla f(\mathbf{x}^*)\)</span>, where <span class="math inline">\(\beta \in [0,1]\)</span>. From Eq.<a href="introduction-to-unconstrained-optimization.html#eq:14">(2.14)</a> we can write,
+<span class="math display" id="eq:16">\[\begin{equation}
+    f(\mathbf{x}^*-\beta \nabla f(\mathbf{x}^*))=f(\mathbf{x}^*)-\beta\|\nabla f(\mathbf{x}^*)\|^2+\mathcal{O}(\beta\|\nabla f(\mathbf{x}^*)\|) \tag{2.16}
+\end{equation}\]</span></p>
+<p>Now, dividing Eq.<a href="introduction-to-unconstrained-optimization.html#eq:16">(2.16)</a>-<span class="math inline">\(f(\mathbf{x}^*)\)</span> by <span class="math inline">\(\beta\)</span>, we get,</p>
+<p><span class="math display" id="eq:17">\[\begin{equation}
+    \frac{f(\mathbf{x}^*-\beta \nabla f(\mathbf{x}^*))-f(\mathbf{x}^*)}{\beta} = -\|\nabla f(\mathbf{x}^*)\|^2 + \frac{\mathcal{O}(\beta \|\nabla f(\mathbf{x}^*)\|)}{\beta} \geq 0 \tag{2.17}
+\end{equation}\]</span></p>
+<p>Now, considering the limit <span class="math inline">\(\beta \to 0^{+}\)</span>, we get,
+<span class="math display" id="eq:18">\[\begin{equation}
+    -\|\nabla f(\mathbf{x}^*)\|^2 \leq 0 \tag{2.18}
+\end{equation}\]</span></p>
+Combining which along with Eq.<a href="introduction-to-unconstrained-optimization.html#eq:18">(2.18)</a>, we get,
+<span class="math display" id="eq:19">\[\begin{equation}
+    0 \leq -\|\nabla f(\mathbf{x}^*)\|^2 \leq 0\tag{2.19}
+\end{equation}\]</span>
+This ultimately gives <span class="math inline">\(\nabla f(\mathbf{x}^*)=0\)</span>, proving the first-order necessary condition.
+</div>
+
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-4" class="example"><strong>Example 2.1  </strong></span>The <strong>Rosenbrock function</strong> of <span class="math inline">\(n\)</span>-variables is given by:
+<span class="math display" id="eq:20">\[\begin{equation}
+    f(\mathbf{x}) = \sum_{i=1}^{n-1}(100(x_{i+1}-x_i^2)^2 + (1-x_i)^2) \tag{2.20}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>. For this example let us consider the <em>Rosenbrock function</em> for two variables, given by:
+<span class="math display" id="eq:21">\[\begin{equation}
+    f(\mathbf{x}) = 100(x_2-x_1^2)^2+(1-x_1)^2 \tag{2.21}
+\end{equation}\]</span></p>
+<p>We will show that the first order necessary condition is satisfied for the local minimizer <span class="math inline">\(\mathbf{x^*}=\begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</span>. We first check whether <span class="math inline">\(\mathbf{x}^*\)</span> is a minimizer or not. Putting <span class="math inline">\(x_1=x_2=1\)</span> in <span class="math inline">\(f(\mathbf{x})\)</span>, we get <span class="math inline">\(f(\mathbf{x})=0\)</span>. Now, we check whether the <span class="math inline">\(\mathbf{x^*}\)</span> satisfies the first order necessary condition. For that we calculate <span class="math inline">\(\nabla f(\mathbf{x}^*)\)</span>.
+<span class="math display" id="eq:22">\[\begin{equation}
+    \nabla f(\mathbf{x}^*) = \begin{bmatrix} -400x_1(x_2-x_1)^2-2(1-x_1) \\ 200(x_2-x_1^2)\end{bmatrix}_{\mathbf{x}^*} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \tag{2.22}
+\end{equation}\]</span></p>
+<p>So, we see that the first order necessary condition is satisfied. We can do similar analysis using the <code>scipy.optimize</code> package in Python. The Scipy official reference states that the <code>scipy.optimize</code> package provides the user with many commonly used optimization algorithms and test functions. It packages the following functionalities and aspects:</p>
+<ul>
+<li>Minimization of multivariate scalar objective functions covering both the unconstrained and constrained domains, using a range of optimization algorithms,</li>
+<li>Algorithms for minimization of scalar univariate functions,</li>
+<li>A variety of brute-force optimization algorithms, also called global optimization algorithms,</li>
+<li>Algorithms like minimization of least-squares and curve-fitting,</li>
+<li>Root finding algorithms, and</li>
+<li>Algorithms for solving multivariate equation systems.</li>
+</ul>
+We will build upon the basic concepts of optimization using this package and cover most of the concepts one by one as we advance in the book. Note that, this is not the only package that we are going to use throughout the book. As we advance, we will be required to look into other Python resources according to our needs. But to keep in mind, <code>scipy.optimize</code> is the most important package that we will be using. Now, going back to the example, <code>scipy.optimize</code> already provides with the  test function, its gradient and its Hessian. We will import them first and check whether the given point <span class="math inline">\(\mathbf{x}^*\)</span> is a minimizer or not:
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="introduction-to-unconstrained-optimization.html#cb1-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="introduction-to-unconstrained-optimization.html#cb1-2"></a><span class="im">import</span> scipy</span>
+<span id="cb1-3"><a href="introduction-to-unconstrained-optimization.html#cb1-3"></a><span class="co"># Import the Rosenbrock function, its gradient and Hessian respectively</span></span>
+<span id="cb1-4"><a href="introduction-to-unconstrained-optimization.html#cb1-4"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> rosen, rosen_der, rosen_hess</span>
+<span id="cb1-5"><a href="introduction-to-unconstrained-optimization.html#cb1-5"></a>x_m <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">1</span>]) <span class="co">#given local minimizer</span></span>
+<span id="cb1-6"><a href="introduction-to-unconstrained-optimization.html#cb1-6"></a>rosen(x_m) <span class="co"># check whether x_m is a minimizer</span></span></code></pre></div>
+<pre><code>## 0.0</code></pre>
+<p>the result is <span class="math inline">\(0.0\)</span>. So <span class="math inline">\(\mathbf{x}^*\)</span> is a minimizer. We then check for the first order necessary condition, using the gradient:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="introduction-to-unconstrained-optimization.html#cb3-1"></a>rosen_der(x_m) <span class="co"># calculates the gradient at the point x_m</span></span></code></pre></div>
+<pre><code>## array([0, 0])</code></pre>
+<p>This matches with our calculations and also satisfies the first-order necessary condition.</p>
+</div>
+<div id="second-order-necessary-conditions" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Second-Order Necessary Conditions</h3>
+<p>If there exists a local minimizer <span class="math inline">\(\mathbf{x}^*\)</span> for a real-valued smooth function <span class="math inline">\(f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, in an open neighborhood <span class="math inline">\(\subset \mathbb{R}^n\)</span> of <span class="math inline">\(\mathbf{x}^*\)</span> along the feasible direction <span class="math inline">\(\mathbf{\delta}\)</span>, and <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span> exists and is continuous in the open neighborhood, then the second order necessary conditions for the minimizer are given by:
+<span class="math display" id="eq:23">\[\begin{equation}
+    \nabla^T f(\mathbf{x}^*)\mathbf{\delta} = 0, \forall\ \mathbf{\delta} \neq 0 \tag{2.23}
 \end{equation}\]</span></p>
 
 </div>

@@ -78,7 +78,99 @@ If there exists a local minimizer $\mathbf{x}^*$ for a real-valued smooth functi
 \begin{equation}
     \nabla^Tf(\mathbf{x}^*)\mathbf{\delta}=0\ \forall\ \mathbf{\delta} \neq 0 (\#eq:11)
 \end{equation}
-i.e, the \textit{directional derivative} is $0$, which ultimately reduces to the equation:
+i.e, the *directional derivative* is $0$, which ultimately reduces to the equation:
 \begin{equation}
     \nabla f(\mathbf{x}^*)=0 (\#eq:12)
+\end{equation}
+
+```{proof}
+Let a real-valued smooth function $f(\mathbf{x})$ be differentiable at the point $\mathbf{x}^* \in \mathbb{R}^n$. Using the *Taylor expansion*, we can write:
+
+\begin{equation}
+    f(\mathbf{x})=f(\mathbf{x}^*) + \nabla^T f(\mathbf{x}^*) (\mathbf{x} - \mathbf{x}^*)+\sum_{|\gamma|\leq m}\frac{\mathfrak{D}^{\gamma}f(\mathbf{x}^*)}{\gamma!}(\mathbf{x}-\mathbf{x}^*)^{\gamma} + \sum_{|\gamma|=m}j_{\gamma}(\mathbf{x})(\mathbf{x} - \mathbf{x}^*)^{\gamma} (\#eq:13)
+\end{equation}
+
+where $\mathfrak{D}$ represents the differential and $m$ is the smoothness of the objective function $f$. Also $\lim_{\mathbf{x} \to \mathbf{x}^*}j_{\gamma(\mathbf{X})}=0$. Clubbing together the higher order terms, we can write Eq.\@ref(eq:13) as,
+\begin{equation}
+    \label{eq:2.14}
+    f(\mathbf{x})=f(\mathbf{x}^*) + \nabla^T f(\mathbf{x}^*) (\mathbf{x} - \mathbf{x}^*)+ \mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|) (\#eq:14)
+\end{equation}
+
+In this case,
+\begin{equation}
+\lim_{\mathbf{x} \to \mathbf{x}^*}\frac{\mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|)}{\|\mathbf{x} - \mathbf{x}^*\|}=0 (\#eq:15)
+\end{equation}
+Let us consider, $\mathbf{x} = \mathbf{x}^*-\beta \nabla f(\mathbf{x}^*)$, where $\beta \in [0,1]$. From Eq.\@ref(eq:14) we can write,
+\begin{equation}
+    f(\mathbf{x}^*-\beta \nabla f(\mathbf{x}^*))=f(\mathbf{x}^*)-\beta\|\nabla f(\mathbf{x}^*)\|^2+\mathcal{O}(\beta\|\nabla f(\mathbf{x}^*)\|) (\#eq:16)
+\end{equation}
+
+Now, dividing Eq.\@ref(eq:16)-$f(\mathbf{x}^*)$ by $\beta$, we get,
+
+\begin{equation}
+    \frac{f(\mathbf{x}^*-\beta \nabla f(\mathbf{x}^*))-f(\mathbf{x}^*)}{\beta} = -\|\nabla f(\mathbf{x}^*)\|^2 + \frac{\mathcal{O}(\beta \|\nabla f(\mathbf{x}^*)\|)}{\beta} \geq 0 (\#eq:17)
+\end{equation}
+
+Now, considering the limit $\beta \to 0^{+}$, we get,
+\begin{equation}
+    -\|\nabla f(\mathbf{x}^*)\|^2 \leq 0 (\#eq:18)
+\end{equation}
+
+Combining which along with Eq.\@ref(eq:18), we get,
+\begin{equation}
+    0 \leq -\|\nabla f(\mathbf{x}^*)\|^2 \leq 0(\#eq:19)
+\end{equation}
+This ultimately gives $\nabla f(\mathbf{x}^*)=0$, proving the first-order necessary condition. 
+```
+
+```{example}
+The **Rosenbrock function** of $n$-variables is given by:
+\begin{equation}
+    f(\mathbf{x}) = \sum_{i=1}^{n-1}(100(x_{i+1}-x_i^2)^2 + (1-x_i)^2) (\#eq:20)
+\end{equation}
+
+where, $\mathbf{x} \in \mathbb{R}^n$. For this example let us consider the *Rosenbrock function* for two variables, given by:
+\begin{equation}
+    f(\mathbf{x}) = 100(x_2-x_1^2)^2+(1-x_1)^2 (\#eq:21)
+\end{equation}
+
+We will show that the first order necessary condition is satisfied for the local minimizer $\mathbf{x^*}=\begin{bmatrix} 1 \\ 1 \end{bmatrix}$. We first check whether $\mathbf{x}^*$ is a minimizer or not. Putting $x_1=x_2=1$ in $f(\mathbf{x})$, we get $f(\mathbf{x})=0$. Now, we check whether the  $\mathbf{x^*}$ satisfies the first order necessary condition. For that we calculate $\nabla f(\mathbf{x}^*)$. 
+\begin{equation}
+    \nabla f(\mathbf{x}^*) = \begin{bmatrix} -400x_1(x_2-x_1)^2-2(1-x_1) \\ 200(x_2-x_1^2)\end{bmatrix}_{\mathbf{x}^*} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} (\#eq:22)
+\end{equation}
+
+So, we see that the first order necessary condition is satisfied. We can do similar analysis using the `scipy.optimize` package in Python. The Scipy official reference states that the `scipy.optimize` package provides the user with many commonly used optimization algorithms and test functions. It packages the following functionalities and aspects:
+    
+* Minimization of multivariate scalar objective functions covering both the unconstrained and constrained domains, using a range of optimization algorithms,
+* Algorithms for minimization of scalar univariate functions,
+* A variety of brute-force optimization algorithms, also called global optimization algorithms,
+* Algorithms like minimization of least-squares and curve-fitting,
+* Root finding algorithms, and
+* Algorithms for solving multivariate equation systems.
+
+We will build upon the basic concepts of optimization using this package and cover most of the concepts one by one as we advance in the book. Note that, this is not the only package that we are going to use throughout the book. As we advance, we will be required to look into other Python resources according to our needs. But to keep in mind, `scipy.optimize` is the most important package that we will be using. Now, going back to the example, `scipy.optimize` already provides with the \mathbfit{Rosenbrock} test function, its gradient and its Hessian. We will import them first and check whether the given point $\mathbf{x}^*$ is a minimizer or not:
+```
+
+```{python}
+import numpy as np
+import scipy
+# Import the Rosenbrock function, its gradient and Hessian respectively
+from scipy.optimize import rosen, rosen_der, rosen_hess
+x_m = np.array([1, 1]) #given local minimizer
+rosen(x_m) # check whether x_m is a minimizer
+```
+
+the result is $0.0$. So $\mathbf{x}^*$ is a minimizer. We then check for the first order necessary condition, using the gradient:
+
+```{python}
+rosen_der(x_m) # calculates the gradient at the point x_m
+```
+
+This matches with our calculations and also satisfies the first-order necessary condition.
+
+### Second-Order Necessary Conditions
+
+If there exists a local minimizer $\mathbf{x}^*$ for a real-valued smooth function $f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}$, in an open neighborhood $\subset \mathbb{R}^n$ of $\mathbf{x}^*$ along the feasible direction $\mathbf{\delta}$, and $\mathbf{H} f(\mathbf{x})$ exists and is continuous in the open neighborhood, then the second order necessary conditions for the minimizer are given by:
+\begin{equation}
+    \nabla^T f(\mathbf{x}^*)\mathbf{\delta} = 0, \forall\ \mathbf{\delta} \neq 0 (\#eq:23)
 \end{equation}

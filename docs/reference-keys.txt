@@ -72,3 +72,5 @@ thm:unnamed-chunk-2
 taylors-theorem
 necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization
 first-order-necessary-condition
+exm:unnamed-chunk-4
+second-order-necessary-conditions
