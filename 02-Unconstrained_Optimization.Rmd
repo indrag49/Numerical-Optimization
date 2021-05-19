@@ -174,3 +174,50 @@ If there exists a local minimizer $\mathbf{x}^*$ for a real-valued smooth functi
 \begin{equation}
     \nabla^T f(\mathbf{x}^*)\mathbf{\delta} = 0, \forall\ \mathbf{\delta} \neq 0 (\#eq:23)
 \end{equation}
+and
+\begin{equation}
+    \mathbf{\delta}^T\mathbf{H}f(\mathbf{x}^*)\mathbf{\delta} \geq 0, \forall\ \mathbf{\delta} \neq 0 (\#eq:24)
+\end{equation}
+which reduces to the following:
+\begin{equation}
+    \nabla f(\mathbf{x}^*) = 0 (\#eq:25)
+\end{equation}
+and
+\begin{equation}
+    \mathbf{\delta}\mathbf{H}f(\mathbf{x}^*) \geq 0 (\#eq:26)
+\end{equation}
+where equation Eq.\@ref(eq:26) means that the Hessian matrix should be positive semi-definite.
+
+```{proof}
+From the proof of first order necessary condition, we know that $\nabla f(\mathbf{x}^*) = 0$, which satisfies equation Eq.\@ref(eq:25). Now for proving equation Eq.\@ref(eq:26), we use the Taylor series expansion again. We have,
+\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{x}^*)+\nabla^T f(\mathbf{x}^*)(\mathbf{x} - \mathbf{x}^*) + \frac{1}{2}\mathbf{H} f(\mathbf{x}^*)(\mathbf{x} - \mathbf{x}^*) + \mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|^2) (\#eq:27)
+\end{equation}
+
+Given, the feasible direction $\mathbf{\delta}$, we take $\beta \in [0,1]$, such that $\mathbf{x} = \mathbf{x}^* + \beta \mathbf{\delta}$. Putting this in Eq.\@ref(eq:27) and rearranging, we get,
+\begin{equation}
+    f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*) = \beta \nabla^T f(\mathbf{x}^*)\mathbf{\delta} + \frac{\beta^2}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \mathcal{O}(\beta^2) (\#eq:28)
+\end{equation}
+
+As, $\nabla f(\mathbf{x}^*)=0$, we have 
+\begin{equation}
+    f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*) = \frac{\beta^2}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \mathcal{O}(\beta^2) (\#eq:29)
+\end{equation}
+
+Now, dividing Eq.\@ref(eq:29) by $\beta^2$, we have,
+\begin{equation}
+    \frac{f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*)}{\beta^2} = \frac{1}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \frac{\mathcal{O}(\beta^2)}{\beta^2} \geq 0 (\#eq:30)
+\end{equation}
+
+Taking the limit $\beta \to 0$, we have,
+\begin{equation}
+    \mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*) \mathbf{\delta} \geq 0 (\#eq:31)
+\end{equation}
+Which ultimately reduces to,
+\begin{equation}
+    \mathbf{H} f(\mathbf{x}^*) \geq 0 (\#eq:32)
+\end{equation}
+We see that the Hessian matrix is positive semi-definite. This completes the proof of the second order necessary conditions. [refer to chapter 1, optimality conditions]
+```
+
+### Second-Order Sufficient Conditions

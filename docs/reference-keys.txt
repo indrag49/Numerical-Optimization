@@ -74,3 +74,10 @@ necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimiz
 first-order-necessary-condition
 exm:unnamed-chunk-4
 second-order-necessary-conditions
+eq:27
+eq:28
+eq:29
+eq:30
+eq:31
+eq:32
+second-order-sufficient-conditions

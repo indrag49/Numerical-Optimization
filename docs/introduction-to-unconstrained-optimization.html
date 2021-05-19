@@ -159,6 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
 <li class="chapter" data-level="2.4.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-necessary-conditions"><i class="fa fa-check"></i><b>2.4.2</b> Second-Order Necessary Conditions</a></li>
+<li class="chapter" data-level="2.4.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-sufficient-conditions"><i class="fa fa-check"></i><b>2.4.3</b> Second-Order Sufficient Conditions</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -334,7 +335,52 @@ We will build upon the basic concepts of optimization using this package and cov
 <p>If there exists a local minimizer <span class="math inline">\(\mathbf{x}^*\)</span> for a real-valued smooth function <span class="math inline">\(f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, in an open neighborhood <span class="math inline">\(\subset \mathbb{R}^n\)</span> of <span class="math inline">\(\mathbf{x}^*\)</span> along the feasible direction <span class="math inline">\(\mathbf{\delta}\)</span>, and <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span> exists and is continuous in the open neighborhood, then the second order necessary conditions for the minimizer are given by:
 <span class="math display" id="eq:23">\[\begin{equation}
     \nabla^T f(\mathbf{x}^*)\mathbf{\delta} = 0, \forall\ \mathbf{\delta} \neq 0 \tag{2.23}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:24">\[\begin{equation}
+    \mathbf{\delta}^T\mathbf{H}f(\mathbf{x}^*)\mathbf{\delta} \geq 0, \forall\ \mathbf{\delta} \neq 0 \tag{2.24}
+\end{equation}\]</span>
+which reduces to the following:
+<span class="math display" id="eq:25">\[\begin{equation}
+    \nabla f(\mathbf{x}^*) = 0 \tag{2.25}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:26">\[\begin{equation}
+    \mathbf{\delta}\mathbf{H}f(\mathbf{x}^*) \geq 0 \tag{2.26}
+\end{equation}\]</span>
+where equation Eq.<a href="introduction-to-unconstrained-optimization.html#eq:26">(2.26)</a> means that the Hessian matrix should be positive semi-definite.</p>
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> From the proof of first order necessary condition, we know that <span class="math inline">\(\nabla f(\mathbf{x}^*) = 0\)</span>, which satisfies equation Eq.<a href="introduction-to-unconstrained-optimization.html#eq:25">(2.25)</a>. Now for proving equation Eq.<a href="introduction-to-unconstrained-optimization.html#eq:26">(2.26)</a>, we use the Taylor series expansion again. We have,
+<span class="math display" id="eq:27">\[\begin{equation}
+    f(\mathbf{x}) = f(\mathbf{x}^*)+\nabla^T f(\mathbf{x}^*)(\mathbf{x} - \mathbf{x}^*) + \frac{1}{2}\mathbf{H} f(\mathbf{x}^*)(\mathbf{x} - \mathbf{x}^*) + \mathcal{O}(\|\mathbf{x} - \mathbf{x}^*\|^2) \tag{2.27}
 \end{equation}\]</span></p>
+<p>Given, the feasible direction <span class="math inline">\(\mathbf{\delta}\)</span>, we take <span class="math inline">\(\beta \in [0,1]\)</span>, such that <span class="math inline">\(\mathbf{x} = \mathbf{x}^* + \beta \mathbf{\delta}\)</span>. Putting this in Eq.<a href="introduction-to-unconstrained-optimization.html#eq:27">(2.27)</a> and rearranging, we get,
+<span class="math display" id="eq:28">\[\begin{equation}
+    f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*) = \beta \nabla^T f(\mathbf{x}^*)\mathbf{\delta} + \frac{\beta^2}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \mathcal{O}(\beta^2) \tag{2.28}
+\end{equation}\]</span></p>
+<p>As, <span class="math inline">\(\nabla f(\mathbf{x}^*)=0\)</span>, we have
+<span class="math display" id="eq:29">\[\begin{equation}
+    f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*) = \frac{\beta^2}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \mathcal{O}(\beta^2) \tag{2.29}
+\end{equation}\]</span></p>
+<p>Now, dividing Eq.<a href="introduction-to-unconstrained-optimization.html#eq:29">(2.29)</a> by <span class="math inline">\(\beta^2\)</span>, we have,
+<span class="math display" id="eq:30">\[\begin{equation}
+    \frac{f(\mathbf{x}^* + \beta \mathbf{\delta}) - f(\mathbf{x}^*)}{\beta^2} = \frac{1}{2}\mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*)\mathbf{\delta} + \frac{\mathcal{O}(\beta^2)}{\beta^2} \geq 0 \tag{2.30}
+\end{equation}\]</span></p>
+Taking the limit <span class="math inline">\(\beta \to 0\)</span>, we have,
+<span class="math display" id="eq:31">\[\begin{equation}
+    \mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*) \mathbf{\delta} \geq 0 \tag{2.31}
+\end{equation}\]</span>
+Which ultimately reduces to,
+<span class="math display" id="eq:32">\[\begin{equation}
+    \mathbf{H} f(\mathbf{x}^*) \geq 0 \tag{2.32}
+\end{equation}\]</span>
+We see that the Hessian matrix is positive semi-definite. This completes the proof of the second order necessary conditions. [refer to chapter 1, optimality conditions]
+</div>
+
+</div>
+<div id="second-order-sufficient-conditions" class="section level3">
+<h3><span class="header-section-number">2.4.3</span> Second-Order Sufficient Conditions</h3>
 
 </div>
 </div>
