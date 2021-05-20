@@ -1,0 +1,60 @@
+# Solving One Dimensional Optimization Problems
+
+This chapter introduces the detailed study on various algorithms for solving one dimensional optimization problems. The classes of methods that have been discussed are: **Elimination method**, **Interpolation method** and **Direct Root Finding method**. The **Elimination method** covers the **Fibonacci Search method** and the **Golden Section Search method**; the Interpolation method covers **Quadratic Interpolation** and **Inverse Quadratic Interpolation** methods; and the **Direct Root Finding method** covers **Newton's method**, **Halley's method**, **Secant method** and **Bisection method**. Finally a combination of some of these methods called the **Brent's method** has also been discussed. Python programs involving the functions provided by the `scipy.optimize` module for solving problems using the above algorithms have also been provided. For the Fibonacci Search method and the Inverse Quadratic Interpolation method, full Python programs have been written for assisting the readers.
+
+---
+
+## One Dimensional Optimization Problems
+
+The aim of this chapter is to introduce methods for solving one-dimensional optimization tasks, formulated in the following way:
+\begin{equation}
+    f(x^*)=\underset{x}{\min\ }f(x), x \in \mathbb{R} (\#eq:1)
+\end{equation}
+where, $f$ is a nonlinear function. The understanding of these optimization tasks and algorithms will be generalized in solving unconstrained optimization tasks involving objective function of multiple variables, in the future chapters.
+
+## What is a Unimodal Function?
+
+```{definition}
+A function $f(x)$, where $x \in \mathbb{R}$ is said to be *unimodal* [refer to https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf] if for a value $x^*$ on the real line, the following conditions are satisfied:
+* $f$ is monotonically decreasing for  $x \leq v$,
+* $f$ is monotonically increasing for $x \geq v$, and
+* if the above two conditions are satisfied, then $f(x^*)$ is the minimum value of $f(x)$, and $x^*$ is the minimizer of $f$.
+```
+
+Let us have a look into the figure below.
+
+```{python, echo=FALSE, results=FALSE}
+import matplotlib.pyplot as plt
+import numpy as np
+
+def f(x):
+    return 5*x**2 - 3*x + 2
+x = np.linspace(-4, 4)
+y = f(x)
+
+plt.axvline(x=-4, color='k', linestyle='--')
+plt.axvline(x=4, color='k', linestyle='--')
+plt.plot(x, y, "-r")
+plt.axvline(x=-1, color='k', linestyle='-')
+plt.axvline(x=2, color='k', linestyle='-')
+plt.axvline(x=0.3, color='k',
+linestyle='--')
+plt.title("A unimodal quadratic function, showing the minimizer, and the interval of uncertainty", size = 10)
+```
+
+We have taken the quadratic function of one variable: $f(x) = 5x^2-3x+2$. It is a nonlinear unimodal function defined over the interval $[-2,2]$, denoted by the dotted lines on either side.. The minimizer $x^*=0.3$ (which can be solved analytically!), given by the middle dotted line, lies inside the interval $[x_l, x_r]=[-2,2]$. We notice that $f(x)$ strictly decreases for $f(x) < f(x^*)$ and strictly increases for $f(x) > f(x^*)$. The interval $[x_l, x_r]$ that has the minimizer within it, is called the *interval of uncertainty* and the goal of an optimization algorithm is to reduce this interval as much as possible to converge towards the minimizer. A good algorithm completes the convergence very fast. In each step of this reduction of the interval, the algorithm finds a new unimodal interval following the following procedures:
+
+* Choose two new points, $x_1 \in [x_l, x^*]$ and another point $x_2 \in [x^*, x_r]$ (denoted by the two filled straight lines in the figure,
+* If $f(x_2) > f(x_1)$, the new interval becomes $[x_l, x_2]$ and $x_r$ becomes $x_2$, i.e, $x_r=x_2$,
+* Next pick a new $x_2$,
+* If condition in step (2) is not satisfied, we set the new interval as $[x_1, x_r]$ directly after step (1) and set $x_l=x_1$, and
+* Next pick a new $x_1$.
+
+The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an \textit{Elimination Method} and we study two categories under this kind:
+
+* **Fibonacci Search**, and
+* **Golden Section Search**.
+
+Rao's book *Engineering Optimization* [Rao, Singiresu S. Engineering optimization: theory and practice. John Wiley & Sons, 2019.] also has some detailed studies on these kinds of optimization methods.
+
+## Fibonacci Search Method

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Solving One Dimensional Optimization Problems | Introduction to Mathematical Optimization</title>
+  <meta name="description" content="Chapter 3 Solving One Dimensional Optimization Problems | Introduction to Mathematical Optimization" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Solving One Dimensional Optimization Problems | Introduction to Mathematical Optimization" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Solving One Dimensional Optimization Problems | Introduction to Mathematical Optimization" />
+  
+  
+  
+
+<meta name="author" content="Indranil Ghosh" />
+
+
+<meta name="date" content="2021-05-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction-to-unconstrained-optimization.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mathematical Optimization</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#feasible-region"><i class="fa fa-check"></i><b>1.4</b> Feasible Region</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#discrete-optimization-problems"><i class="fa fa-check"></i><b>1.5</b> Discrete Optimization Problems</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#linear-programming-problems"><i class="fa fa-check"></i><b>1.6</b> Linear Programming Problems</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#stochastic-optimization-problems"><i class="fa fa-check"></i><b>1.7</b> Stochastic Optimization Problems</a></li>
+<li class="chapter" data-level="1.8" data-path="index.html"><a href="index.html#scaling-of-decision-variables"><i class="fa fa-check"></i><b>1.8</b> Scaling of Decision Variables</a></li>
+<li class="chapter" data-level="1.9" data-path="index.html"><a href="index.html#gradient-vector-and-hessian-matrix-of-the-objective-function"><i class="fa fa-check"></i><b>1.9</b> Gradient Vector and Hessian Matrix of the Objective Function</a></li>
+<li class="chapter" data-level="1.10" data-path="index.html"><a href="index.html#directional-derivative-of-the-objective-function"><i class="fa fa-check"></i><b>1.10</b> Directional Derivative of the Objective Function</a></li>
+<li class="chapter" data-level="1.11" data-path="index.html"><a href="index.html#positive-definite-and-positive-semi-definite-matrices"><i class="fa fa-check"></i><b>1.11</b> Positive Definite and Positive Semi-definite Matrices</a></li>
+<li class="chapter" data-level="1.12" data-path="index.html"><a href="index.html#what-is-convexity"><i class="fa fa-check"></i><b>1.12</b> What is Convexity?</a></li>
+<li class="chapter" data-level="1.13" data-path="index.html"><a href="index.html#numerical-optimization-algorithms"><i class="fa fa-check"></i><b>1.13</b> Numerical Optimization Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#the-unconstrained-optimization-problem"><i class="fa fa-check"></i><b>2.1</b> The Unconstrained Optimization Problem</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#smooth-functions"><i class="fa fa-check"></i><b>2.2</b> Smooth Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#taylors-theorem"><i class="fa fa-check"></i><b>2.3</b> Taylor’s Theorem</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-necessary-conditions"><i class="fa fa-check"></i><b>2.4.2</b> Second-Order Necessary Conditions</a></li>
+<li class="chapter" data-level="2.4.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-sufficient-conditions"><i class="fa fa-check"></i><b>2.4.3</b> Second-Order Sufficient Conditions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#algorithms-for-solving-unconstrained-minimization-tasks"><i class="fa fa-check"></i><b>2.5</b> Algorithms for Solving Unconstrained Minimization Tasks</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html"><i class="fa fa-check"></i><b>3</b> Solving One Dimensional Optimization Problems</a><ul>
+<li class="chapter" data-level="3.1" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#one-dimensional-optimization-problems"><i class="fa fa-check"></i><b>3.1</b> One Dimensional Optimization Problems</a></li>
+<li class="chapter" data-level="3.2" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#what-is-a-unimodal-function"><i class="fa fa-check"></i><b>3.2</b> What is a Unimodal Function?</a></li>
+<li class="chapter" data-level="3.3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#fibonacci-search-method"><i class="fa fa-check"></i><b>3.3</b> Fibonacci Search Method</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to Mathematical Optimization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="solving-one-dimensional-optimization-problems" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Solving One Dimensional Optimization Problems</h1>
+<p>This chapter introduces the detailed study on various algorithms for solving one dimensional optimization problems. The classes of methods that have been discussed are: <strong>Elimination method</strong>, <strong>Interpolation method</strong> and <strong>Direct Root Finding method</strong>. The <strong>Elimination method</strong> covers the <strong>Fibonacci Search method</strong> and the <strong>Golden Section Search method</strong>; the Interpolation method covers <strong>Quadratic Interpolation</strong> and <strong>Inverse Quadratic Interpolation</strong> methods; and the <strong>Direct Root Finding method</strong> covers <strong>Newton’s method</strong>, <strong>Halley’s method</strong>, <strong>Secant method</strong> and <strong>Bisection method</strong>. Finally a combination of some of these methods called the <strong>Brent’s method</strong> has also been discussed. Python programs involving the functions provided by the <code>scipy.optimize</code> module for solving problems using the above algorithms have also been provided. For the Fibonacci Search method and the Inverse Quadratic Interpolation method, full Python programs have been written for assisting the readers.</p>
+<hr />
+<div id="one-dimensional-optimization-problems" class="section level2">
+<h2><span class="header-section-number">3.1</span> One Dimensional Optimization Problems</h2>
+<p>The aim of this chapter is to introduce methods for solving one-dimensional optimization tasks, formulated in the following way:
+<span class="math display" id="eq:1">\[\begin{equation}
+    f(x^*)=\underset{x}{\min\ }f(x), x \in \mathbb{R} \tag{3.1}
+\end{equation}\]</span>
+where, <span class="math inline">\(f\)</span> is a nonlinear function. The understanding of these optimization tasks and algorithms will be generalized in solving unconstrained optimization tasks involving objective function of multiple variables, in the future chapters.</p>
+</div>
+<div id="what-is-a-unimodal-function" class="section level2">
+<h2><span class="header-section-number">3.2</span> What is a Unimodal Function?</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-1" class="definition"><strong>Definition 3.1  </strong></span>A function <span class="math inline">\(f(x)\)</span>, where <span class="math inline">\(x \in \mathbb{R}\)</span> is said to be <em>unimodal</em> [refer to <a href="https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf" class="uri">https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf</a>] if for a value <span class="math inline">\(x^*\)</span> on the real line, the following conditions are satisfied:
+* <span class="math inline">\(f\)</span> is monotonically decreasing for <span class="math inline">\(x \leq v\)</span>,
+* <span class="math inline">\(f\)</span> is monotonically increasing for <span class="math inline">\(x \geq v\)</span>, and
+* if the above two conditions are satisfied, then <span class="math inline">\(f(x^*)\)</span> is the minimum value of <span class="math inline">\(f(x)\)</span>, and <span class="math inline">\(x^*\)</span> is the minimizer of <span class="math inline">\(f\)</span>.
+</div>
+
+<p>Let us have a look into the figure below.</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We have taken the quadratic function of one variable: <span class="math inline">\(f(x) = 5x^2-3x+2\)</span>. It is a nonlinear unimodal function defined over the interval <span class="math inline">\([-2,2]\)</span>, denoted by the dotted lines on either side.. The minimizer <span class="math inline">\(x^*=0.3\)</span> (which can be solved analytically!), given by the middle dotted line, lies inside the interval <span class="math inline">\([x_l, x_r]=[-2,2]\)</span>. We notice that <span class="math inline">\(f(x)\)</span> strictly decreases for <span class="math inline">\(f(x) &lt; f(x^*)\)</span> and strictly increases for <span class="math inline">\(f(x) &gt; f(x^*)\)</span>. The interval <span class="math inline">\([x_l, x_r]\)</span> that has the minimizer within it, is called the <em>interval of uncertainty</em> and the goal of an optimization algorithm is to reduce this interval as much as possible to converge towards the minimizer. A good algorithm completes the convergence very fast. In each step of this reduction of the interval, the algorithm finds a new unimodal interval following the following procedures:</p>
+<ul>
+<li>Choose two new points, <span class="math inline">\(x_1 \in [x_l, x^*]\)</span> and another point <span class="math inline">\(x_2 \in [x^*, x_r]\)</span> (denoted by the two filled straight lines in the figure,</li>
+<li>If <span class="math inline">\(f(x_2) &gt; f(x_1)\)</span>, the new interval becomes <span class="math inline">\([x_l, x_2]\)</span> and <span class="math inline">\(x_r\)</span> becomes <span class="math inline">\(x_2\)</span>, i.e, <span class="math inline">\(x_r=x_2\)</span>,</li>
+<li>Next pick a new <span class="math inline">\(x_2\)</span>,</li>
+<li>If condition in step (2) is not satisfied, we set the new interval as <span class="math inline">\([x_1, x_r]\)</span> directly after step (1) and set <span class="math inline">\(x_l=x_1\)</span>, and</li>
+<li>Next pick a new <span class="math inline">\(x_1\)</span>.</li>
+</ul>
+<p>The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an  and we study two categories under this kind:</p>
+<ul>
+<li><strong>Fibonacci Search</strong>, and</li>
+<li><strong>Golden Section Search</strong>.</li>
+</ul>
+<p>Rao’s book <em>Engineering Optimization</em> [Rao, Singiresu S. Engineering optimization: theory and practice. John Wiley &amp; Sons, 2019.] also has some detailed studies on these kinds of optimization methods.</p>
+</div>
+<div id="fibonacci-search-method" class="section level2">
+<h2><span class="header-section-number">3.3</span> Fibonacci Search Method</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction-to-unconstrained-optimization.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/indrag49/Numerical-Optimization/edit/master/03-One_Dimensional_Optimization.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/indrag49/Numerical-Optimization/blob/master/03-One_Dimensional_Optimization.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

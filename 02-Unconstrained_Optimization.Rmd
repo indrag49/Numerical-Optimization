@@ -221,3 +221,131 @@ We see that the Hessian matrix is positive semi-definite. This completes the pro
 ```
 
 ### Second-Order Sufficient Conditions
+
+For a real-valued smooth objective function $f(\mathbf{x})$, if $\mathbf{x}^*$ is its local minimizer and $\mathbf{H} f(\mathbf{x})$ exists and is continuous in an open neighborhood $\subset \mathbb{R}^n$ of $\mathbf{x}^*$ along the feasible direction $\mathbf{\delta}$, then the conditions:
+\begin{equation}
+    \nabla^T f(\mathbf{x}^*)\delta = 0 (\#eq:33)
+\end{equation}
+i.e,
+\begin{equation}
+    \nabla f(\mathbf{x}^*) = 0 (\#eq:34)
+\end{equation}
+and 
+
+\begin{equation}
+    \mathbf{\delta}^T \mathbf{H} f(\mathbf{x}^*) \mathbf{\delta} > 0 (\#eq:35)
+\end{equation}
+
+i.e, a positive definite Hessian matrix imply that $\mathbf{x}^*$ is a strong local minimizer of $f(\mathbf{x})$.
+
+```{proof}
+Let $\mathfrak{r} >0$ be a radius such that the Hessian of the objective function, $\mathbf{H} f(\mathbf{x})$ is positive definite $\forall\ \mathbf{x}$ in the open ball defined by $\mathfrak{B} = \{\mathbf{y} \mid \|\mathbf{y} - \mathbf{x}^*\| \leq \mathfrak{r}\}$. This comes from the fact that $\mathbf{H} f(\mathbf{x})$ is positive definite at the local minimizer $\mathbf{x}^*$. Now, considering a nonzero vector $\mathbf{\eta}$, such that $\|\mathbf{\eta}\| < \mathfrak{r}$ and $c \in [0,1]$, we will have, $\mathbf{x}=\mathbf{x}^*+c\mathbf{\eta} \in \mathfrak{B}$. Now, using the Taylor's expansion, i.e, Eq.\@ref(eq:27), we will have, 
+
+\begin{equation}
+    f(\mathbf{x}^* + \mathbf{\eta}) = f(\mathbf{x}^*) + c\nabla^Tf(\mathbf{x}^*)\mathbf{\eta} + \frac{c^2}{2}\mathbf{\eta}^T\mathbf{H} f(\mathbf{y})\mathbf{\eta} + \mathcal{O}(c^2) (\#eq:36)
+\end{equation}
+
+Since, $\nabla f(\mathbf{x}^*) = 0$, we have,
+\begin{equation}
+    \frac{f(\mathbf{x}^* + \mathbf{\eta}) - f(\mathbf{x}^*)}{c^2} = \frac{1}{2}\mathbf{\eta}^T\mathbf{H}f(\mathbf{y})\mathbf{\eta}+\frac{\mathcal{O}(c^2)}{c^2} (\#eq:37)
+\end{equation}
+
+Here, $\mathbf{y} = \mathbf{x}^* + \beta \mathbf{\eta}$ with $\beta \in [0,1]$. As, $\mathbf{y} \in \mathfrak{B}$, we have, 
+\begin{equation}
+    \mathbf{\eta}^T\mathbf{H}f(\mathbf{y})\mathbf{\eta} > 0 (\#eq:38)
+\end{equation}
+
+So, taking the limit, $c \to 0$, we have, 
+\begin{equation}
+    f(\mathbf{x}^* + \mathbf{\eta}) - f(\mathbf{x}^*) > 0 (\#eq:39)
+\end{equation}
+
+this proves our claim that,
+\begin{equation}
+    f(\mathbf{x}^* + \mathbf{\eta}) > f(\mathbf{x}^*) (\#eq:40)
+\end{equation}
+that is, $\mathbf{x}^*$ is a strict local minimizer of the objective function $f(\mathbf{x})$. 
+```
+
+```{example}
+Let us now work with a new test function called Himmelblau's function, given by,
+\begin{equation}
+    f(\mathbf{x}) = (x_1^2+x_2-11)^2+(x_1+x_2^2-7)^2 (\#eq:41)
+\end{equation}
+
+where, $\mathbf{x} \in \mathbb{R}^2$. We will check whether $\mathbf{x}^*=\begin{bmatrix} 3 \\ 2 \end{bmatrix}$ satisfies the second-order sufficient conditions satisfying the fact that it is a strong local minimizer. We will again use the `autograd` package to do the analyses for this objective function. Let us first define the function and the local minimizer as `x_star` in Python:
+```
+
+```{python}
+def Himm(x):
+    return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
+
+x_star = np.array([3, 2], dtype='float') #local minimizer
+```
+
+We then check whether `x_star` is a minimizer.
+
+```{python}
+print("function at x_star:", Himm(x_star))
+```
+
+Now, we calculate the gradient vector and the Hessian matrix of the function at `x_star` and look at the results,
+
+```{python}
+# import the necessary packages
+import autograd.numpy as au
+from autograd import grad, jacobian
+
+# gradient vector of the Himmelblau's function
+Himm_grad=grad(Himm)
+print("gradient vector at x_star:", Himm_grad(x_star))
+
+# Hessian matrix of the Himmelblau's function
+Himm_hess = jacobian(Himm_grad)
+M = Himm_hess(x_star) 
+eigs = np.linalg.eigvals(M)
+print("The eigenvalues of M:", eigs)
+
+if (np.all(eigs>0)):
+    print("M is positive definite")
+elif (np.all(eigs>=0)):
+    print("M is positive semi-definite")
+else:
+    print("M is negative definite")
+```
+
+We see that `x1` satisfies the second order sufficient conditions and is a strong local minimizer. We wanted to perform the analyses using `autograd` package instead of `scipy.optimize`, because there might be cases when we need to use test functions that are not predefined in `scipy.optimize` package, unlike the `Rosenbrock function`.
+
+## Algorithms for Solving Unconstrained Minimization Tasks
+
+An optimization algorithm for solving an unconstrained minimization problem requires an initial point $\mathbf{x}_0$ to start with. The choice of $\mathbf{x}_0$ depends either on the applicant who has some idea about the data and the task at hand or it can be set by the algorithm in charge. Starting with $\mathbf{x}_0$, the optimization algorithm iterates through a sequence of successive points $\{\mathbf{x}_0, \mathbf{x}_1, \ldots, \mathbf{x}_{\infty}\}$, which stops at the point where all the termination conditions are met for approximating the minimizer $\mathbf{x}^*$. The algorithm generates this sequence taking into consideration the objective function $f(\mathbf{x})$ at a particular point $f(\mathbf{x}_n)$. A new iterate $\mathbf{x}_{n+1}$ is added in the sequence if the condition $f(\mathbf{x}_{n+1}) < f(\mathbf{x}_n)$. Although in many special cases, the algorithm might fail to find a new point in each and every step following the above condition, it must satisfy that after some stipulated number $k$ of steps, the following condition is met: $$f(\mathbf{x}_{n+k}) < f(\mathbf{x}_n)$$. One of the important terminating conditions, for example, is to check whether the first order necessary condition is sufficiently accurate, for a smooth objective function, i.e, $\|\nabla f(\mathbf{x}_{\infty})\| < \epsilon$, where $\epsilon$ is the infinitesimal tolerance value. We will discuss these conditions further in the subsequent chapters.
+
+Fundamentally, there are two approaches available to generate $f(\mathbf{x}_{n+1})$ from $f(\mathbf{x}_n)$:
+
+* **Line Search Descent Method**: Using this method, the optimization algorithm first picks a direction $\mathbf{\delta}_n$ for the $n^{th}$ step and performs a search along this direction from the previous generated iterate $\mathbf{x}_{n-1}$ to find a new iterate $\mathbf{x}_n$ such that the condition $f(\mathbf{x}_n) < f(\mathbf{x}_{n-1})$ is satisfied. A direction $\mathbf{\delta}_n$ is selected for the next iterate if the following condition is satisfied:
+
+    \begin{equation}
+        \nabla^T f(\mathbf{x}_{n-1})\mathbf{\delta}_n < 0 (\#eq:42)
+    \end{equation}
+    
+    i.e, if the directional derivative in the direction $\mathbf{\delta}_n$ is negative. Here $f$ is the objective function. In view of that, the algorithm then needs to ascertain a distance by which it has to move along the direction $\mathbf{\delta}_n$ to figure out $\mathbf{x}_n$. The distance $\beta >0$, which is called the *step length*, can be figured out by solving the one-dimensional minimization problem formulated as:
+    
+    \begin{equation}
+        \underset{\beta > 0}{\min} \tilde{f}(\beta) = \underset{\beta > 0}{\min} f(\mathbf{x}_{n-1} + \beta \mathbf{\delta}_n) (\#eq:43)
+        
+    \end{equation}
+    
+![Line Search Descent Method](img 2.png)
+
+* **Trust Region Method**: Using this method, the optimization algorithm develops a model function [refer to Nocedal & Wright], $M_n$, such that its behavior inside a boundary set around the current iterate $\mathbf{x}_n$ matches that of the objective function $f(\mathbf{x}_n)$ at that point. The model function is not expected to give a reasonable approximation to the behavior of the objective function at a point $\mathbf{x}_t$ which is far away from $\mathbf{x}_n$, i.e, not lying inside the boundary defined around $\mathbf{x}_n$. As a result, the algorithm obstructs the search for the minimizer of $M_n$ inside the boundary region, which is actually called the *trust region*, denoted by $\mathcal{T}$, before finding the step $\mathbf{\zeta}$, by solving the minimization problem formulated by:
+
+    \begin{equation}
+        \underset{\mathbf{\zeta}}{\min\ } M_n(\mathbf{x}_n+\mathbf{\zeta}),\text{ where }\mathbf{x}_n+\mathbf{\zeta}\in \mathcal{T} (\#eq:44)
+    \end{equation}
+    Using this $\mathbf{\zeta}$, if the decrease in the value of $f(\mathbf{x}_{n+1})$ from $f(\mathbf{x}_n)$ is not sufficient, it can be inferred that the selected trust region is unnecessarily large. The algorithm then reduces the size of $\mathcal{T}$ accordingly and re-solves the problem given by equation Eq.\@ref(eq:44). Most often, the trust region $\mathcal{T}$ is defined by a circle in case of a two dimensional problem or a sphere in case of a three dimensional problem of radius $\mathcal{T_r}>0$, which follows the condition $\|\mathbf{\zeta}\| \leq \mathcal{T_r}$. In special cases, the shape of the trust region might vary. The form of the model function is given by a quadratic function, given by,
+\begin{equation}
+        M_n(\mathbf{x}_n+\mathbf{\zeta}) = f(\mathbf{x}_n) + \mathbf{\zeta}^T\nabla f(\mathbf{x}_n)+\frac{1}{2}\mathbf{\zeta}^T\mathbf{B} f(\mathbf{x}_n)\mathbf{\zeta} (\#eq:45)
+    \end{equation}
+    Where, $\mathbf{B}f(\mathbf{x}_n)$ is either the Hessian matrix $\mathbf{H}f(\mathbf{x}_n)$ or an approximation to it.
+
+Before moving into detailed discussions on line search descent methods and trust region methods in the later chapters, we will first deal with solving equation Eq.\@ref(eq:43) in the immediate next chapter, which is itself an unconstrained one dimensional minimization problem, where we have to solve for $$\underset{\beta>0}{\min\ }\tilde{f}(\beta)$$ and deduce the value of $\beta^*$, which is the minimizer for $\tilde{f}(\beta)$.
