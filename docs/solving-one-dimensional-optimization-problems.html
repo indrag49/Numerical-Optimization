@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-20" />
+<meta name="date" content="2021-05-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,70 @@
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -164,6 +228,182 @@ where, <span class="math inline">\(f\)</span> is a nonlinear function. The under
 </div>
 <div id="fibonacci-search-method" class="section level2">
 <h2><span class="header-section-number">3.3</span> Fibonacci Search Method</h2>
+<p>Instead of finding the exact minimizer <span class="math inline">\(x^*\)</span> of <span class="math inline">\(f(x)\)</span>, the  works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of <em>Fibonacci numbers</em> [<a href="http://oeis.org/A000045" class="uri">http://oeis.org/A000045</a>]. This sequence is defined in the following way:</p>
+<p><span class="math display">\[\begin{align}
+F_0&amp;=0,F_1=1, \\ 
+F_n&amp;=F_{n-1} + F_{n-2},\text{ where }n=2,3,\ldots
+\end{align}\]</span></p>
+<p>We write a Python code to generate the first 16 Fibonacci numbers and display them as a table:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="solving-one-dimensional-optimization-problems.html#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="solving-one-dimensional-optimization-problems.html#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="solving-one-dimensional-optimization-problems.html#cb1-3"></a></span>
+<span id="cb1-4"><a href="solving-one-dimensional-optimization-problems.html#cb1-4"></a><span class="kw">def</span> fibonacci(n): <span class="co"># define the  function</span></span>
+<span id="cb1-5"><a href="solving-one-dimensional-optimization-problems.html#cb1-5"></a>    fn <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>,]</span>
+<span id="cb1-6"><a href="solving-one-dimensional-optimization-problems.html#cb1-6"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb1-7"><a href="solving-one-dimensional-optimization-problems.html#cb1-7"></a>        fn.append(fn[i<span class="dv">-1</span>] <span class="op">+</span> fn[i<span class="dv">-2</span>])</span>
+<span id="cb1-8"><a href="solving-one-dimensional-optimization-problems.html#cb1-8"></a>    <span class="cf">return</span> fn</span>
+<span id="cb1-9"><a href="solving-one-dimensional-optimization-problems.html#cb1-9"></a></span>
+<span id="cb1-10"><a href="solving-one-dimensional-optimization-problems.html#cb1-10"></a></span>
+<span id="cb1-11"><a href="solving-one-dimensional-optimization-problems.html#cb1-11"></a>N <span class="op">=</span> np.arange(<span class="dv">16</span>)</span>
+<span id="cb1-12"><a href="solving-one-dimensional-optimization-problems.html#cb1-12"></a>data <span class="op">=</span> {<span class="st">&#39;n&#39;</span>: N, <span class="st">&#39;Fibonacci(n)&#39;</span>: fibonacci(<span class="dv">15</span>)}</span>
+<span id="cb1-13"><a href="solving-one-dimensional-optimization-problems.html#cb1-13"></a>df <span class="op">=</span> pd.DataFrame(data)</span></code></pre></div>
+<p><code>df</code> looks like this:</p>
+<pre><code>## +----+-----+----------------+
+## |    |   n |   Fibonacci(n) |
+## |----+-----+----------------|
+## |  0 |   0 |              0 |
+## |  1 |   1 |              1 |
+## |  2 |   2 |              1 |
+## |  3 |   3 |              2 |
+## |  4 |   4 |              3 |
+## |  5 |   5 |              5 |
+## |  6 |   6 |              8 |
+## |  7 |   7 |             13 |
+## |  8 |   8 |             21 |
+## |  9 |   9 |             34 |
+## | 10 |  10 |             55 |
+## | 11 |  11 |             89 |
+## | 12 |  12 |            144 |
+## | 13 |  13 |            233 |
+## | 14 |  14 |            377 |
+## | 15 |  15 |            610 |
+## +----+-----+----------------+</code></pre>
+<p>Let <span class="math inline">\(n\)</span> be the total number of experiments to be conducted and <span class="math inline">\([x_l, x_r]\)</span> be the initial interval the algorithm starts with. Let
+<span class="math display" id="eq:2">\[\begin{eqnarray}
+L_0 = x_r - x_l \tag{3.2}
+\end{eqnarray}\]</span>
+be the initial level of uncertainty and let us define,
+<span class="math display" id="eq:3">\[\begin{eqnarray}
+L_j = \frac{F_{n-2}}{F_n}L_0 \tag{3.3}
+\end{eqnarray}\]</span>
+where, <span class="math inline">\(F_{n-2}\)</span> and <span class="math inline">\(F_n\)</span> are the <span class="math inline">\((n-2)^{th}\)</span> and <span class="math inline">\(n^{th}\)</span> <em>Fibonacci numbers</em> respectively. We see from the formulation of the <em>Fibonacci numbers</em> that, <a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a> shows the following property:
+<span class="math display">\[\begin{equation}
+    L_j = \frac{F_{n-2}}{F_n}L_0 \leq \frac{L_0}{2} \text{ for } n\geq 2 
+\end{equation}\]</span>
+Now, the initial two experiments are set at points <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, where, <span class="math inline">\(L_j = x_1 - x_l\)</span> and <span class="math inline">\(L_j = x_r - x_2\)</span>. So, combining these with Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>, we have:
+<span class="math display" id="eq:4">\[\begin{equation}
+    x_1 = x_l + \frac{F_{n-2}}{F_n}L_0 \tag{3.4}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:5">\[\begin{equation}
+    x_2 = x_r - \frac{F_{n-2}}{F_n}L_0 \tag{3.5}
+    \end{equation}\]</span>
+Now taking into consideration the unimodality assumption, a part of the interval of uncertainty is rejected, shrinking it to a smaller size, given by,
+<span class="math display" id="eq:6">\[\begin{equation}
+    L_i = L_0 - L_j = L_0(1-\frac{F_{n-2}}{F_n}) = \frac{F_{n-1}}{F_n}L_0 \tag{3.6}
+\end{equation}\]</span>
+where, we have used the fact that, <span class="math inline">\(F_n - F_{n-2} = F_{n-1}\)</span> from the formulation of the <em>Fibonacci numbers</em>. This procedure leaves us with only one experiment, which, from one end, is situated at a distance of
+<span class="math display" id="eq:7">\[\begin{equation}
+  L_j = \frac{F_{n-2}}{F_n}L_0 = \frac{F_{n-2}}{F_{n-1}}L_i \tag{3.7}
+\end{equation}\]</span>
+where, we have used Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>. From the other end, the same experiment point is situated at a distance give by,
+<span class="math display" id="eq:8">\[\begin{equation}
+L_i-L_j = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_{n-1}}L_2 \tag{3.8}
+\end{equation}\]</span>
+where, we have again used Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>. We now place a new experiment point in the interval <span class="math inline">\(L_i\)</span> so that both the present experiment points are situated at a distance given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:7">(3.7)</a>. We again reduce the size of the interval of uncertainty using the unimodality conditions. This whole process is continued so that for the <span class="math inline">\(k^{th}\)</span> experiment point, its location is given by,
+<span class="math display" id="eq:9">\[\begin{equation}
+    L_{k[j]} = \frac{F_{n-k}}{F_{n-(k-2)}}L_{k-1} \tag{3.9}
+\end{equation}\]</span>
+and the interval of uncertainty is given by,
+<span class="math display" id="eq:10">\[\begin{equation}
+    l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 \tag{3.10}
+\end{equation}\]</span>
+after <span class="math inline">\(k\)</span> iterations are completed. Now, the  given by the ratio of the present interval of uncertainty after conduction <span class="math inline">\(k\)</span> iterations out of the <span class="math inline">\(n\)</span> experiments to be performed, <span class="math inline">\(L_{k[i]}\)</span> to the initial interval of uncertainty, <span class="math inline">\(L_0\)</span>:
+<span class="math display" id="eq:11">\[\begin{equation}
+    R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} \tag{3.11}
+\end{equation}\]</span></p>
+<p>The purpose of this algorithm is to bring <span class="math inline">\(R \sim 0\)</span>. The <strong>Fibonacci Search Algorithm</strong> has been shown below:</p>
+<p><img src="img%203.png" /></p>
+<p>We will write a Python function that implements the above algorithm</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="solving-one-dimensional-optimization-problems.html#cb3-1"></a><span class="kw">def</span> fib_search(f, xl, xr, n):</span>
+<span id="cb3-2"><a href="solving-one-dimensional-optimization-problems.html#cb3-2"></a>    F <span class="op">=</span> fibonacci(n) <span class="co"># Call the fibonnaci number function</span></span>
+<span id="cb3-3"><a href="solving-one-dimensional-optimization-problems.html#cb3-3"></a>    L0 <span class="op">=</span> xr <span class="op">-</span> xl <span class="co"># Initial interval of uncertainty</span></span>
+<span id="cb3-4"><a href="solving-one-dimensional-optimization-problems.html#cb3-4"></a>    R1 <span class="op">=</span> L0 <span class="co"># Initial Reduction Ratio</span></span>
+<span id="cb3-5"><a href="solving-one-dimensional-optimization-problems.html#cb3-5"></a>    Li <span class="op">=</span> (F[n<span class="dv">-2</span>]<span class="op">/</span>F[n])<span class="op">*</span>L0 </span>
+<span id="cb3-6"><a href="solving-one-dimensional-optimization-problems.html#cb3-6"></a>    </span>
+<span id="cb3-7"><a href="solving-one-dimensional-optimization-problems.html#cb3-7"></a>    R <span class="op">=</span> [Li<span class="op">/</span>L0]</span>
+<span id="cb3-8"><a href="solving-one-dimensional-optimization-problems.html#cb3-8"></a></span>
+<span id="cb3-9"><a href="solving-one-dimensional-optimization-problems.html#cb3-9"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb3-10"><a href="solving-one-dimensional-optimization-problems.html#cb3-10"></a>        <span class="cf">if</span> Li <span class="op">&gt;</span> L0<span class="op">/</span><span class="dv">2</span>:</span>
+<span id="cb3-11"><a href="solving-one-dimensional-optimization-problems.html#cb3-11"></a>            x1 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb3-12"><a href="solving-one-dimensional-optimization-problems.html#cb3-12"></a>            x2 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb3-13"><a href="solving-one-dimensional-optimization-problems.html#cb3-13"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-14"><a href="solving-one-dimensional-optimization-problems.html#cb3-14"></a>            x1 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb3-15"><a href="solving-one-dimensional-optimization-problems.html#cb3-15"></a>            x2 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb3-16"><a href="solving-one-dimensional-optimization-problems.html#cb3-16"></a>            </span>
+<span id="cb3-17"><a href="solving-one-dimensional-optimization-problems.html#cb3-17"></a>        f1, f2 <span class="op">=</span> f(x1), f(x2)</span>
+<span id="cb3-18"><a href="solving-one-dimensional-optimization-problems.html#cb3-18"></a>        </span>
+<span id="cb3-19"><a href="solving-one-dimensional-optimization-problems.html#cb3-19"></a>        <span class="cf">if</span> f1 <span class="op">&lt;</span> f2:</span>
+<span id="cb3-20"><a href="solving-one-dimensional-optimization-problems.html#cb3-20"></a>            xr <span class="op">=</span> x2</span>
+<span id="cb3-21"><a href="solving-one-dimensional-optimization-problems.html#cb3-21"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
+<span id="cb3-22"><a href="solving-one-dimensional-optimization-problems.html#cb3-22"></a>        <span class="cf">elif</span> f1 <span class="op">&gt;</span> f2:</span>
+<span id="cb3-23"><a href="solving-one-dimensional-optimization-problems.html#cb3-23"></a>            xl <span class="op">=</span> x1</span>
+<span id="cb3-24"><a href="solving-one-dimensional-optimization-problems.html#cb3-24"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
+<span id="cb3-25"><a href="solving-one-dimensional-optimization-problems.html#cb3-25"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-26"><a href="solving-one-dimensional-optimization-problems.html#cb3-26"></a>            xl, xr <span class="op">=</span> x1, x2</span>
+<span id="cb3-27"><a href="solving-one-dimensional-optimization-problems.html#cb3-27"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>(xr <span class="op">-</span> xl) <span class="co"># New interval of uncertainty</span></span>
+<span id="cb3-28"><a href="solving-one-dimensional-optimization-problems.html#cb3-28"></a>            </span>
+<span id="cb3-29"><a href="solving-one-dimensional-optimization-problems.html#cb3-29"></a>        L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
+<span id="cb3-30"><a href="solving-one-dimensional-optimization-problems.html#cb3-30"></a>        R <span class="op">+=</span> [Li<span class="op">/</span>R1,] <span class="co"># Append the new reduction ratio</span></span>
+<span id="cb3-31"><a href="solving-one-dimensional-optimization-problems.html#cb3-31"></a>        </span>
+<span id="cb3-32"><a href="solving-one-dimensional-optimization-problems.html#cb3-32"></a>    <span class="cf">if</span> f1 <span class="op">&lt;=</span> f2:</span>
+<span id="cb3-33"><a href="solving-one-dimensional-optimization-problems.html#cb3-33"></a>        <span class="cf">return</span> [x1, f(x1), R] <span class="co"># Final result</span></span>
+<span id="cb3-34"><a href="solving-one-dimensional-optimization-problems.html#cb3-34"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-35"><a href="solving-one-dimensional-optimization-problems.html#cb3-35"></a>        <span class="cf">return</span> [x2, f(x2), R] <span class="co"># Final result</span></span></code></pre></div>
+
+<div class="example">
+<span id="exm:unnamed-chunk-6" class="example"><strong>Example 3.1  </strong></span>Let an objective function be:
+<span class="math display" id="eq:12">\[\begin{equation}
+    f(x) = x^5 - 5x^3 - 20x + 5 \tag{3.12}
+\end{equation}\]</span>
+We will use the <strong>Fibonacci search algorithm</strong> to find the minimizer <span class="math inline">\(x^*\)</span>, taking <span class="math inline">\(n=25\)</span> and the initial interval of uncertainty <span class="math inline">\([-2.5, 2.5]\)</span>. Let’s write a Python function to define the given objective function and visualize the same:
+</div>
+
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="solving-one-dimensional-optimization-problems.html#cb4-1"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
+<span id="cb4-2"><a href="solving-one-dimensional-optimization-problems.html#cb4-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">5</span> <span class="op">-</span> <span class="dv">5</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">20</span><span class="op">*</span>x <span class="op">+</span> <span class="dv">5</span></span>
+<span id="cb4-3"><a href="solving-one-dimensional-optimization-problems.html#cb4-3"></a></span>
+<span id="cb4-4"><a href="solving-one-dimensional-optimization-problems.html#cb4-4"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb4-5"><a href="solving-one-dimensional-optimization-problems.html#cb4-5"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="solving-one-dimensional-optimization-problems.html#cb5-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="solving-one-dimensional-optimization-problems.html#cb6-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="solving-one-dimensional-optimization-problems.html#cb7-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
+<p>Now, we use the function <code>fib_search(f, -2.5, 2.5, 25)</code> to run the optimization and print the results:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="solving-one-dimensional-optimization-problems.html#cb8-1"></a>Fib <span class="op">=</span> fib_search(f, <span class="fl">-2.5</span>, <span class="fl">2.5</span>, <span class="dv">25</span>)</span>
+<span id="cb8-2"><a href="solving-one-dimensional-optimization-problems.html#cb8-2"></a>x_star, f_x_star, R <span class="op">=</span> Fib</span>
+<span id="cb8-3"><a href="solving-one-dimensional-optimization-problems.html#cb8-3"></a><span class="bu">print</span> (<span class="st">&quot;x*:&quot;</span>, x_star)</span></code></pre></div>
+<pre><code>## x*: 1.999966677774075</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="solving-one-dimensional-optimization-problems.html#cb10-1"></a><span class="bu">print</span> (<span class="st">&quot;f(x*):&quot;</span>, f_x_star)</span></code></pre></div>
+<pre><code>## f(x*): -42.99999994448275</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="solving-one-dimensional-optimization-problems.html#cb12-1"></a><span class="bu">print</span> (<span class="st">&quot;Final Reduction Ratio:&quot;</span>, R[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## Final Reduction Ratio: 0.0</code></pre>
+<pre><code>##      n       xl       xr      f(x1)      f(x2)  Reduction Ratio
+## 0    0 -2.50000  2.50000  35.468750 -25.468750          0.38197
+## 1    1 -0.59017  2.50000  17.759586  -7.759586          0.38197
+## 2    2  0.59017  2.50000  -7.759586 -28.881854          0.23607
+## 3    3  1.31966  2.50000 -28.881854 -40.762632          0.14590
+## 4    4  1.77051  2.50000 -40.762632 -42.874998          0.09017
+## 5    5  1.77051  2.22136 -42.874998 -40.145824          0.05573
+## 6    6  1.94272  2.22136 -42.842416 -42.874998          0.03444
+## 7    7  1.94272  2.11493 -42.874998 -42.284678          0.02129
+## 8    8  1.94272  2.04915 -42.996368 -42.874998          0.01316
+## 9    9  1.98337  2.04915 -42.986336 -42.996368          0.00813
+## 10  10  1.98337  2.02403 -42.996368 -42.970650          0.00502
+## 11  11  1.98337  2.00850 -42.999940 -42.996368          0.00311
+## 12  12  1.99297  2.00850 -42.997540 -42.999940          0.00192
+## 13  13  1.99297  2.00257 -42.999940 -42.999670          0.00119
+## 14  14  1.99663  2.00257 -42.999435 -42.999940          0.00073
+## 15  15  1.99890  2.00257 -42.999940 -42.999996          0.00045
+## 16  16  1.99890  2.00117 -42.999996 -42.999932          0.00028
+## 17  17  1.99890  2.00030 -42.999997 -42.999996          0.00017
+## 18  18  1.99943  2.00030 -42.999984 -42.999997          0.00011
+## 19  19  1.99977  2.00030 -42.999997 -43.000000          0.00007
+## 20  20  1.99977  2.00010 -43.000000 -43.000000          0.00004
+## 21  21  1.99990  2.00010 -43.000000 -43.000000          0.00003
+## 22  22  1.99990  2.00003 -43.000000 -43.000000          0.00001
+## 23  23  1.99997  1.99997 -43.000000 -43.000000          0.00000
+## 24  24  1.99997  1.99997 -43.000000 -43.000000          0.00000
+## [1.999966677774075, -42.99999994448275, [0.3819660113295568, 0.3819660113295568, 0.23606797734088633, 0.14589803398867046, 0.09016994335221593, 0.05572809063645452, 0.0344418527157614, 0.0212862379206931, 0.01315561479506831, 0.008130623125624776, 0.005024991669443516, 0.0031056314561812774, 0.0019193602132622563, 0.0011862712429190209, 0.0007330889703432183, 0.00045318227257580253, 0.00027990669776741585, 0.00017327557480838668, 0.0001066311229590291, 6.664445184937448e-05, 3.9986671109637494e-05, 2.665778073975389e-05, 1.3328890369882865e-05, 0.0, 0.0]]</code></pre>
 
 </div>
 </div>

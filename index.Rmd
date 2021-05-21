@@ -2,6 +2,10 @@
 title: "Introduction to Mathematical Optimization"
 subtitle: "with Python"
 author: "Indranil Ghosh"
+output:
+    pdf_document:
+    extra_dependencies: 
+        algorithm2e: ["ruled", "lined", "linesnumbered", "longend"]
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---

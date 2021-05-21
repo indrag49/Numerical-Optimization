@@ -58,3 +58,220 @@ The given steps continue iteratively until the convergence is satisfied to a giv
 Rao's book *Engineering Optimization* [Rao, Singiresu S. Engineering optimization: theory and practice. John Wiley & Sons, 2019.] also has some detailed studies on these kinds of optimization methods.
 
 ## Fibonacci Search Method
+
+Instead of finding the exact minimizer $x^*$ of $f(x)$, the \textit{fibonacci search strategy} works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of *Fibonacci numbers* [http://oeis.org/A000045]. This sequence is defined in the following way:
+
+\begin{align}
+F_0&=0,F_1=1, \\ 
+F_n&=F_{n-1} + F_{n-2},\text{ where }n=2,3,\ldots
+\end{align}
+
+We write a Python code to generate the first 16 Fibonacci numbers and display them as a table:
+
+```{python}
+import pandas as pd
+import numpy as np
+
+def fibonacci(n): # define the  function
+    fn = [0, 1,]
+    for i in range(2, n+1):
+        fn.append(fn[i-1] + fn[i-2])
+    return fn
+
+
+N = np.arange(16)
+data = {'n': N, 'Fibonacci(n)': fibonacci(15)}
+df = pd.DataFrame(data)
+```
+
+`df` looks like this:
+
+```{python, echo=FALSE}
+from tabulate import tabulate
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+Let $n$ be the total number of experiments to be conducted and $[x_l, x_r]$ be the initial interval the algorithm starts with. Let 
+\begin{eqnarray}
+L_0 = x_r - x_l (\#eq:2)
+\end{eqnarray}
+be the initial level of uncertainty and let us define,
+\begin{eqnarray}
+L_j = \frac{F_{n-2}}{F_n}L_0 (\#eq:3)
+\end{eqnarray}
+where, $F_{n-2}$ and $F_n$ are the $(n-2)^{th}$ and $n^{th}$ *Fibonacci numbers* respectively. We see from the formulation of the *Fibonacci numbers* that, \@ref(eq:3) shows the following property:
+\begin{equation}
+    L_j = \frac{F_{n-2}}{F_n}L_0 \leq \frac{L_0}{2} \text{ for } n\geq 2 
+\end{equation}
+Now, the initial two experiments are set at points $x_1$ and $x_2$, where, $L_j = x_1 - x_l$ and $L_j = x_r - x_2$. So, combining these with Eq.\@ref(eq:3), we have:
+\begin{equation}
+    x_1 = x_l + \frac{F_{n-2}}{F_n}L_0 (\#eq:4)
+\end{equation}
+and
+\begin{equation}
+    x_2 = x_r - \frac{F_{n-2}}{F_n}L_0 (\#eq:5)
+    \end{equation}
+Now taking into consideration the unimodality assumption, a part of the interval of uncertainty is rejected, shrinking it to a smaller size, given by,
+\begin{equation}
+    L_i = L_0 - L_j = L_0(1-\frac{F_{n-2}}{F_n}) = \frac{F_{n-1}}{F_n}L_0 (\#eq:6)
+\end{equation}
+where, we have used the fact that, $F_n - F_{n-2} = F_{n-1}$ from the formulation of the *Fibonacci numbers*. This procedure leaves us with only one experiment, which, from one end, is situated at a distance of
+\begin{equation}
+  L_j = \frac{F_{n-2}}{F_n}L_0 = \frac{F_{n-2}}{F_{n-1}}L_i (\#eq:7)
+\end{equation}
+where, we have used Eq.\@ref(eq:3). From the other end, the same experiment point is situated at a distance give by,
+\begin{equation}
+L_i-L_j = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_{n-1}}L_2 (\#eq:8)
+\end{equation}
+where, we have again used Eq.\@ref(eq:3). We now place a new experiment point in the interval $L_i$ so that both the present experiment points are situated at a distance given by Eq.\@ref(eq:7). We again reduce the size of the interval of uncertainty using the unimodality conditions. This whole process is continued so that for the $k^{th}$ experiment point, its location is given by,
+\begin{equation}
+    L_{k[j]} = \frac{F_{n-k}}{F_{n-(k-2)}}L_{k-1} (\#eq:9)
+\end{equation}
+and the interval of uncertainty is given by,
+\begin{equation}
+    l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 (\#eq:10)
+\end{equation}
+    after $k$ iterations are completed. Now, the \textit{reduction ratio} given by the ratio of the present interval of uncertainty after conduction $k$ iterations out of the $n$ experiments to be performed, $L_{k[i]}$ to the initial interval of uncertainty, $L_0$:
+\begin{equation}
+    R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} (\#eq:11)
+\end{equation}
+
+The purpose of this algorithm is to bring $R \sim 0$. The **Fibonacci Search Algorithm** has been shown below:
+
+![](img 3.png)
+
+We will write a Python function that implements the above algorithm
+
+```{python}
+def fib_search(f, xl, xr, n):
+    F = fibonacci(n) # Call the fibonnaci number function
+    L0 = xr - xl # Initial interval of uncertainty
+    R1 = L0 # Initial Reduction Ratio
+    Li = (F[n-2]/F[n])*L0 
+    
+    R = [Li/L0]
+
+    for i in range(2, n+1):
+        if Li > L0/2:
+            x1 = xr - Li
+            x2 = xl + Li
+        else:
+            x1 = xl + Li
+            x2 = xr - Li
+            
+        f1, f2 = f(x1), f(x2)
+        
+        if f1 < f2:
+            xr = x2
+            Li = (F[n - i]/F[n - (i - 2)])*L0 # New interval of uncertainty
+        elif f1 > f2:
+            xl = x1
+            Li = (F[n - i]/F[n - (i - 2)])*L0 # New interval of uncertainty
+        else:
+            xl, xr = x1, x2
+            Li = (F[n - i]/F[n - (i - 2)])*(xr - xl) # New interval of uncertainty
+            
+        L0 = xr - xl
+        R += [Li/R1,] # Append the new reduction ratio
+        
+    if f1 <= f2:
+        return [x1, f(x1), R] # Final result
+    else:
+        return [x2, f(x2), R] # Final result
+```
+
+```{example}
+Let an objective function be:
+\begin{equation}
+    f(x) = x^5 - 5x^3 - 20x + 5 (\#eq:12)
+\end{equation}
+We will use the **Fibonacci search algorithm** to find the minimizer $x^*$, taking $n=25$ and the initial interval of uncertainty $[-2.5, 2.5]$. Let's write a Python function to define the given objective function and visualize the same:
+```
+
+```{python, results=FALSE}
+def f(x): # Objective function
+    return x**5 - 5*x**3 - 20*x + 5
+
+x = np.linspace(-3, 3, 100)
+plt.plot(x, f(x), 'r-')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.show()
+```
+
+Now, we use the function `fib_search(f, -2.5, 2.5, 25)` to run the optimization and print the results:
+
+```{python}
+Fib = fib_search(f, -2.5, 2.5, 25)
+x_star, f_x_star, R = Fib
+print ("x*:", x_star)
+print ("f(x*):", f_x_star)
+print ("Final Reduction Ratio:", R[-1])
+```
+
+```{python, echo=FALSE}
+
+def fib_search(f, xl, xr, n):    
+    F = fibonacci(n)
+    L0 = xr - xl
+    ini = L0
+    Li = (F[n-2]/F[n])*L0
+    
+    R = [Li/L0]
+    a = [xl]
+    b = [xr]
+    F1 = [f(xl)]
+    F2 = [f(xr)]
+
+    for i in range(2, n+1):
+        #print("reduction ratio:", Li/ini)
+        if Li > L0/2:
+            x1 = xr - Li
+            x2 = xl + Li
+        else:
+            x1 = xl + Li
+            x2 = xr - Li
+            
+        f1, f2 = f(x1), f(x2)
+        
+        if f1 < f2:
+            xr = x2
+            Li = (F[n - i]/F[n - (i - 2)])*L0
+        elif f1 > f2:
+            xl = x1
+            Li = (F[n - i]/F[n - (i - 2)])*L0
+        else:
+            xl, xr = x1, x2
+            Li = (F[n - i]/F[n - (i - 2)])*(xr - xl)
+            
+        L0 = xr - xl
+        R += [Li/ini,] 
+        a += [xl, ]
+        b += [xr, ]
+        F1 += [f1, ]
+        F2 += [f2, ]
+        
+    data = {'n' : range(0, n),
+            'xl': a,
+            'xr': b,
+            'f(x1)': F1,
+            'f(x2)': F2,
+            'Reduction Ratio': R}
+
+    df = pd.DataFrame(data, columns = ['n', 'xl', 'xr', 'f(x1)', 'f(x2)', 'Reduction Ratio'])
+    df = df.round({'xl': 5})
+    df = df.round({'xr' : 5}) 
+    #df = df.round({'f(x1)':5})
+    #df = df.round({'f(x2)':5})
+    df = df.round({'Reduction Ratio':5})
+    print(df)
+        
+    if f1 <= f2:
+        return [x1, f(x1), R]
+    else:
+        return [x2, f(x2), R]
+
+#def f(x) : return x+np.exp(np.sin(x))
+    
+fib_search(f, -2.5, 2.5, 25)
+```
