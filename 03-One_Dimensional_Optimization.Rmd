@@ -196,10 +196,11 @@ x = np.linspace(-3, 3, 100)
 plt.plot(x, f(x), 'r-')
 plt.xlabel('x ->')
 plt.ylabel('f(x) ->')
+plt.title("Graph of $f(x) =  x^5-5x^3-20x+5$")
 plt.show()
 ```
 
-Now, we use the function `fib_search(f, -2.5, 2.5, 25)` to run the optimization and print the results:
+Now, we consider $n=25$ and use the function `fib_search(f, -2.5, 2.5, 25)` to run the optimization and print the results:
 
 ```{python}
 Fib = fib_search(f, -2.5, 2.5, 25)
@@ -209,7 +210,23 @@ print ("f(x*):", f_x_star)
 print ("Final Reduction Ratio:", R[-1])
 ```
 
-```{python, echo=FALSE}
+We see that $x^* \sim 2$, $f(x^*) \sim -43$ and the final *Reduction Ration* is 0. Now, to show the positions of $x^*$ and $f(x^*)$ on the graph of the objective function, we write the following code:
+
+```{python, results=FALSE}
+x = np.linspace(-3, 3, 100)
+plt.plot(x, f(x), 'r-')
+plt.plot([x_star], [f_x_star], 'ko')
+plt.axvline(x=x_star, color='b', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("$x^*$ denoted as broken blue line and $f(x^*)$ denoted as the black dot")
+plt.show()
+```
+
+We can modify our function in such a way that all the optimization data in every step are collected
+and displayed as a `DataFrame`:
+
+```{python}
 
 def fib_search(f, xl, xr, n):    
     F = fibonacci(n)
@@ -259,19 +276,112 @@ def fib_search(f, xl, xr, n):
             'Reduction Ratio': R}
 
     df = pd.DataFrame(data, columns = ['n', 'xl', 'xr', 'f(x1)', 'f(x2)', 'Reduction Ratio'])
-    df = df.round({'xl': 5})
-    df = df.round({'xr' : 5}) 
-    #df = df.round({'f(x1)':5})
-    #df = df.round({'f(x2)':5})
-    df = df.round({'Reduction Ratio':5})
-    print(df)
-        
-    if f1 <= f2:
-        return [x1, f(x1), R]
-    else:
-        return [x2, f(x2), R]
+    return df
 
-#def f(x) : return x+np.exp(np.sin(x))
-    
-fib_search(f, -2.5, 2.5, 25)
+df = fib_search(f, -2.5, 2.5, 25)
 ```
+
+Where `df` looks like this:
+
+```{python, echo=FALSE}
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+ The graph of the reduction ratio at each $n$ can be plotted with the following code:
+
+```{python, results=FALSE}
+plt.xlabel("n->")
+plt.ylabel("Reduction Ratio ->")
+plt.plot(range(0, len(df)), df['Reduction Ratio'])
+plt.title("Graph of change of reduction ratio at each $n$")
+plt.show()
+```
+
+
+## Golden Section Search Method
+
+The **golden section search method** is a modified version of the **Fibonacci search method**. One advantage of the former over the later is that, we do not need to keep a record of the total number of experiment points $n$ beforehand. While selecting $x_1$ and $x_2$ inside the interval of uncertainty, we make use of the golden ratio, $\phi = \frac{\sqrt{5} - 1}{2}$ which is the positive root of the quadratic equation given by:
+\begin{equation}
+    \phi^2+\phi-1=0 (\#eq:13)
+\end{equation}
+
+Given the initial interval $[x_l, x_r]$, we have the initial interval of uncertainty as,
+\begin{equation}
+L_0 = x_r - x_l (\#eq:14)
+\end{equation}
+
+The new interior points $x_1$ and $x_2$ are chosen in such a way that both of them lies at a distance $\phi^2L_0$ from either side, i.e,
+\begin{equation}
+    x_1-x_l = \phi^2L_0 (\#eq:15)
+\end{equation}
+and
+\begin{equation}
+    x_r-x_2 = \phi^2L_0 (\#eq:16)
+\end{equation}
+
+Now from Eq.\@ref(eq:13) we know 
+\begin{equation}
+    L_0 = (\phi^2 + \phi)L_0 (\#eq:17)
+\end{equation}
+
+The above computations leave us with:
+\begin{equation}
+x_r - x_1 = \phi L_0 (\#eq:18)
+\end{equation}
+and
+\begin{equation}
+    x_2 - x_l = \phi L_0 (\#eq:19)
+\end{equation}
+
+Given, $f(x)$ is the nonlinear objective function, we now check whether $f(x_1) > f(x_2)$. If this is the case, we set $x_l = x_1$, otherwise if $f(x_1) > f(x_2)$, we set $x_r=x_2$. The new interval of uncertainty is set to be $L_i = \phi L_0$ and the previous interval is shrunk. This process of choosing new experimental points and shrinking the interval of uncertainty is continued until the termination condition is satisfied. The termination condition is to check whether the interval of uncertainty is less than a particular tolerance $\epsilon$ usually provided by the user. The *golden section search* algorithm is given below:
+
+![](img 4.png)
+
+```{example}
+Let us consider an objective function:
+\begin{equation}
+    f(x) = \frac{1}{16}x^3 - \frac{27}{4}x (\#eq:20)
+\end{equation}
+
+We will use the *golden section search* method to find the minimizer $x^*$ of this function and compute $f(x^*)$. Suppose the initial interval be $[-10, 10]$ and the tolerance for the termination condition for the algorithm be $\epsilon = 10^{-5}$. Let us first define the function in Python:
+```
+
+```{python}
+def f(x): # objective function
+    return x**3/16 - 27*x/4
+```
+
+The graph of the objective function:
+
+```{python, results=FALSE}
+x = np.linspace(-20, 20, 100)
+plt.plot(x, f(x), 'r-')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("Graph of $f(x) = \\frac{1}{16}x^3 - \\frac{27}{4}x$")
+plt.show()
+```
+
+For tackling this problem, we will not write our own Python function. As already stated in the last chapter, the `scipy.optimize` package too equips us with solvers to solve these tasks. For this problem, we use the `minimize_scalar()` function provided by `scipy.optimize`, which is used for minimization of a scalar function of one variable. The `minimize_scalar()` function provides the user with the following parameter:
+
+* `fun`: The objective function which must be callable,
+* `bracket`: This is an optional parameter and defines the bracketing interval. This is a sequence, and consists of either three points $(x_a, x_b, x_c)$, such that $x_a < x_b < x_c$ and $f(x_b) < f(x_a), f(x_c)$, or two points $(x_a, x_b)$ that are considered as the starting interval for any elimination search method,
+* `bounds`: This is an optional parameter too (important for our analysis!) and is a sequence. This defines the optimization bound, i.e, the initial interval of uncertainty, $[x_l, x_r]$, 
+* `args`: This is a tuple and an optional parameter that defines the extra arguments that might be needed to pass to the objective function,
+* `method`: This is the most important parameter that defines the various solvers provided by `minimize_scalar()`. This should be either a string (`str`) or a callable object. As of writing this book, the solvers that `minimize_scalar()` provides are:
+  - `'golden'`: Uses the *golden section search* method for finding the local minimum,
+  - `'brent'`: Uses the *Brent's algorithm* (will be discussed in the next section) for finding the local minimum,
+  - `'bounded'`: For performing bounded minimization and uses the `Brent's algorithm` to find the local minima specified in the `'bounds'` parameter. The `method` parameter is optional too, and if not provided, the `minimize_scalar()` function uses the `'brent'` method by default. The user can also write and pass a custom solver which must be a Python callable object.
+* `tol`: This parameter represents the tolerance ($\epsilon$) of the optimization algorithm. This must be a `float` and is optional too, and
+* `options`: This is an optional parameter and is a Python dictionary which specifies the solver options:
+  - `maxiter`: This is an `int` object and denotes the maximum number of iterations to be performed by the solver,
+  - `disp`: This must be a boolean (`bool`) object, and if set to `True`, prints a detailed information about the convergence of the algorithm
+  
+The `minimize_scalar()` function returns the optimization result as a specific Python object designed specifically for the `scipy.optimize` module called, `OptimizeResult`. It has the following important attributes:
+
+* `x`: The solution ($x^*$) of the optimization. This is a *numpy array* object, i.e, `ndarray` and can return a scalar or a vector,
+* `success`: This is a `bool` object and states whether the optimization process has completed successfully or not,
+* `fun, jac, hess`: Provides the objective function, Jacobian and the Hessian matrix at the solution $x^*$ as \texttt{ndarray} objects,
+* `nfev, njev, nhev`: Provides the number of evaluations of the objective function, its Jacobian and Hessian matrix during the running of the optimization solver and are `int` objects,
+* This is an `int` object and states the number of iterations that have been performed by the solver, and
+* `maxcv`: This is a \texttt{float} object and represents the maximum constraint evaluation.

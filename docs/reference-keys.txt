@@ -99,3 +99,4 @@ one-dimensional-optimization-problems
 what-is-a-unimodal-function
 fibonacci-search-method
 exm:unnamed-chunk-6
+golden-section-search-method
