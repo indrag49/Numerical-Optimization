@@ -50,7 +50,7 @@ We have taken the quadratic function of one variable: $f(x) = 5x^2-3x+2$. It is 
 * If condition in step (2) is not satisfied, we set the new interval as $[x_1, x_r]$ directly after step (1) and set $x_l=x_1$, and
 * Next pick a new $x_1$.
 
-The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an \textit{Elimination Method} and we study two categories under this kind:
+The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an *Elimination Method* and we study two categories under this kind:
 
 * **Fibonacci Search**, and
 * **Golden Section Search**.
@@ -59,7 +59,7 @@ Rao's book *Engineering Optimization* [Rao, Singiresu S. Engineering optimizatio
 
 ## Fibonacci Search Method
 
-Instead of finding the exact minimizer $x^*$ of $f(x)$, the \textit{fibonacci search strategy} works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of *Fibonacci numbers* [http://oeis.org/A000045]. This sequence is defined in the following way:
+Instead of finding the exact minimizer $x^*$ of $f(x)$, the *Fibonacci search strategy* works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of *Fibonacci numbers* [http://oeis.org/A000045]. This sequence is defined in the following way:
 
 \begin{align}
 F_0&=0,F_1=1, \\ 
@@ -131,7 +131,7 @@ and the interval of uncertainty is given by,
 \begin{equation}
     l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 (\#eq:10)
 \end{equation}
-    after $k$ iterations are completed. Now, the \textit{reduction ratio} given by the ratio of the present interval of uncertainty after conduction $k$ iterations out of the $n$ experiments to be performed, $L_{k[i]}$ to the initial interval of uncertainty, $L_0$:
+    after $k$ iterations are completed. Now, the *reduction ratio* given by the ratio of the present interval of uncertainty after conduction $k$ iterations out of the $n$ experiments to be performed, $L_{k[i]}$ to the initial interval of uncertainty, $L_0$:
 \begin{equation}
     R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} (\#eq:11)
 \end{equation}
@@ -381,7 +381,19 @@ The `minimize_scalar()` function returns the optimization result as a specific P
 
 * `x`: The solution ($x^*$) of the optimization. This is a *numpy array* object, i.e, `ndarray` and can return a scalar or a vector,
 * `success`: This is a `bool` object and states whether the optimization process has completed successfully or not,
-* `fun, jac, hess`: Provides the objective function, Jacobian and the Hessian matrix at the solution $x^*$ as \texttt{ndarray} objects,
+* `fun, jac, hess`: Provides the objective function, Jacobian and the Hessian matrix at the solution $x^*$ as `ndarray` objects,
 * `nfev, njev, nhev`: Provides the number of evaluations of the objective function, its Jacobian and Hessian matrix during the running of the optimization solver and are `int` objects,
 * This is an `int` object and states the number of iterations that have been performed by the solver, and
-* `maxcv`: This is a \texttt{float} object and represents the maximum constraint evaluation.
+* `maxcv`: This is a `float` object and represents the maximum constraint evaluation.
+
+Now returning back to our example, we have $f(x)$ defined by Eq.\@ref(eq:20), we use the *golden section search method* to find its minimizer. Using the `minimize_scalar()` function and setting parameters `method = 'golden'`, `bounds = (-10, 10)` and `tol = 10**-5` we can get our solution. We see that the initial interval has been set to $[-10, 10]$ and the tolerance $\epsilon$ has been set $10^{-5}$. We write the Python code:
+
+```{python}
+from scipy.optimize import minimize_scalar
+result = minimize_scalar(f, bounds = (-10, 10), method = 'golden', tol = 10**-5)
+print(result)
+```
+
+We notice that $x^* \sim 6$, $f(x^*) \sim -27$, the number of iterations it took to converge to $x^*$ is 26 and other attributes that have been listed methodically. With some little extra Python codes, the user can also collect the data of the optimization steps, given below:
+
+

@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-21" />
+<meta name="date" content="2021-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,6 +167,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#one-dimensional-optimization-problems"><i class="fa fa-check"></i><b>3.1</b> One Dimensional Optimization Problems</a></li>
 <li class="chapter" data-level="3.2" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#what-is-a-unimodal-function"><i class="fa fa-check"></i><b>3.2</b> What is a Unimodal Function?</a></li>
 <li class="chapter" data-level="3.3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#fibonacci-search-method"><i class="fa fa-check"></i><b>3.3</b> Fibonacci Search Method</a></li>
+<li class="chapter" data-level="3.4" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#golden-section-search-method"><i class="fa fa-check"></i><b>3.4</b> Golden Section Search Method</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -191,7 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">Introduction to Mathematical Optimization</h1>
 <h2 class="subtitle"><em>with Python</em></h2>
 <p class="author"><em>Indranil Ghosh</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-05-21</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-05-23</em></p>
 </div>
 <div id="what-is-numerical-optimization" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> What is Numerical Optimization?</h1>
@@ -345,7 +346,7 @@ We then apply any minimization technique after setting <span class="math inline"
 <span id="exm:unnamed-chunk-13" class="example"><strong>Example 1.1  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> and the Hessian matrix <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span>. The gradient vector is <span class="math inline">\(\nabla f(\mathbf{x}) = \begin{pmatrix} 2x_2^3+x_3^3 \\ 6x_1x_2^2+6x_2x_3 \\ 3x_2^2+3x_3^2x_1 \end{pmatrix}\)</span>. So <span class="math inline">\(\nabla f(\mathbf{x})| \mathbf{p} = \begin{pmatrix} 43 \\ 60 \\ 39 \end{pmatrix}\)</span>. The Hessian matrix is therefore given by, <span class="math inline">\(\mathbf{H}f(\mathbf{x}) = \begin{pmatrix} 0 &amp; 6x_2^2 &amp; 3x_3^2 \\ 6x_2^2 &amp; 12x_1x_2+6x_3 &amp; 6x_2 \\ 3x_3^2 &amp; 6x_2 &amp; 6x_3x_1 \end{pmatrix}\)</span> and at point <span class="math inline">\(\mathbf{p}\)</span>, <span class="math inline">\(\mathbf{H} f(\mathbf{x})|\mathbf{p} = \begin{pmatrix} 0 &amp; 24 &amp; 27 \\ 24 &amp; 42 &amp; 12 \\ 27 &amp; 12 &amp; 18 \end{pmatrix}\)</span>.
 </div>
 
-<p>We will try to work out the same example with Python scripting now. For that we need an extra package called <code>autograd</code> [<a href="https://github.com/HIPS/autograd" class="uri">https://github.com/HIPS/autograd</a>], besides the <code>numpy</code>[<a href="https://numpy.org/" class="uri">https://numpy.org/</a>] package. The <code>autograd</code> package is used for automatically differentiating native Python and Numpy code. Fundamentally <code>autograd</code> is used in <em>gradient-based optimization</em>. First <code>pip</code> install the <code>autograd package</code></p>
+<p>We will try to work out the same example with Python scripting now. For that we need an extra package called <a href="https://github.com/HIPS/autograd"><code>autograd</code></a>, besides the <a href="https://numpy.org/"><code>numpy</code></a> package. The <code>autograd</code> package is used for automatically differentiating native Python and Numpy code. Fundamentally <code>autograd</code> is used in <em>gradient-based optimization</em>. First <code>pip</code> install the <code>autograd package</code></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="index.html#cb1-1"></a>pip install autograd</span></code></pre></div>
 <p>Now, after it is downloaded, we type the following in our notebook:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="index.html#cb2-1"></a><span class="im">import</span> autograd.numpy <span class="im">as</span> au</span>

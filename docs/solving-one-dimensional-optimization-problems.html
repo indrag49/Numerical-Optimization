@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-21" />
+<meta name="date" content="2021-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -220,7 +220,7 @@ where, <span class="math inline">\(f\)</span> is a nonlinear function. The under
 <li>If condition in step (2) is not satisfied, we set the new interval as <span class="math inline">\([x_1, x_r]\)</span> directly after step (1) and set <span class="math inline">\(x_l=x_1\)</span>, and</li>
 <li>Next pick a new <span class="math inline">\(x_1\)</span>.</li>
 </ul>
-<p>The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an  and we study two categories under this kind:</p>
+<p>The given steps continue iteratively until the convergence is satisfied to a given limit of the minimizer. These class of methods is called an <em>Elimination Method</em> and we study two categories under this kind:</p>
 <ul>
 <li><strong>Fibonacci Search</strong>, and</li>
 <li><strong>Golden Section Search</strong>.</li>
@@ -229,7 +229,7 @@ where, <span class="math inline">\(f\)</span> is a nonlinear function. The under
 </div>
 <div id="fibonacci-search-method" class="section level2">
 <h2><span class="header-section-number">3.3</span> Fibonacci Search Method</h2>
-<p>Instead of finding the exact minimizer <span class="math inline">\(x^*\)</span> of <span class="math inline">\(f(x)\)</span>, the  works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of <em>Fibonacci numbers</em> [<a href="http://oeis.org/A000045" class="uri">http://oeis.org/A000045</a>]. This sequence is defined in the following way:</p>
+<p>Instead of finding the exact minimizer <span class="math inline">\(x^*\)</span> of <span class="math inline">\(f(x)\)</span>, the <em>Fibonacci search strategy</em> works by reducing the interval of uncertainty in every step, ultimately converging the interval, containing the minimizer, to a desired size as small as possible. One caveat is that, the initial interval containing, such that the interval lies in it, has to be known beforehand. However, the algorithm works on a nonlinear function, even if it is discontinuous. The name comes from the fact that the algorithm makes use of the famous sequence of <em>Fibonacci numbers</em> [<a href="http://oeis.org/A000045" class="uri">http://oeis.org/A000045</a>]. This sequence is defined in the following way:</p>
 <p><span class="math display">\[\begin{align}
 F_0&amp;=0,F_1=1, \\ 
 F_n&amp;=F_{n-1} + F_{n-2},\text{ where }n=2,3,\ldots
@@ -309,7 +309,7 @@ and the interval of uncertainty is given by,
 <span class="math display" id="eq:10">\[\begin{equation}
     l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 \tag{3.10}
 \end{equation}\]</span>
-after <span class="math inline">\(k\)</span> iterations are completed. Now, the  given by the ratio of the present interval of uncertainty after conduction <span class="math inline">\(k\)</span> iterations out of the <span class="math inline">\(n\)</span> experiments to be performed, <span class="math inline">\(L_{k[i]}\)</span> to the initial interval of uncertainty, <span class="math inline">\(L_0\)</span>:
+after <span class="math inline">\(k\)</span> iterations are completed. Now, the <em>reduction ratio</em> given by the ratio of the present interval of uncertainty after conduction <span class="math inline">\(k\)</span> iterations out of the <span class="math inline">\(n\)</span> experiments to be performed, <span class="math inline">\(L_{k[i]}\)</span> to the initial interval of uncertainty, <span class="math inline">\(L_0\)</span>:
 <span class="math display" id="eq:11">\[\begin{equation}
     R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} \tag{3.11}
 \end{equation}\]</span></p>
@@ -555,11 +555,21 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 <ul>
 <li><code>x</code>: The solution (<span class="math inline">\(x^*\)</span>) of the optimization. This is a <em>numpy array</em> object, i.e, <code>ndarray</code> and can return a scalar or a vector,</li>
 <li><code>success</code>: This is a <code>bool</code> object and states whether the optimization process has completed successfully or not,</li>
-<li><code>fun, jac, hess</code>: Provides the objective function, Jacobian and the Hessian matrix at the solution <span class="math inline">\(x^*\)</span> as  objects,</li>
+<li><code>fun, jac, hess</code>: Provides the objective function, Jacobian and the Hessian matrix at the solution <span class="math inline">\(x^*\)</span> as <code>ndarray</code> objects,</li>
 <li><code>nfev, njev, nhev</code>: Provides the number of evaluations of the objective function, its Jacobian and Hessian matrix during the running of the optimization solver and are <code>int</code> objects,</li>
 <li>This is an <code>int</code> object and states the number of iterations that have been performed by the solver, and</li>
-<li><code>maxcv</code>: This is a  object and represents the maximum constraint evaluation.</li>
+<li><code>maxcv</code>: This is a <code>float</code> object and represents the maximum constraint evaluation.</li>
 </ul>
+<p>Now returning back to our example, we have <span class="math inline">\(f(x)\)</span> defined by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:20">(3.20)</a>, we use the <em>golden section search method</em> to find its minimizer. Using the <code>minimize_scalar()</code> function and setting parameters <code>method = 'golden'</code>, <code>bounds = (-10, 10)</code> and <code>tol = 10**-5</code> we can get our solution. We see that the initial interval has been set to <span class="math inline">\([-10, 10]\)</span> and the tolerance <span class="math inline">\(\epsilon\)</span> has been set <span class="math inline">\(10^{-5}\)</span>. We write the Python code:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="solving-one-dimensional-optimization-problems.html#cb35-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize_scalar</span>
+<span id="cb35-2"><a href="solving-one-dimensional-optimization-problems.html#cb35-2"></a>result <span class="op">=</span> minimize_scalar(f, bounds <span class="op">=</span> (<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), method <span class="op">=</span> <span class="st">&#39;golden&#39;</span>, tol <span class="op">=</span> <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
+<span id="cb35-3"><a href="solving-one-dimensional-optimization-problems.html#cb35-3"></a><span class="bu">print</span>(result)</span></code></pre></div>
+<pre><code>##      fun: -26.99999999991886
+##     nfev: 32
+##      nit: 26
+##  success: True
+##        x: 5.99999150720724</code></pre>
+<p>We notice that <span class="math inline">\(x^* \sim 6\)</span>, <span class="math inline">\(f(x^*) \sim -27\)</span>, the number of iterations it took to converge to <span class="math inline">\(x^*\)</span> is 26 and other attributes that have been listed methodically. With some little extra Python codes, the user can also collect the data of the optimization steps, given below:</p>
 
 </div>
 </div>

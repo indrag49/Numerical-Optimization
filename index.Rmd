@@ -225,7 +225,7 @@ Let us consider an example now.
 Let an objective function be $f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1$. We will find out the gradient vector $\nabla f(\mathbf{x})$ and the Hessian matrix $\mathbf{H} f(\mathbf{x})$ at the point $\mathbf{p} = \begin{pmatrix} 1 & 2 & 3 \end{pmatrix}$. The gradient vector is $\nabla f(\mathbf{x}) = \begin{pmatrix} 2x_2^3+x_3^3 \\ 6x_1x_2^2+6x_2x_3 \\ 3x_2^2+3x_3^2x_1 \end{pmatrix}$. So $\nabla f(\mathbf{x})| \mathbf{p} = \begin{pmatrix} 43 \\ 60 \\ 39 \end{pmatrix}$. The Hessian matrix is therefore given by, $\mathbf{H}f(\mathbf{x}) = \begin{pmatrix} 0 & 6x_2^2 & 3x_3^2 \\ 6x_2^2 & 12x_1x_2+6x_3 & 6x_2 \\ 3x_3^2 & 6x_2 & 6x_3x_1 \end{pmatrix}$ and at point $\mathbf{p}$, $\mathbf{H} f(\mathbf{x})|\mathbf{p} = \begin{pmatrix} 0 & 24 & 27 \\ 24 & 42 & 12 \\ 27 & 12 & 18 \end{pmatrix}$.
 ```
 
-We will try to work out the same example with Python scripting now. For that we need an extra package called `autograd` [https://github.com/HIPS/autograd], besides the `numpy`[https://numpy.org/] package. The `autograd` package is used for automatically differentiating native Python and Numpy code. Fundamentally `autograd` is used in *gradient-based optimization*. First `pip` install the `autograd package`
+We will try to work out the same example with Python scripting now. For that we need an extra package called [`autograd`](https://github.com/HIPS/autograd), besides the [`numpy`](https://numpy.org/) package. The `autograd` package is used for automatically differentiating native Python and Numpy code. Fundamentally `autograd` is used in *gradient-based optimization*. First `pip` install the `autograd package`
 
 ```{python, eval=FALSE}
 pip install autograd
