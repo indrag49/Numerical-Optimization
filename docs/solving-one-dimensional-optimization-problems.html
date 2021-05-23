@@ -570,6 +570,51 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 ##  success: True
 ##        x: 5.99999150720724</code></pre>
 <p>We notice that <span class="math inline">\(x^* \sim 6\)</span>, <span class="math inline">\(f(x^*) \sim -27\)</span>, the number of iterations it took to converge to <span class="math inline">\(x^*\)</span> is 26 and other attributes that have been listed methodically. With some little extra Python codes, the user can also collect the data of the optimization steps, given below:</p>
+<pre><code>## +----+----------+------------+
+## |    |        x |       f(x) |
+## |----+----------+------------|
+## |  0 |  0       |   0        |
+## |  1 |  1       |  -6.6875   |
+## |  2 |  2.61803 | -16.5502   |
+## |  3 | 15.287   | 120.093    |
+## |  4 |  2.61803 | -16.5502   |
+## |  5 |  7.45716 | -24.4179   |
+## |  6 | 10.4479  |   0.756678 |
+## |  7 |  5.60878 | -26.8316   |
+## |  8 |  4.46642 | -24.5796   |
+## |  9 |  6.3148  | -26.8866   |
+## | 10 |  6.75114 | -26.3388   |
+## | 11 |  6.04512 | -26.9977   |
+## | 12 |  5.87846 | -26.9835   |
+## | 13 |  6.14813 | -26.9751   |
+## | 14 |  5.98146 | -26.9996   |
+## | 15 |  5.94212 | -26.9962   |
+## | 16 |  6.00578 | -27        |
+## | 17 |  6.02081 | -26.9995   |
+## | 18 |  5.99649 | -27        |
+## | 19 |  5.99075 | -26.9999   |
+## | 20 |  6.00004 | -27        |
+## | 21 |  6.00223 | -27        |
+## | 22 |  5.99868 | -27        |
+## | 23 |  6.00088 | -27        |
+## | 24 |  5.99952 | -27        |
+## | 25 |  6.00036 | -27        |
+## | 26 |  5.99984 | -27        |
+## | 27 |  6.00016 | -27        |
+## | 28 |  5.99996 | -27        |
+## | 29 |  5.99992 | -27        |
+## | 30 |  5.99999 | -27        |
+## | 31 |  6.00001 | -27        |
+## +----+----------+------------+</code></pre>
+<p>The optimization steps can be plotted too. The graph with all the function evaluations along with the minimizer <span class="math inline">\(f(x^*)\)</span> at <span class="math inline">\(x^*\)</span> has been denoted as a blue dotted line in the below figure which can be generated using the following Python code:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="solving-one-dimensional-optimization-problems.html#cb38-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="solving-one-dimensional-optimization-problems.html#cb39-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="solving-one-dimensional-optimization-problems.html#cb40-1"></a>plt.axvline(x<span class="op">=</span>result.x, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="solving-one-dimensional-optimization-problems.html#cb41-1"></a>plt.axhline(y<span class="op">=</span>result.fun, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="solving-one-dimensional-optimization-problems.html#cb42-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="solving-one-dimensional-optimization-problems.html#cb43-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="solving-one-dimensional-optimization-problems.html#cb44-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-11.png" width="672" /></p>
 
 </div>
 </div>

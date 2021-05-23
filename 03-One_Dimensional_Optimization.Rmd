@@ -396,4 +396,35 @@ print(result)
 
 We notice that $x^* \sim 6$, $f(x^*) \sim -27$, the number of iterations it took to converge to $x^*$ is 26 and other attributes that have been listed methodically. With some little extra Python codes, the user can also collect the data of the optimization steps, given below:
 
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return x**3/16 - 27*x/4
 
+from scipy.optimize import minimize_scalar
+result = minimize_scalar(F, bounds = (-10, 10), method = 'golden', tol = 10**-5)
+
+fL = []
+for i in L:
+    fL += [f(i), ]
+data = {'x' : L,
+        'f(x)': fL}
+        
+
+df = pd.DataFrame(data, columns = ['x', 'f(x)'])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The optimization steps can be plotted too. The graph with all the function evaluations along with the minimizer $f(x^*)$ at $x^*$ has been denoted as a blue dotted line in the below figure which can be generated using the following Python code:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-20, 20, 100), f(np.linspace(-20, 20, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=result.x, color='b', linestyle='--')
+plt.axhline(y=result.fun, color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = \\frac{1}{16}x^3 - \\frac{27}{4}x$")
+```
