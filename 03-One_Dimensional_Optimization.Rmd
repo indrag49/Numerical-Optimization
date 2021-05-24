@@ -428,3 +428,65 @@ plt.xlabel('x ->')
 plt.ylabel('f(x) ->')
 plt.title("optimization of $f(x) = \\frac{1}{16}x^3 - \\frac{27}{4}x$")
 ```
+
+If we analyse closely the optimization data in the dataframe and look at the third, fourth and fifth steps, we see that $f(x[3]) ~\sim -16.55$, $f(x[4]) \sim 120.1$ and again $f(x[5]) ~\sim -16.55$. This interesting overshooting can be also seen in the visualization given by the above figure.
+
+We next discuss *interpolation* methods to find the minimum of a nonlinear unimodal objective function. This methods use polynomial approximation for modeling the objective function. We will study two methods under this class of methods:
+
+* **Powell's quadratic interpolation method**, and
+* **Inverse quadratic interpolation method**
+
+## Powell's Quadratic Interpolation Method
+
+Suppose, the objective function is $f(x), x\in \mathbb{R}$ and the minimizer is $x^*$. Powell's method use successive quadratic interpolation curves for fitting to the objective function data. This gives a sequence of approximations to $x^*$, denoted by $x_t$.
+
+Initially three data points $x_0, x_1, x_2 \in \mathbb{R}$ are provided. The interpolating quadratic polynomial through these data points $P(x)$ is as followed:
+\begin{equation}
+    P(x) = f(x_0) + (x - x_0)f[x_0, x_1] + (x-x_0)(x-x_1)f[x_0, x_1, x_2] (\#eq:21)
+\end{equation}
+where,
+\begin{equation}
+    f[x, y] = \frac{f(y) - f(x)}{y - x} (\#eq:22)
+\end{equation}
+is the first order forward divided difference, and
+\begin{equation}
+    f[x, y, z] = \frac{f[y, z] - f[x, y]}{z - x} (\#eq:23)
+\end{equation}
+is the second order forward divided difference. $x_t$ is the point where the slope of $P(x)$ curve is $0$. To find it, we set,
+\begin{align}
+& \frac{dP(x)}{dx} = 0 \\
+&\Rightarrow f[x_0, x_1] + f[x_0, x_1, x_t](2x_t - x_0 - x_1) = 0 (\#eq:24)
+\end{align}
+So we end up with $x_t$,
+\begin{equation}
+    x_t = \frac{f[x_0, x_1, x_2](x_0, x_1) - f[x_0, x_1]}{2f[x_0, x_1, x_2]} (\#eq:25)
+\end{equation}
+For $x_t$ to be minimum, the following condition regarding the second order forward divided difference should be satisfied,
+\begin{equation}
+    f[x_0, x_1, x_2] > 0 (\#eq:26)
+\end{equation}
+
+We can now say that $x_t$ is a good approximation to $x^*$. The algorithm for *Powell's quadratic interpolation method* is given below:
+
+![](img 5.png)
+
+```{example}
+Let us consider an objective function:
+\begin{equation}
+    f(x) = x^4 - 2x^2 + \frac{1}{4} (\#eq:27)
+\end{equation}
+We will use *Powell's quadratic interpolation method* to find out the minimizer $x^*$ and the function value at this point, $f(x^*)$. Let the initial starting point be $x=0.5$, the discrete step size be $s=10^{-3}$, the maximum step size be $m=30$ and the tolerance be $\epsilon = 10^{-5}$. To start with the optimization process, let us first define the objective function given by Eq.\@ref(eq:27)in Python and plot the function:
+```
+
+```{python, results = FALSE}
+def f(x): # define the objective function
+    return x**4 - 2*x**2 + 1/4
+    
+l = np.linspace(-2, 2, 100)
+plt.plot(l, f(l), 'r-')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.show()
+```
+
+**This chapter is under development**

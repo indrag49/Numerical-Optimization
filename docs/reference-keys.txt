@@ -102,3 +102,5 @@ what-is-a-unimodal-function
 fibonacci-search-method
 golden-section-search-method
 exm:unnamed-chunk-6
+powells-quadratic-interpolation-method
+exm:unnamed-chunk-19

@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-23" />
+<meta name="date" content="2021-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,6 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#what-is-a-unimodal-function"><i class="fa fa-check"></i><b>3.2</b> What is a Unimodal Function?</a></li>
 <li class="chapter" data-level="3.3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#fibonacci-search-method"><i class="fa fa-check"></i><b>3.3</b> Fibonacci Search Method</a></li>
 <li class="chapter" data-level="3.4" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#golden-section-search-method"><i class="fa fa-check"></i><b>3.4</b> Golden Section Search Method</a></li>
+<li class="chapter" data-level="3.5" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#powells-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.5</b> Powell’s Quadratic Interpolation Method</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -615,6 +616,62 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 <div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="solving-one-dimensional-optimization-problems.html#cb43-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="solving-one-dimensional-optimization-problems.html#cb44-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-11.png" width="672" /></p>
+<p>If we analyse closely the optimization data in the dataframe and look at the third, fourth and fifth steps, we see that <span class="math inline">\(f(x[3]) ~\sim -16.55\)</span>, <span class="math inline">\(f(x[4]) \sim 120.1\)</span> and again <span class="math inline">\(f(x[5]) ~\sim -16.55\)</span>. This interesting overshooting can be also seen in the visualization given by the above figure.</p>
+<p>We next discuss <em>interpolation</em> methods to find the minimum of a nonlinear unimodal objective function. This methods use polynomial approximation for modeling the objective function. We will study two methods under this class of methods:</p>
+<ul>
+<li><strong>Powell’s quadratic interpolation method</strong>, and</li>
+<li><strong>Inverse quadratic interpolation method</strong></li>
+</ul>
+</div>
+<div id="powells-quadratic-interpolation-method" class="section level2">
+<h2><span class="header-section-number">3.5</span> Powell’s Quadratic Interpolation Method</h2>
+<p>Suppose, the objective function is <span class="math inline">\(f(x), x\in \mathbb{R}\)</span> and the minimizer is <span class="math inline">\(x^*\)</span>. Powell’s method use successive quadratic interpolation curves for fitting to the objective function data. This gives a sequence of approximations to <span class="math inline">\(x^*\)</span>, denoted by <span class="math inline">\(x_t\)</span>.</p>
+<p>Initially three data points <span class="math inline">\(x_0, x_1, x_2 \in \mathbb{R}\)</span> are provided. The interpolating quadratic polynomial through these data points <span class="math inline">\(P(x)\)</span> is as followed:
+<span class="math display" id="eq:21">\[\begin{equation}
+    P(x) = f(x_0) + (x - x_0)f[x_0, x_1] + (x-x_0)(x-x_1)f[x_0, x_1, x_2] \tag{3.21}
+\end{equation}\]</span>
+where,
+<span class="math display" id="eq:22">\[\begin{equation}
+    f[x, y] = \frac{f(y) - f(x)}{y - x} \tag{3.22}
+\end{equation}\]</span>
+is the first order forward divided difference, and
+<span class="math display" id="eq:23">\[\begin{equation}
+    f[x, y, z] = \frac{f[y, z] - f[x, y]}{z - x} \tag{3.23}
+\end{equation}\]</span>
+is the second order forward divided difference. <span class="math inline">\(x_t\)</span> is the point where the slope of <span class="math inline">\(P(x)\)</span> curve is <span class="math inline">\(0\)</span>. To find it, we set,
+<span class="math display" id="eq:24">\[\begin{align}
+&amp; \frac{dP(x)}{dx} = 0 \\
+&amp;\Rightarrow f[x_0, x_1] + f[x_0, x_1, x_t](2x_t - x_0 - x_1) = 0 \tag{3.24}
+\end{align}\]</span>
+So we end up with <span class="math inline">\(x_t\)</span>,
+<span class="math display" id="eq:25">\[\begin{equation}
+    x_t = \frac{f[x_0, x_1, x_2](x_0, x_1) - f[x_0, x_1]}{2f[x_0, x_1, x_2]} \tag{3.25}
+\end{equation}\]</span>
+For <span class="math inline">\(x_t\)</span> to be minimum, the following condition regarding the second order forward divided difference should be satisfied,
+<span class="math display" id="eq:26">\[\begin{equation}
+    f[x_0, x_1, x_2] &gt; 0 \tag{3.26}
+\end{equation}\]</span></p>
+<p>We can now say that <span class="math inline">\(x_t\)</span> is a good approximation to <span class="math inline">\(x^*\)</span>. The algorithm for <em>Powell’s quadratic interpolation method</em> is given below:</p>
+<p><img src="img%205.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-19" class="example"><strong>Example 3.3  </strong></span>Let us consider an objective function:
+<span class="math display" id="eq:27">\[\begin{equation}
+    f(x) = x^4 - 2x^2 + \frac{1}{4} \tag{3.27}
+\end{equation}\]</span>
+We will use <em>Powell’s quadratic interpolation method</em> to find out the minimizer <span class="math inline">\(x^*\)</span> and the function value at this point, <span class="math inline">\(f(x^*)\)</span>. Let the initial starting point be <span class="math inline">\(x=0.5\)</span>, the discrete step size be <span class="math inline">\(s=10^{-3}\)</span>, the maximum step size be <span class="math inline">\(m=30\)</span> and the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span>. To start with the optimization process, let us first define the objective function given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:27">(3.27)</a>in Python and plot the function:
+</div>
+
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="solving-one-dimensional-optimization-problems.html#cb45-1"></a><span class="kw">def</span> f(x): <span class="co"># define the objective function</span></span>
+<span id="cb45-2"><a href="solving-one-dimensional-optimization-problems.html#cb45-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span></span>
+<span id="cb45-3"><a href="solving-one-dimensional-optimization-problems.html#cb45-3"></a>    </span>
+<span id="cb45-4"><a href="solving-one-dimensional-optimization-problems.html#cb45-4"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
+<span id="cb45-5"><a href="solving-one-dimensional-optimization-problems.html#cb45-5"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="solving-one-dimensional-optimization-problems.html#cb46-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="solving-one-dimensional-optimization-problems.html#cb47-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="solving-one-dimensional-optimization-problems.html#cb48-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-13.png" width="672" /></p>
+<p><strong>This chapter is under development</strong></p>
 
 </div>
 </div>
