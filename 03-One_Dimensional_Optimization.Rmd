@@ -486,6 +486,138 @@ l = np.linspace(-2, 2, 100)
 plt.plot(l, f(l), 'r-')
 plt.xlabel('x ->')
 plt.ylabel('f(x) ->')
+plt.title("Graph of $f(x) =  x^4 - 2x^2 + \\frac{1}{4}$")
+plt.show()
+```
+
+We will now write functions for the first order forward divided difference and the second order forward divided difference given by Eq.\@ref(eq:22) and Eq.\@ref(eq:22).
+
+```{python}
+def f1(x, y): # First order forward divided difference
+    return (f(y) - f(x)) / (y - x)
+
+def f2(x, y, z): # Second order forward divided difference
+    return (f1(y, z) - f1(x, y))/(z - x)
+```
+
+Next, we write a function to find out the nearest value to a number `n` from a list, `seq` and a function to find out the furthest value to a number `n` from a list, `seq`.
+
+```{python}
+def nearest_to(seq, n): # Picks the nearest value to a number entered from a list
+    return min(seq, key = lambda x: abs(x - n))
+                
+def furthest_to(seq, n): # Picks the furthest value to a number entered from a list
+    return max(seq, key = lambda x: abs(x - n))
+```
+
+Let us consider a list be $L = \{1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33\}$ and a number be $0.7$, we need to find the nearest value to $0.7$ from $L$ and the furthest value to $0.7$ from $L$. We use the functions:
+
+```{python}
+L = [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33]
+n = 0.7
+
+print("The nearest value to", n, "from ", L, ":", nearest_to(L, n))
+
+print("The furthest value to", n, "from ", L, ":", furthest_to(L, n))
+```
+
+We now require to write a function that returns the element from a list that has the maximum value of $f(x)$ where $f$ is the objective function.
+
+```{python}
+def maximum_fvalue(seq):
+    fu = f(np.array(seq)) # Converts a Python list to a ndarray object 
+    return seq[np.where(fu==np.amax(fu))[0][0]] # Picks up the index from the ndarray sequence, the element at which has the maximum f(x) value and returns the element from the sequence
+```
+
+Let us use the same sequence and find out the element from it that fas the maximum value of $f$,
+
+```{python}
+L = [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33]
+print(f(np.array(L))) # Prints the f(x)'s at all the x's from the sequence 
+print(maximum_fvalue(L)) # Prints the element with the highest f(x) value  
+```
+
+We see that from the sequence $-6.33$ has the highest $f$ value, that is $f(-6.33) = 1.52562895\times 10^3$ is the maximum value as can be seen in the printed `ndarray`. We finally write the function that implements **Powell's Quadratic Interpolation Algorithm" and name it `powell_quad()` with the parameters `x, s, m,` and `tol`:
+
+```{python}
+def powell_quad(x, s, m, tol):
+    if f(x) < f(x + s):
+        x0 = x - s
+        x1 = x
+        x2 = x + s
+    else:
+        x0 = x
+        x1 = x + s
+        x2 = x + 2 * s
+
+    L = [x0, x1, x2] # Set x0, x1 and x2
+    XT = []  
+    while True:
+        M = f2(L[0], L[1], L[2])
+        xt = (M * (L[0] + L[1]) - f1(L[0], L[1]))/(2 * M) # The approximate minimizer 
+        xn = nearest_to(L, xt) # Picks the point from [x0, x1, x2] which is the nearest to xt
+        xf = furthest_to(L, xt) # Picks the point from [x0, x1, x2] which is the furthest to xt
+        if M > 0 and abs(xt - xn) > m: # Checks for equation 3.26 
+            L.remove(xf) # Remove xf from [x0, x1, x2]
+            value = min(L) + m 
+            L += [value, ]
+            L.sort() # Take a step of size m towards the direction of descent from the point with the lowest value
+        elif M < 0 :
+            L.remove(xn) # Remove xn from [x0, x1, x2]
+            value = min(L) + m
+            L += [value, ]
+            L.sort() # Take a step of size m towards the direction of descent from the point with the lowest value
+        else:
+            # print((xt + xn) / 2, f((xt + xn) / 2)) # If the user wants to print the steps at all function evaluations at the approximate minimizers, uncomment the command
+            XT += [(xt + xn) / 2, ]
+            if abs(xt - xn) < tol: # Check for the terminating condition
+                return [(xt + xn) / 2, f((xt + xn) / 2), XT] # Return the results
+            else:
+                mx = maximum_fvalue(L) 
+                L.remove(mx)
+                L += [xt, ]
+                L.sort() # Replace the element from [x0, x1, x2] having the maximum function value with xt
+```
+
+Now returning back to our original example problem, we have $x = 0.5$, $s=10^{-3}$, $m=30$ and $\epsilon=10^{-5}$. We will use these values as parameter values for our function `powell_quad()` and check the result:
+
+```{python}
+res = powell_quad(0.5, 10**-3, 30, 10**-5)
+x_star = res[0]
+f_x_star = res[1]
+
+print('x*:', x_star)
+print('f(x*):', f_x_star)
+```
+
+Now let us collect the optimization data and store in a dataframe `df`:
+
+```{python}
+XT = np.array(res[2])
+F = f(XT)
+
+data = {'xt': XT, 'f(xt)': F}
+df = pd.DataFrame(data, columns=['xt', 'f(xt)'])
+```
+
+The last few rows of `df` looks like:
+
+```{python, echo=FALSE}
+print(tabulate(df.tail(10), headers='keys', tablefmt='psql'))
+```
+
+To plot the optimization data type:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-2, 2, 100), f(np.linspace(-2, 2, 100)), 'r-')
+plt.plot(df['xt'], df['f(xt)'], 'ko-')
+plt.axvline(x=x_star, color='b', linestyle='--')
+plt.axhline(y=f_x_star, color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.xlim(-2, 2)
+plt.ylim(-2, 10)
+plt.title("optimization of $f(x) =  x^4 - 2x^2 + \\frac{1}{4}$")
 plt.show()
 ```
 

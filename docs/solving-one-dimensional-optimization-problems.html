@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-05-24" />
+<meta name="date" content="2021-05-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -669,8 +669,120 @@ We will use <em>Powell’s quadratic interpolation method</em> to find out the m
 <span id="cb45-5"><a href="solving-one-dimensional-optimization-problems.html#cb45-5"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="solving-one-dimensional-optimization-problems.html#cb46-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="solving-one-dimensional-optimization-problems.html#cb47-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="solving-one-dimensional-optimization-problems.html#cb48-1"></a>plt.show()</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="solving-one-dimensional-optimization-problems.html#cb48-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="solving-one-dimensional-optimization-problems.html#cb49-1"></a>plt.show()</span></code></pre></div>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-13.png" width="672" /></p>
+<p>We will now write functions for the first order forward divided difference and the second order forward divided difference given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:22">(3.22)</a> and Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:22">(3.22)</a>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="solving-one-dimensional-optimization-problems.html#cb50-1"></a><span class="kw">def</span> f1(x, y): <span class="co"># First order forward divided difference</span></span>
+<span id="cb50-2"><a href="solving-one-dimensional-optimization-problems.html#cb50-2"></a>    <span class="cf">return</span> (f(y) <span class="op">-</span> f(x)) <span class="op">/</span> (y <span class="op">-</span> x)</span>
+<span id="cb50-3"><a href="solving-one-dimensional-optimization-problems.html#cb50-3"></a></span>
+<span id="cb50-4"><a href="solving-one-dimensional-optimization-problems.html#cb50-4"></a><span class="kw">def</span> f2(x, y, z): <span class="co"># Second order forward divided difference</span></span>
+<span id="cb50-5"><a href="solving-one-dimensional-optimization-problems.html#cb50-5"></a>    <span class="cf">return</span> (f1(y, z) <span class="op">-</span> f1(x, y))<span class="op">/</span>(z <span class="op">-</span> x)</span></code></pre></div>
+<p>Next, we write a function to find out the nearest value to a number <code>n</code> from a list, <code>seq</code> and a function to find out the furthest value to a number <code>n</code> from a list, <code>seq</code>.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="solving-one-dimensional-optimization-problems.html#cb51-1"></a><span class="kw">def</span> nearest_to(seq, n): <span class="co"># Picks the nearest value to a number entered from a list</span></span>
+<span id="cb51-2"><a href="solving-one-dimensional-optimization-problems.html#cb51-2"></a>    <span class="cf">return</span> <span class="bu">min</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span>
+<span id="cb51-3"><a href="solving-one-dimensional-optimization-problems.html#cb51-3"></a>                </span>
+<span id="cb51-4"><a href="solving-one-dimensional-optimization-problems.html#cb51-4"></a><span class="kw">def</span> furthest_to(seq, n): <span class="co"># Picks the furthest value to a number entered from a list</span></span>
+<span id="cb51-5"><a href="solving-one-dimensional-optimization-problems.html#cb51-5"></a>    <span class="cf">return</span> <span class="bu">max</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span></code></pre></div>
+<p>Let us consider a list be <span class="math inline">\(L = \{1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33\}\)</span> and a number be <span class="math inline">\(0.7\)</span>, we need to find the nearest value to <span class="math inline">\(0.7\)</span> from <span class="math inline">\(L\)</span> and the furthest value to <span class="math inline">\(0.7\)</span> from <span class="math inline">\(L\)</span>. We use the functions:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="solving-one-dimensional-optimization-problems.html#cb52-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
+<span id="cb52-2"><a href="solving-one-dimensional-optimization-problems.html#cb52-2"></a>n <span class="op">=</span> <span class="fl">0.7</span></span>
+<span id="cb52-3"><a href="solving-one-dimensional-optimization-problems.html#cb52-3"></a></span>
+<span id="cb52-4"><a href="solving-one-dimensional-optimization-problems.html#cb52-4"></a><span class="bu">print</span>(<span class="st">&quot;The nearest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, nearest_to(L, n))</span></code></pre></div>
+<pre><code>## The nearest value to 0.7 from  [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33] : 1.1</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="solving-one-dimensional-optimization-problems.html#cb54-1"></a><span class="bu">print</span>(<span class="st">&quot;The furthest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, furthest_to(L, n))</span></code></pre></div>
+<pre><code>## The furthest value to 0.7 from  [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33] : -6.33</code></pre>
+<p>We now require to write a function that returns the element from a list that has the maximum value of <span class="math inline">\(f(x)\)</span> where <span class="math inline">\(f\)</span> is the objective function.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="solving-one-dimensional-optimization-problems.html#cb56-1"></a><span class="kw">def</span> maximum_fvalue(seq):</span>
+<span id="cb56-2"><a href="solving-one-dimensional-optimization-problems.html#cb56-2"></a>    fu <span class="op">=</span> f(np.array(seq)) <span class="co"># Converts a Python list to a ndarray object </span></span>
+<span id="cb56-3"><a href="solving-one-dimensional-optimization-problems.html#cb56-3"></a>    <span class="cf">return</span> seq[np.where(fu<span class="op">==</span>np.amax(fu))[<span class="dv">0</span>][<span class="dv">0</span>]] <span class="co"># Picks up the index from the ndarray sequence, the element at which has the maximum f(x) value and returns the element from the sequence</span></span></code></pre></div>
+<p>Let us use the same sequence and find out the element from it that fas the maximum value of <span class="math inline">\(f\)</span>,</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="solving-one-dimensional-optimization-problems.html#cb57-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
+<span id="cb57-2"><a href="solving-one-dimensional-optimization-problems.html#cb57-2"></a><span class="bu">print</span>(f(np.array(L))) <span class="co"># Prints the f(x)&#39;s at all the x&#39;s from the sequence </span></span></code></pre></div>
+<pre><code>## [-7.05900000e-01  3.88141000e+01  9.70621000e+01  8.46276000e+01
+##   4.26760000e+00 -7.13900000e-01 -1.87500000e-01  1.52562895e+03]</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="solving-one-dimensional-optimization-problems.html#cb59-1"></a><span class="bu">print</span>(maximum_fvalue(L)) <span class="co"># Prints the element with the highest f(x) value  </span></span></code></pre></div>
+<pre><code>## -6.33</code></pre>
+<p>We see that from the sequence <span class="math inline">\(-6.33\)</span> has the highest <span class="math inline">\(f\)</span> value, that is <span class="math inline">\(f(-6.33) = 1.52562895\times 10^3\)</span> is the maximum value as can be seen in the printed <code>ndarray</code>. We finally write the function that implements **Powell’s Quadratic Interpolation Algorithm" and name it <code>powell_quad()</code> with the parameters <code>x, s, m,</code> and <code>tol</code>:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="solving-one-dimensional-optimization-problems.html#cb61-1"></a><span class="kw">def</span> powell_quad(x, s, m, tol):</span>
+<span id="cb61-2"><a href="solving-one-dimensional-optimization-problems.html#cb61-2"></a>    <span class="cf">if</span> f(x) <span class="op">&lt;</span> f(x <span class="op">+</span> s):</span>
+<span id="cb61-3"><a href="solving-one-dimensional-optimization-problems.html#cb61-3"></a>        x0 <span class="op">=</span> x <span class="op">-</span> s</span>
+<span id="cb61-4"><a href="solving-one-dimensional-optimization-problems.html#cb61-4"></a>        x1 <span class="op">=</span> x</span>
+<span id="cb61-5"><a href="solving-one-dimensional-optimization-problems.html#cb61-5"></a>        x2 <span class="op">=</span> x <span class="op">+</span> s</span>
+<span id="cb61-6"><a href="solving-one-dimensional-optimization-problems.html#cb61-6"></a>    <span class="cf">else</span>:</span>
+<span id="cb61-7"><a href="solving-one-dimensional-optimization-problems.html#cb61-7"></a>        x0 <span class="op">=</span> x</span>
+<span id="cb61-8"><a href="solving-one-dimensional-optimization-problems.html#cb61-8"></a>        x1 <span class="op">=</span> x <span class="op">+</span> s</span>
+<span id="cb61-9"><a href="solving-one-dimensional-optimization-problems.html#cb61-9"></a>        x2 <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> s</span>
+<span id="cb61-10"><a href="solving-one-dimensional-optimization-problems.html#cb61-10"></a></span>
+<span id="cb61-11"><a href="solving-one-dimensional-optimization-problems.html#cb61-11"></a>    L <span class="op">=</span> [x0, x1, x2] <span class="co"># Set x0, x1 and x2</span></span>
+<span id="cb61-12"><a href="solving-one-dimensional-optimization-problems.html#cb61-12"></a>    XT <span class="op">=</span> []  </span>
+<span id="cb61-13"><a href="solving-one-dimensional-optimization-problems.html#cb61-13"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb61-14"><a href="solving-one-dimensional-optimization-problems.html#cb61-14"></a>        M <span class="op">=</span> f2(L[<span class="dv">0</span>], L[<span class="dv">1</span>], L[<span class="dv">2</span>])</span>
+<span id="cb61-15"><a href="solving-one-dimensional-optimization-problems.html#cb61-15"></a>        xt <span class="op">=</span> (M <span class="op">*</span> (L[<span class="dv">0</span>] <span class="op">+</span> L[<span class="dv">1</span>]) <span class="op">-</span> f1(L[<span class="dv">0</span>], L[<span class="dv">1</span>]))<span class="op">/</span>(<span class="dv">2</span> <span class="op">*</span> M) <span class="co"># The approximate minimizer </span></span>
+<span id="cb61-16"><a href="solving-one-dimensional-optimization-problems.html#cb61-16"></a>        xn <span class="op">=</span> nearest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the nearest to xt</span></span>
+<span id="cb61-17"><a href="solving-one-dimensional-optimization-problems.html#cb61-17"></a>        xf <span class="op">=</span> furthest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the furthest to xt</span></span>
+<span id="cb61-18"><a href="solving-one-dimensional-optimization-problems.html#cb61-18"></a>        <span class="cf">if</span> M <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&gt;</span> m: <span class="co"># Checks for equation 3.26 </span></span>
+<span id="cb61-19"><a href="solving-one-dimensional-optimization-problems.html#cb61-19"></a>            L.remove(xf) <span class="co"># Remove xf from [x0, x1, x2]</span></span>
+<span id="cb61-20"><a href="solving-one-dimensional-optimization-problems.html#cb61-20"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m </span>
+<span id="cb61-21"><a href="solving-one-dimensional-optimization-problems.html#cb61-21"></a>            L <span class="op">+=</span> [value, ]</span>
+<span id="cb61-22"><a href="solving-one-dimensional-optimization-problems.html#cb61-22"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
+<span id="cb61-23"><a href="solving-one-dimensional-optimization-problems.html#cb61-23"></a>        <span class="cf">elif</span> M <span class="op">&lt;</span> <span class="dv">0</span> :</span>
+<span id="cb61-24"><a href="solving-one-dimensional-optimization-problems.html#cb61-24"></a>            L.remove(xn) <span class="co"># Remove xn from [x0, x1, x2]</span></span>
+<span id="cb61-25"><a href="solving-one-dimensional-optimization-problems.html#cb61-25"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m</span>
+<span id="cb61-26"><a href="solving-one-dimensional-optimization-problems.html#cb61-26"></a>            L <span class="op">+=</span> [value, ]</span>
+<span id="cb61-27"><a href="solving-one-dimensional-optimization-problems.html#cb61-27"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
+<span id="cb61-28"><a href="solving-one-dimensional-optimization-problems.html#cb61-28"></a>        <span class="cf">else</span>:</span>
+<span id="cb61-29"><a href="solving-one-dimensional-optimization-problems.html#cb61-29"></a>            <span class="co"># print((xt + xn) / 2, f((xt + xn) / 2)) # If the user wants to print the steps at all function evaluations at the approximate minimizers, uncomment the command</span></span>
+<span id="cb61-30"><a href="solving-one-dimensional-optimization-problems.html#cb61-30"></a>            XT <span class="op">+=</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, ]</span>
+<span id="cb61-31"><a href="solving-one-dimensional-optimization-problems.html#cb61-31"></a>            <span class="cf">if</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&lt;</span> tol: <span class="co"># Check for the terminating condition</span></span>
+<span id="cb61-32"><a href="solving-one-dimensional-optimization-problems.html#cb61-32"></a>                <span class="cf">return</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, f((xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>), XT] <span class="co"># Return the results</span></span>
+<span id="cb61-33"><a href="solving-one-dimensional-optimization-problems.html#cb61-33"></a>            <span class="cf">else</span>:</span>
+<span id="cb61-34"><a href="solving-one-dimensional-optimization-problems.html#cb61-34"></a>                mx <span class="op">=</span> maximum_fvalue(L) </span>
+<span id="cb61-35"><a href="solving-one-dimensional-optimization-problems.html#cb61-35"></a>                L.remove(mx)</span>
+<span id="cb61-36"><a href="solving-one-dimensional-optimization-problems.html#cb61-36"></a>                L <span class="op">+=</span> [xt, ]</span>
+<span id="cb61-37"><a href="solving-one-dimensional-optimization-problems.html#cb61-37"></a>                L.sort() <span class="co"># Replace the element from [x0, x1, x2] having the maximum function value with xt</span></span></code></pre></div>
+<p>Now returning back to our original example problem, we have <span class="math inline">\(x = 0.5\)</span>, <span class="math inline">\(s=10^{-3}\)</span>, <span class="math inline">\(m=30\)</span> and <span class="math inline">\(\epsilon=10^{-5}\)</span>. We will use these values as parameter values for our function <code>powell_quad()</code> and check the result:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="solving-one-dimensional-optimization-problems.html#cb62-1"></a>res <span class="op">=</span> powell_quad(<span class="fl">0.5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">3</span>, <span class="dv">30</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
+<span id="cb62-2"><a href="solving-one-dimensional-optimization-problems.html#cb62-2"></a>x_star <span class="op">=</span> res[<span class="dv">0</span>]</span>
+<span id="cb62-3"><a href="solving-one-dimensional-optimization-problems.html#cb62-3"></a>f_x_star <span class="op">=</span> res[<span class="dv">1</span>]</span>
+<span id="cb62-4"><a href="solving-one-dimensional-optimization-problems.html#cb62-4"></a></span>
+<span id="cb62-5"><a href="solving-one-dimensional-optimization-problems.html#cb62-5"></a><span class="bu">print</span>(<span class="st">&#39;x*:&#39;</span>, x_star)</span></code></pre></div>
+<pre><code>## x*: 1.000000513307495</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="solving-one-dimensional-optimization-problems.html#cb64-1"></a><span class="bu">print</span>(<span class="st">&#39;f(x*):&#39;</span>, f_x_star)</span></code></pre></div>
+<pre><code>## f(x*): -0.7499999999989462</code></pre>
+<p>Now let us collect the optimization data and store in a dataframe <code>df</code>:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="solving-one-dimensional-optimization-problems.html#cb66-1"></a>XT <span class="op">=</span> np.array(res[<span class="dv">2</span>])</span>
+<span id="cb66-2"><a href="solving-one-dimensional-optimization-problems.html#cb66-2"></a>F <span class="op">=</span> f(XT)</span>
+<span id="cb66-3"><a href="solving-one-dimensional-optimization-problems.html#cb66-3"></a></span>
+<span id="cb66-4"><a href="solving-one-dimensional-optimization-problems.html#cb66-4"></a>data <span class="op">=</span> {<span class="st">&#39;xt&#39;</span>: XT, <span class="st">&#39;f(xt)&#39;</span>: F}</span>
+<span id="cb66-5"><a href="solving-one-dimensional-optimization-problems.html#cb66-5"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">&#39;xt&#39;</span>, <span class="st">&#39;f(xt)&#39;</span>])</span></code></pre></div>
+<p>The last few rows of <code>df</code> looks like:</p>
+<pre><code>## +-----+----------+-----------+
+## |     |       xt |     f(xt) |
+## |-----+----------+-----------|
+## | 174 | 1.24152  | -0.456924 |
+## | 175 | 0.77715  | -0.593154 |
+## | 176 | 1.04659  | -0.740909 |
+## | 177 | 0.896613 | -0.711551 |
+## | 178 | 1.00525  | -0.749889 |
+## | 179 | 0.978394 | -0.748173 |
+## | 180 | 0.998358 | -0.749989 |
+## | 181 | 0.999505 | -0.749999 |
+## | 182 | 1.00004  | -0.75     |
+## | 183 | 1        | -0.75     |
+## +-----+----------+-----------+</code></pre>
+<p>To plot the optimization data type:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="solving-one-dimensional-optimization-problems.html#cb68-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb69-1"><a href="solving-one-dimensional-optimization-problems.html#cb69-1"></a>plt.plot(df[<span class="st">&#39;xt&#39;</span>], df[<span class="st">&#39;f(xt)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="solving-one-dimensional-optimization-problems.html#cb70-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb71-1"><a href="solving-one-dimensional-optimization-problems.html#cb71-1"></a>plt.axhline(y<span class="op">=</span>f_x_star, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="solving-one-dimensional-optimization-problems.html#cb72-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="solving-one-dimensional-optimization-problems.html#cb73-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="solving-one-dimensional-optimization-problems.html#cb74-1"></a>plt.xlim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="solving-one-dimensional-optimization-problems.html#cb75-1"></a>plt.ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="solving-one-dimensional-optimization-problems.html#cb76-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="solving-one-dimensional-optimization-problems.html#cb77-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-15.png" width="672" /></p>
 <p><strong>This chapter is under development</strong></p>
 
 </div>
