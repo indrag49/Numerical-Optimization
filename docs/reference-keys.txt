@@ -73,6 +73,8 @@ eq:45
 def:unnamed-chunk-45
 exm:unnamed-chunk-50
 exm:unnamed-chunk-57
+exm:unnamed-chunk-63
+def:unnamed-chunk-79
 what-is-numerical-optimization
 introduction-to-optimization
 a-solution
@@ -101,9 +103,9 @@ one-dimensional-optimization-problems
 what-is-a-unimodal-function
 fibonacci-search-method
 golden-section-search-method
-exm:unnamed-chunk-6
 powells-quadratic-interpolation-method
-exm:unnamed-chunk-19
 inverse-quadratic-interpolation-method
 newtons-method
+exm:unnamed-chunk-6
+exm:unnamed-chunk-19
 def:unnamed-chunk-35

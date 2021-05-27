@@ -767,5 +767,4 @@ For a twice differentiable objective function $f(x)$, assuming that its minimize
 \end{equation}
 ```
 
-
 **This chapter is under development**
