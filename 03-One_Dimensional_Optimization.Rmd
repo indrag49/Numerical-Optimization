@@ -606,7 +606,7 @@ The last few rows of `df` looks like:
 print(tabulate(df.tail(10), headers='keys', tablefmt='psql'))
 ```
 
-To plot the optimization data type:
+To plot the optimization data, type:
 
 ```{python, results=FALSE}
 plt.plot(np.linspace(-2, 2, 100), f(np.linspace(-2, 2, 100)), 'r-')
@@ -620,5 +620,152 @@ plt.ylim(-2, 10)
 plt.title("optimization of $f(x) =  x^4 - 2x^2 + \\frac{1}{4}$")
 plt.show()
 ```
+
+We notice that the blue dashed line gives the position of $x^*$ and the green dashed line gives the corresponding $f(x^*)$ value. 
+
+Now, we change our original problem a little bit and consider the initial starting point to be $x=-0.5$ and reduce the maximum step size to $m=10$ , keeping all the other parameters same.
+
+```{python}
+res = powell_quad(-0.5, 10**-3, 10, 10**-5)
+x_star = res[0]
+f_x_star = res[1]
+
+print('x*:', x_star)
+print('f(x*):', f_x_star)
+```
+
+Now let us collect the optimization data and store in a dataframe `df`:
+
+```{python}
+XT = np.array(res[2])
+F = f(XT)
+
+data = {'xt': XT, 'f(xt)': F}
+df = pd.DataFrame(data, columns=['xt', 'f(xt)'])
+```
+
+The last few rows of `df` looks like:
+
+```{python, echo=FALSE}
+print(tabulate(df.tail(10), headers='keys', tablefmt='psql'))
+```
+
+To plot the optimization data, type:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-2, 2, 100), f(np.linspace(-2, 2, 100)), 'r-')
+plt.plot(df['xt'], df['f(xt)'], 'ko-')
+plt.axvline(x=x_star, color='b', linestyle='--')
+plt.axhline(y=f_x_star, color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.xlim(-2, 2)
+plt.ylim(-2, 10)
+plt.title("optimization of $f(x) =  x^4 - 2x^2 + \\frac{1}{4}$")
+plt.show()
+```
+
+We have $x^* \sim -1$ and $f(x^*) \sim -0.75$, i.e, now the $x^*$ converges to the local minimum on the left side.
+
+## Inverse Quadratic Interpolation Method
+
+The main motivation of using the **inverse quadratic interpolation method** [refer to *An Introduction to Numerical Methods and Analysis* by *James F. Epperson*] is to use the quadratic interpolation method to find the inverse of the objective function $f(x)$. This algorithm forms an integral part of the *Brent's method* for optimization, which we will study later in this chapter. In this method, we have three initial points to start with, given by, $x_0, x_1, x_2 \in \mathbb{R}$. Our aim is to find the polynomial $q(f(x))$, such that,
+\begin{equation}
+    q(f(x_j)) = x_j (\#eq:28)
+\end{equation}
+which identifies,
+\begin{equation}
+    q = f^{-1} (\#eq:29)
+\end{equation}
+
+Now, using the divided difference forms we can write,
+\begin{align}
+    q(y) &= f^{-1}(y_0) + (y - y_0)\frac{f^{-1}(y_1) - f^{-1}(y_0)}{y_1 - y_0}\\ 
+    &+ \frac{(y-y_0)(y-y_1)}{(y_2-y_0)}(\frac{f^{-1}(y_2) - f^{-1}(y_1)}{y_2 - y_1} - \frac{f^{-1}(y_1) - f^{-1}(y_0)}{y_1 - y_0})\\
+    &= x_0 + (y-y_0) \frac{(x-x_0}{(y_1-y_0)}\\ &+\frac{(y-y_0)(y-y_1)}{(y_2-y_0)}(\frac{(x_2 - x_1)}{(y_2-y_1)} - \frac{(x_1-x_0)}{(y_1-y_0)}) (\#eq:30)
+\end{align}
+
+where,
+\begin{equation}
+    y_j = f(x_j) (\#eq:31)
+\end{equation}
+
+Now, the approximate minimizer $x_t$ is the value $q(0)=x_t$, i.e, at $y=0$. Putting $y=0$ in Eq.\@ref(eq:30), we have,
+
+\begin{equation}
+    x_t = q(0) = x_0 - y_0 \frac{(x_1 - x_0)}{(y_1 - y_0)} + \frac{y_0y_1}{(y_2 - y_0)}(\frac{(x_2 - x_1)}{(y_2 - y_1)} - \frac{(x_1 - x_0)}{(y_1 - y_0)}) (\#eq:32)
+\end{equation}
+
+$x_t$ can be considered as a good approximate of $x^*$ after satisfactory number of optimizations steps of the algorithm. The algorithm for *inverse quadratic interpolation method* is given  below:
+
+![](img 6.png)
+
+The above alogorithm looks very simple and it will be left as an exercise for the reader to implement this using Python. An objective function $f(x)$ can be selected to test the results using this algorithm. Let 
+\begin{equation}
+    f(x) = 2 - e^x (\#eq:33)
+\end{equation}
+One can take the initial experimental point to be $x=1$, the step size to be $s=10^{-5}$ and the tolerance to be $\epsilon=10^{-8}$. 
+\end{example}
+
+In the next section we discuss two direct root finding methods:
+
+* **Newton's method**,
+* **Halley's method**, 
+* **Secant Method**, and
+* **Bisection Method**
+
+## Newton's Method
+
+For a given objective function $f(x), x\in \mathbb{R}$, the necessary condition for it to contain a minimizer $x^*$, is that $\frac{df}{dx}(x^*)=0$. The aim of these direct root-finding methods is thus to obtain the solution of the equation,
+\begin{equation}
+    \frac{df}{dx}(x)=0 (\#eq:34)
+\end{equation}
+
+At point $x_j$, the Taylor's expansion of the objective function, up to the second order terms is given by,
+\begin{equation}
+    f(x) = f(x_j) + (x - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) (\#eq:35)
+\end{equation}
+
+Now, 
+\begin{equation}
+    \frac{df}{dx}(x_j) = 0 (\#eq:36)
+\end{equation}
+so, 
+
+Eq.\@ref(eq:35) reduces to 
+\begin{equation}
+    f(x) = f(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) (\#eq:37)
+\end{equation}
+
+Here $\frac{d^2f}{dx^2}(x_j)$ is a constant. Now, we find the derivative of Eq.\@ref(eq:37) and set it to $0$ following Eq.\@ref(eq:34)
+\begin{align}
+\frac{df}{dx}(x) &= 0 \\
+\frac{df}{dx}(x_j) + (x - x_j)\frac{d^2f}{dx^2}(x_j) &= 0 (\#eq:38)
+\end{align}
+
+We get,
+\begin{equation}
+    x = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} (\#eq:39)
+\end{equation}
+
+$x_j$ denotes an approximation to the minimizer $x^*$ of $f(x)$. An improved approximation in the form of an iterative process can be given using Eq.\@ref(eq:39),
+\begin{equation}
+    x_{j+1} = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} (\#eq:40)
+\end{equation}
+
+The termination condition for convergence after a sufficient number of large iterations to $x^*$ is given by:
+\begin{equation}
+    |\frac{df}{dx}(x_{j+1})| \leq \epsilon (\#eq:41)
+\end{equation}
+
+where, $\epsilon$ is the tolerance set by the user for the optimization algorithm. In numerical analysis literature, the *Newton's method* is also sometimes called the *Newton-Raphson method*, because it was originally designed by Newton and was later improved by Raphson. The *Newton's method* has a fast convergence property called the *quadratic convergence*.
+
+```{definition}
+For a twice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Newton's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to be \textit{quadratically convergent} to $x^*$ if the following condition is satisfied:
+\begin{equation}
+    |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M > \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} (\#eq:42)
+\end{equation}
+```
+
 
 **This chapter is under development**
