@@ -106,6 +106,3 @@ golden-section-search-method
 powells-quadratic-interpolation-method
 inverse-quadratic-interpolation-method
 newtons-method
-exm:unnamed-chunk-6
-exm:unnamed-chunk-19
-def:unnamed-chunk-35

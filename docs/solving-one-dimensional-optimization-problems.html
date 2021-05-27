@@ -199,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.1</span> One Dimensional Optimization Problems</h2>
 <p>The aim of this chapter is to introduce methods for solving one-dimensional optimization tasks, formulated in the following way:
 <span class="math display" id="eq:1">\[\begin{equation}
-    f(x^*)=\underset{x}{\min\ }f(x), x \in \mathbb{R} \tag{3.1}
+    f(x^*)=\underset{x}{\min\ }f(x), x \in \mathbb{R} \tag{1.1}
 \end{equation}\]</span>
 where, <span class="math inline">\(f\)</span> is a nonlinear function. The understanding of these optimization tasks and algorithms will be generalized in solving unconstrained optimization tasks involving objective function of multiple variables, in the future chapters.</p>
 </div>
@@ -207,14 +207,14 @@ where, <span class="math inline">\(f\)</span> is a nonlinear function. The under
 <h2><span class="header-section-number">3.2</span> What is a Unimodal Function?</h2>
 
 <div class="definition">
-<span id="def:unnamed-chunk-1" class="definition"><strong>Definition 3.1  </strong></span>A function <span class="math inline">\(f(x)\)</span>, where <span class="math inline">\(x \in \mathbb{R}\)</span> is said to be <em>unimodal</em> [refer to <a href="https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf" class="uri">https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf</a>] if for a value <span class="math inline">\(x^*\)</span> on the real line, the following conditions are satisfied:
+<span id="def:unnamed-chunk-45" class="definition"><strong>Definition 3.1  </strong></span>A function <span class="math inline">\(f(x)\)</span>, where <span class="math inline">\(x \in \mathbb{R}\)</span> is said to be <em>unimodal</em> [refer to <a href="https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf" class="uri">https://math.mit.edu/~rmd/465/unimod-dip-bds.pdf</a>] if for a value <span class="math inline">\(x^*\)</span> on the real line, the following conditions are satisfied:
 * <span class="math inline">\(f\)</span> is monotonically decreasing for <span class="math inline">\(x \leq v\)</span>,
 * <span class="math inline">\(f\)</span> is monotonically increasing for <span class="math inline">\(x \geq v\)</span>, and
 * if the above two conditions are satisfied, then <span class="math inline">\(f(x^*)\)</span> is the minimum value of <span class="math inline">\(f(x)\)</span>, and <span class="math inline">\(x^*\)</span> is the minimizer of <span class="math inline">\(f\)</span>.
 </div>
 
 <p>Let us have a look into the figure below.</p>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-49.png" width="672" /></p>
 <p>We have taken the quadratic function of one variable: <span class="math inline">\(f(x) = 5x^2-3x+2\)</span>. It is a nonlinear unimodal function defined over the interval <span class="math inline">\([-2,2]\)</span>, denoted by the dotted lines on either side.. The minimizer <span class="math inline">\(x^*=0.3\)</span> (which can be solved analytically!), given by the middle dotted line, lies inside the interval <span class="math inline">\([x_l, x_r]=[-2,2]\)</span>. We notice that <span class="math inline">\(f(x)\)</span> strictly decreases for <span class="math inline">\(f(x) &lt; f(x^*)\)</span> and strictly increases for <span class="math inline">\(f(x) &gt; f(x^*)\)</span>. The interval <span class="math inline">\([x_l, x_r]\)</span> that has the minimizer within it, is called the <em>interval of uncertainty</em> and the goal of an optimization algorithm is to reduce this interval as much as possible to converge towards the minimizer. A good algorithm completes the convergence very fast. In each step of this reduction of the interval, the algorithm finds a new unimodal interval following the following procedures:</p>
 <ul>
 <li>Choose two new points, <span class="math inline">\(x_1 \in [x_l, x^*]\)</span> and another point <span class="math inline">\(x_2 \in [x^*, x_r]\)</span> (denoted by the two filled straight lines in the figure,</li>
@@ -238,19 +238,19 @@ F_0&amp;=0,F_1=1, \\
 F_n&amp;=F_{n-1} + F_{n-2},\text{ where }n=2,3,\ldots
 \end{align}\]</span></p>
 <p>We write a Python code to generate the first 16 Fibonacci numbers and display them as a table:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="solving-one-dimensional-optimization-problems.html#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="solving-one-dimensional-optimization-problems.html#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="solving-one-dimensional-optimization-problems.html#cb1-3"></a></span>
-<span id="cb1-4"><a href="solving-one-dimensional-optimization-problems.html#cb1-4"></a><span class="kw">def</span> fibonacci(n): <span class="co"># define the  function</span></span>
-<span id="cb1-5"><a href="solving-one-dimensional-optimization-problems.html#cb1-5"></a>    fn <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>,]</span>
-<span id="cb1-6"><a href="solving-one-dimensional-optimization-problems.html#cb1-6"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
-<span id="cb1-7"><a href="solving-one-dimensional-optimization-problems.html#cb1-7"></a>        fn.append(fn[i<span class="dv">-1</span>] <span class="op">+</span> fn[i<span class="dv">-2</span>])</span>
-<span id="cb1-8"><a href="solving-one-dimensional-optimization-problems.html#cb1-8"></a>    <span class="cf">return</span> fn</span>
-<span id="cb1-9"><a href="solving-one-dimensional-optimization-problems.html#cb1-9"></a></span>
-<span id="cb1-10"><a href="solving-one-dimensional-optimization-problems.html#cb1-10"></a></span>
-<span id="cb1-11"><a href="solving-one-dimensional-optimization-problems.html#cb1-11"></a>N <span class="op">=</span> np.arange(<span class="dv">16</span>)</span>
-<span id="cb1-12"><a href="solving-one-dimensional-optimization-problems.html#cb1-12"></a>data <span class="op">=</span> {<span class="st">&#39;n&#39;</span>: N, <span class="st">&#39;Fibonacci(n)&#39;</span>: fibonacci(<span class="dv">15</span>)}</span>
-<span id="cb1-13"><a href="solving-one-dimensional-optimization-problems.html#cb1-13"></a>df <span class="op">=</span> pd.DataFrame(data)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="solving-one-dimensional-optimization-problems.html#cb25-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb25-2"><a href="solving-one-dimensional-optimization-problems.html#cb25-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb25-3"><a href="solving-one-dimensional-optimization-problems.html#cb25-3"></a></span>
+<span id="cb25-4"><a href="solving-one-dimensional-optimization-problems.html#cb25-4"></a><span class="kw">def</span> fibonacci(n): <span class="co"># define the  function</span></span>
+<span id="cb25-5"><a href="solving-one-dimensional-optimization-problems.html#cb25-5"></a>    fn <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>,]</span>
+<span id="cb25-6"><a href="solving-one-dimensional-optimization-problems.html#cb25-6"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb25-7"><a href="solving-one-dimensional-optimization-problems.html#cb25-7"></a>        fn.append(fn[i<span class="dv">-1</span>] <span class="op">+</span> fn[i<span class="dv">-2</span>])</span>
+<span id="cb25-8"><a href="solving-one-dimensional-optimization-problems.html#cb25-8"></a>    <span class="cf">return</span> fn</span>
+<span id="cb25-9"><a href="solving-one-dimensional-optimization-problems.html#cb25-9"></a></span>
+<span id="cb25-10"><a href="solving-one-dimensional-optimization-problems.html#cb25-10"></a></span>
+<span id="cb25-11"><a href="solving-one-dimensional-optimization-problems.html#cb25-11"></a>N <span class="op">=</span> np.arange(<span class="dv">16</span>)</span>
+<span id="cb25-12"><a href="solving-one-dimensional-optimization-problems.html#cb25-12"></a>data <span class="op">=</span> {<span class="st">&#39;n&#39;</span>: N, <span class="st">&#39;Fibonacci(n)&#39;</span>: fibonacci(<span class="dv">15</span>)}</span>
+<span id="cb25-13"><a href="solving-one-dimensional-optimization-problems.html#cb25-13"></a>df <span class="op">=</span> pd.DataFrame(data)</span></code></pre></div>
 <p><code>df</code> looks like this:</p>
 <pre><code>## +----+-----+----------------+
 ## |    |   n |   Fibonacci(n) |
@@ -274,178 +274,178 @@ F_n&amp;=F_{n-1} + F_{n-2},\text{ where }n=2,3,\ldots
 ## +----+-----+----------------+</code></pre>
 <p>Let <span class="math inline">\(n\)</span> be the total number of experiments to be conducted and <span class="math inline">\([x_l, x_r]\)</span> be the initial interval the algorithm starts with. Let
 <span class="math display" id="eq:2">\[\begin{eqnarray}
-L_0 = x_r - x_l \tag{3.2}
+L_0 = x_r - x_l \tag{1.2}
 \end{eqnarray}\]</span>
 be the initial level of uncertainty and let us define,
 <span class="math display" id="eq:3">\[\begin{eqnarray}
-L_j = \frac{F_{n-2}}{F_n}L_0 \tag{3.3}
+L_j = \frac{F_{n-2}}{F_n}L_0 \tag{1.3}
 \end{eqnarray}\]</span>
-where, <span class="math inline">\(F_{n-2}\)</span> and <span class="math inline">\(F_n\)</span> are the <span class="math inline">\((n-2)^{th}\)</span> and <span class="math inline">\(n^{th}\)</span> <em>Fibonacci numbers</em> respectively. We see from the formulation of the <em>Fibonacci numbers</em> that, <a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a> shows the following property:
+where, <span class="math inline">\(F_{n-2}\)</span> and <span class="math inline">\(F_n\)</span> are the <span class="math inline">\((n-2)^{th}\)</span> and <span class="math inline">\(n^{th}\)</span> <em>Fibonacci numbers</em> respectively. We see from the formulation of the <em>Fibonacci numbers</em> that, <a href="index.html#eq:3">(1.3)</a> shows the following property:
 <span class="math display">\[\begin{equation}
     L_j = \frac{F_{n-2}}{F_n}L_0 \leq \frac{L_0}{2} \text{ for } n\geq 2 
 \end{equation}\]</span>
-Now, the initial two experiments are set at points <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, where, <span class="math inline">\(L_j = x_1 - x_l\)</span> and <span class="math inline">\(L_j = x_r - x_2\)</span>. So, combining these with Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>, we have:
+Now, the initial two experiments are set at points <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, where, <span class="math inline">\(L_j = x_1 - x_l\)</span> and <span class="math inline">\(L_j = x_r - x_2\)</span>. So, combining these with Eq.<a href="index.html#eq:3">(1.3)</a>, we have:
 <span class="math display" id="eq:4">\[\begin{equation}
-    x_1 = x_l + \frac{F_{n-2}}{F_n}L_0 \tag{3.4}
+    x_1 = x_l + \frac{F_{n-2}}{F_n}L_0 \tag{1.4}
 \end{equation}\]</span>
 and
 <span class="math display" id="eq:5">\[\begin{equation}
-    x_2 = x_r - \frac{F_{n-2}}{F_n}L_0 \tag{3.5}
+    x_2 = x_r - \frac{F_{n-2}}{F_n}L_0 \tag{1.5}
     \end{equation}\]</span>
 Now taking into consideration the unimodality assumption, a part of the interval of uncertainty is rejected, shrinking it to a smaller size, given by,
 <span class="math display" id="eq:6">\[\begin{equation}
-    L_i = L_0 - L_j = L_0(1-\frac{F_{n-2}}{F_n}) = \frac{F_{n-1}}{F_n}L_0 \tag{3.6}
+    L_i = L_0 - L_j = L_0(1-\frac{F_{n-2}}{F_n}) = \frac{F_{n-1}}{F_n}L_0 \tag{1.6}
 \end{equation}\]</span>
 where, we have used the fact that, <span class="math inline">\(F_n - F_{n-2} = F_{n-1}\)</span> from the formulation of the <em>Fibonacci numbers</em>. This procedure leaves us with only one experiment, which, from one end, is situated at a distance of
 <span class="math display" id="eq:7">\[\begin{equation}
-  L_j = \frac{F_{n-2}}{F_n}L_0 = \frac{F_{n-2}}{F_{n-1}}L_i \tag{3.7}
+  L_j = \frac{F_{n-2}}{F_n}L_0 = \frac{F_{n-2}}{F_{n-1}}L_i \tag{1.7}
 \end{equation}\]</span>
-where, we have used Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>. From the other end, the same experiment point is situated at a distance give by,
+where, we have used Eq.<a href="index.html#eq:3">(1.3)</a>. From the other end, the same experiment point is situated at a distance give by,
 <span class="math display" id="eq:8">\[\begin{equation}
-L_i-L_j = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_{n-1}}L_2 \tag{3.8}
+L_i-L_j = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_n}L_0 = \frac{F_{n-3}}{F_{n-1}}L_2 \tag{1.8}
 \end{equation}\]</span>
-where, we have again used Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:3">(3.3)</a>. We now place a new experiment point in the interval <span class="math inline">\(L_i\)</span> so that both the present experiment points are situated at a distance given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:7">(3.7)</a>. We again reduce the size of the interval of uncertainty using the unimodality conditions. This whole process is continued so that for the <span class="math inline">\(k^{th}\)</span> experiment point, its location is given by,
+where, we have again used Eq.<a href="index.html#eq:3">(1.3)</a>. We now place a new experiment point in the interval <span class="math inline">\(L_i\)</span> so that both the present experiment points are situated at a distance given by Eq.<a href="index.html#eq:7">(1.7)</a>. We again reduce the size of the interval of uncertainty using the unimodality conditions. This whole process is continued so that for the <span class="math inline">\(k^{th}\)</span> experiment point, its location is given by,
 <span class="math display" id="eq:9">\[\begin{equation}
-    L_{k[j]} = \frac{F_{n-k}}{F_{n-(k-2)}}L_{k-1} \tag{3.9}
+    L_{k[j]} = \frac{F_{n-k}}{F_{n-(k-2)}}L_{k-1} \tag{1.9}
 \end{equation}\]</span>
 and the interval of uncertainty is given by,
 <span class="math display" id="eq:10">\[\begin{equation}
-    l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 \tag{3.10}
+    l_{k[i]} = \frac{F_{n-(k-1)}}{F_n}L_0 \tag{1.10}
 \end{equation}\]</span>
 after <span class="math inline">\(k\)</span> iterations are completed. Now, the <em>reduction ratio</em> given by the ratio of the present interval of uncertainty after conduction <span class="math inline">\(k\)</span> iterations out of the <span class="math inline">\(n\)</span> experiments to be performed, <span class="math inline">\(L_{k[i]}\)</span> to the initial interval of uncertainty, <span class="math inline">\(L_0\)</span>:
 <span class="math display" id="eq:11">\[\begin{equation}
-    R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} \tag{3.11}
+    R = \frac{L_{k[i]}}{L_0} = \frac{F_{n-(k-1)}}{F_n} \tag{1.11}
 \end{equation}\]</span></p>
 <p>The purpose of this algorithm is to bring <span class="math inline">\(R \sim 0\)</span>. The <strong>Fibonacci Search Algorithm</strong> has been shown below:</p>
 <p><img src="img%203.png" /></p>
 <p>We will write a Python function that implements the above algorithm</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="solving-one-dimensional-optimization-problems.html#cb3-1"></a><span class="kw">def</span> fib_search(f, xl, xr, n):</span>
-<span id="cb3-2"><a href="solving-one-dimensional-optimization-problems.html#cb3-2"></a>    F <span class="op">=</span> fibonacci(n) <span class="co"># Call the fibonnaci number function</span></span>
-<span id="cb3-3"><a href="solving-one-dimensional-optimization-problems.html#cb3-3"></a>    L0 <span class="op">=</span> xr <span class="op">-</span> xl <span class="co"># Initial interval of uncertainty</span></span>
-<span id="cb3-4"><a href="solving-one-dimensional-optimization-problems.html#cb3-4"></a>    R1 <span class="op">=</span> L0 <span class="co"># Initial Reduction Ratio</span></span>
-<span id="cb3-5"><a href="solving-one-dimensional-optimization-problems.html#cb3-5"></a>    Li <span class="op">=</span> (F[n<span class="dv">-2</span>]<span class="op">/</span>F[n])<span class="op">*</span>L0 </span>
-<span id="cb3-6"><a href="solving-one-dimensional-optimization-problems.html#cb3-6"></a>    </span>
-<span id="cb3-7"><a href="solving-one-dimensional-optimization-problems.html#cb3-7"></a>    R <span class="op">=</span> [Li<span class="op">/</span>L0]</span>
-<span id="cb3-8"><a href="solving-one-dimensional-optimization-problems.html#cb3-8"></a></span>
-<span id="cb3-9"><a href="solving-one-dimensional-optimization-problems.html#cb3-9"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
-<span id="cb3-10"><a href="solving-one-dimensional-optimization-problems.html#cb3-10"></a>        <span class="cf">if</span> Li <span class="op">&gt;</span> L0<span class="op">/</span><span class="dv">2</span>:</span>
-<span id="cb3-11"><a href="solving-one-dimensional-optimization-problems.html#cb3-11"></a>            x1 <span class="op">=</span> xr <span class="op">-</span> Li</span>
-<span id="cb3-12"><a href="solving-one-dimensional-optimization-problems.html#cb3-12"></a>            x2 <span class="op">=</span> xl <span class="op">+</span> Li</span>
-<span id="cb3-13"><a href="solving-one-dimensional-optimization-problems.html#cb3-13"></a>        <span class="cf">else</span>:</span>
-<span id="cb3-14"><a href="solving-one-dimensional-optimization-problems.html#cb3-14"></a>            x1 <span class="op">=</span> xl <span class="op">+</span> Li</span>
-<span id="cb3-15"><a href="solving-one-dimensional-optimization-problems.html#cb3-15"></a>            x2 <span class="op">=</span> xr <span class="op">-</span> Li</span>
-<span id="cb3-16"><a href="solving-one-dimensional-optimization-problems.html#cb3-16"></a>            </span>
-<span id="cb3-17"><a href="solving-one-dimensional-optimization-problems.html#cb3-17"></a>        f1, f2 <span class="op">=</span> f(x1), f(x2)</span>
-<span id="cb3-18"><a href="solving-one-dimensional-optimization-problems.html#cb3-18"></a>        </span>
-<span id="cb3-19"><a href="solving-one-dimensional-optimization-problems.html#cb3-19"></a>        <span class="cf">if</span> f1 <span class="op">&lt;</span> f2:</span>
-<span id="cb3-20"><a href="solving-one-dimensional-optimization-problems.html#cb3-20"></a>            xr <span class="op">=</span> x2</span>
-<span id="cb3-21"><a href="solving-one-dimensional-optimization-problems.html#cb3-21"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
-<span id="cb3-22"><a href="solving-one-dimensional-optimization-problems.html#cb3-22"></a>        <span class="cf">elif</span> f1 <span class="op">&gt;</span> f2:</span>
-<span id="cb3-23"><a href="solving-one-dimensional-optimization-problems.html#cb3-23"></a>            xl <span class="op">=</span> x1</span>
-<span id="cb3-24"><a href="solving-one-dimensional-optimization-problems.html#cb3-24"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
-<span id="cb3-25"><a href="solving-one-dimensional-optimization-problems.html#cb3-25"></a>        <span class="cf">else</span>:</span>
-<span id="cb3-26"><a href="solving-one-dimensional-optimization-problems.html#cb3-26"></a>            xl, xr <span class="op">=</span> x1, x2</span>
-<span id="cb3-27"><a href="solving-one-dimensional-optimization-problems.html#cb3-27"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>(xr <span class="op">-</span> xl) <span class="co"># New interval of uncertainty</span></span>
-<span id="cb3-28"><a href="solving-one-dimensional-optimization-problems.html#cb3-28"></a>            </span>
-<span id="cb3-29"><a href="solving-one-dimensional-optimization-problems.html#cb3-29"></a>        L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
-<span id="cb3-30"><a href="solving-one-dimensional-optimization-problems.html#cb3-30"></a>        R <span class="op">+=</span> [Li<span class="op">/</span>R1,] <span class="co"># Append the new reduction ratio</span></span>
-<span id="cb3-31"><a href="solving-one-dimensional-optimization-problems.html#cb3-31"></a>        </span>
-<span id="cb3-32"><a href="solving-one-dimensional-optimization-problems.html#cb3-32"></a>    <span class="cf">if</span> f1 <span class="op">&lt;=</span> f2:</span>
-<span id="cb3-33"><a href="solving-one-dimensional-optimization-problems.html#cb3-33"></a>        <span class="cf">return</span> [x1, f(x1), R] <span class="co"># Final result</span></span>
-<span id="cb3-34"><a href="solving-one-dimensional-optimization-problems.html#cb3-34"></a>    <span class="cf">else</span>:</span>
-<span id="cb3-35"><a href="solving-one-dimensional-optimization-problems.html#cb3-35"></a>        <span class="cf">return</span> [x2, f(x2), R] <span class="co"># Final result</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="solving-one-dimensional-optimization-problems.html#cb27-1"></a><span class="kw">def</span> fib_search(f, xl, xr, n):</span>
+<span id="cb27-2"><a href="solving-one-dimensional-optimization-problems.html#cb27-2"></a>    F <span class="op">=</span> fibonacci(n) <span class="co"># Call the fibonnaci number function</span></span>
+<span id="cb27-3"><a href="solving-one-dimensional-optimization-problems.html#cb27-3"></a>    L0 <span class="op">=</span> xr <span class="op">-</span> xl <span class="co"># Initial interval of uncertainty</span></span>
+<span id="cb27-4"><a href="solving-one-dimensional-optimization-problems.html#cb27-4"></a>    R1 <span class="op">=</span> L0 <span class="co"># Initial Reduction Ratio</span></span>
+<span id="cb27-5"><a href="solving-one-dimensional-optimization-problems.html#cb27-5"></a>    Li <span class="op">=</span> (F[n<span class="dv">-2</span>]<span class="op">/</span>F[n])<span class="op">*</span>L0 </span>
+<span id="cb27-6"><a href="solving-one-dimensional-optimization-problems.html#cb27-6"></a>    </span>
+<span id="cb27-7"><a href="solving-one-dimensional-optimization-problems.html#cb27-7"></a>    R <span class="op">=</span> [Li<span class="op">/</span>L0]</span>
+<span id="cb27-8"><a href="solving-one-dimensional-optimization-problems.html#cb27-8"></a></span>
+<span id="cb27-9"><a href="solving-one-dimensional-optimization-problems.html#cb27-9"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb27-10"><a href="solving-one-dimensional-optimization-problems.html#cb27-10"></a>        <span class="cf">if</span> Li <span class="op">&gt;</span> L0<span class="op">/</span><span class="dv">2</span>:</span>
+<span id="cb27-11"><a href="solving-one-dimensional-optimization-problems.html#cb27-11"></a>            x1 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb27-12"><a href="solving-one-dimensional-optimization-problems.html#cb27-12"></a>            x2 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb27-13"><a href="solving-one-dimensional-optimization-problems.html#cb27-13"></a>        <span class="cf">else</span>:</span>
+<span id="cb27-14"><a href="solving-one-dimensional-optimization-problems.html#cb27-14"></a>            x1 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb27-15"><a href="solving-one-dimensional-optimization-problems.html#cb27-15"></a>            x2 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb27-16"><a href="solving-one-dimensional-optimization-problems.html#cb27-16"></a>            </span>
+<span id="cb27-17"><a href="solving-one-dimensional-optimization-problems.html#cb27-17"></a>        f1, f2 <span class="op">=</span> f(x1), f(x2)</span>
+<span id="cb27-18"><a href="solving-one-dimensional-optimization-problems.html#cb27-18"></a>        </span>
+<span id="cb27-19"><a href="solving-one-dimensional-optimization-problems.html#cb27-19"></a>        <span class="cf">if</span> f1 <span class="op">&lt;</span> f2:</span>
+<span id="cb27-20"><a href="solving-one-dimensional-optimization-problems.html#cb27-20"></a>            xr <span class="op">=</span> x2</span>
+<span id="cb27-21"><a href="solving-one-dimensional-optimization-problems.html#cb27-21"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
+<span id="cb27-22"><a href="solving-one-dimensional-optimization-problems.html#cb27-22"></a>        <span class="cf">elif</span> f1 <span class="op">&gt;</span> f2:</span>
+<span id="cb27-23"><a href="solving-one-dimensional-optimization-problems.html#cb27-23"></a>            xl <span class="op">=</span> x1</span>
+<span id="cb27-24"><a href="solving-one-dimensional-optimization-problems.html#cb27-24"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0 <span class="co"># New interval of uncertainty</span></span>
+<span id="cb27-25"><a href="solving-one-dimensional-optimization-problems.html#cb27-25"></a>        <span class="cf">else</span>:</span>
+<span id="cb27-26"><a href="solving-one-dimensional-optimization-problems.html#cb27-26"></a>            xl, xr <span class="op">=</span> x1, x2</span>
+<span id="cb27-27"><a href="solving-one-dimensional-optimization-problems.html#cb27-27"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>(xr <span class="op">-</span> xl) <span class="co"># New interval of uncertainty</span></span>
+<span id="cb27-28"><a href="solving-one-dimensional-optimization-problems.html#cb27-28"></a>            </span>
+<span id="cb27-29"><a href="solving-one-dimensional-optimization-problems.html#cb27-29"></a>        L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
+<span id="cb27-30"><a href="solving-one-dimensional-optimization-problems.html#cb27-30"></a>        R <span class="op">+=</span> [Li<span class="op">/</span>R1,] <span class="co"># Append the new reduction ratio</span></span>
+<span id="cb27-31"><a href="solving-one-dimensional-optimization-problems.html#cb27-31"></a>        </span>
+<span id="cb27-32"><a href="solving-one-dimensional-optimization-problems.html#cb27-32"></a>    <span class="cf">if</span> f1 <span class="op">&lt;=</span> f2:</span>
+<span id="cb27-33"><a href="solving-one-dimensional-optimization-problems.html#cb27-33"></a>        <span class="cf">return</span> [x1, f(x1), R] <span class="co"># Final result</span></span>
+<span id="cb27-34"><a href="solving-one-dimensional-optimization-problems.html#cb27-34"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-35"><a href="solving-one-dimensional-optimization-problems.html#cb27-35"></a>        <span class="cf">return</span> [x2, f(x2), R] <span class="co"># Final result</span></span></code></pre></div>
 
 <div class="example">
-<span id="exm:unnamed-chunk-6" class="example"><strong>Example 3.1  </strong></span>Let an objective function be:
+<span id="exm:unnamed-chunk-50" class="example"><strong>Example 3.1  </strong></span>Let an objective function be:
 <span class="math display" id="eq:12">\[\begin{equation}
-    f(x) = x^5 - 5x^3 - 20x + 5 \tag{3.12}
+    f(x) = x^5 - 5x^3 - 20x + 5 \tag{1.12}
 \end{equation}\]</span>
 We will use the <strong>Fibonacci search algorithm</strong> to find the minimizer <span class="math inline">\(x^*\)</span>, taking <span class="math inline">\(n=25\)</span> and the initial interval of uncertainty <span class="math inline">\([-2.5, 2.5]\)</span>. Let’s write a Python function to define the given objective function and visualize the same:
 </div>
 
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="solving-one-dimensional-optimization-problems.html#cb4-1"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
-<span id="cb4-2"><a href="solving-one-dimensional-optimization-problems.html#cb4-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">5</span> <span class="op">-</span> <span class="dv">5</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">20</span><span class="op">*</span>x <span class="op">+</span> <span class="dv">5</span></span>
-<span id="cb4-3"><a href="solving-one-dimensional-optimization-problems.html#cb4-3"></a></span>
-<span id="cb4-4"><a href="solving-one-dimensional-optimization-problems.html#cb4-4"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
-<span id="cb4-5"><a href="solving-one-dimensional-optimization-problems.html#cb4-5"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="solving-one-dimensional-optimization-problems.html#cb5-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="solving-one-dimensional-optimization-problems.html#cb6-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="solving-one-dimensional-optimization-problems.html#cb7-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^5-5x^3-20x+5$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="solving-one-dimensional-optimization-problems.html#cb8-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="solving-one-dimensional-optimization-problems.html#cb28-1"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
+<span id="cb28-2"><a href="solving-one-dimensional-optimization-problems.html#cb28-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">5</span> <span class="op">-</span> <span class="dv">5</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">20</span><span class="op">*</span>x <span class="op">+</span> <span class="dv">5</span></span>
+<span id="cb28-3"><a href="solving-one-dimensional-optimization-problems.html#cb28-3"></a></span>
+<span id="cb28-4"><a href="solving-one-dimensional-optimization-problems.html#cb28-4"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb28-5"><a href="solving-one-dimensional-optimization-problems.html#cb28-5"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="solving-one-dimensional-optimization-problems.html#cb29-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="solving-one-dimensional-optimization-problems.html#cb30-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="solving-one-dimensional-optimization-problems.html#cb31-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^5-5x^3-20x+5$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="solving-one-dimensional-optimization-problems.html#cb32-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-51.png" width="672" /></p>
 <p>Now, we consider <span class="math inline">\(n=25\)</span> and use the function <code>fib_search(f, -2.5, 2.5, 25)</code> to run the optimization and print the results:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="solving-one-dimensional-optimization-problems.html#cb9-1"></a>Fib <span class="op">=</span> fib_search(f, <span class="fl">-2.5</span>, <span class="fl">2.5</span>, <span class="dv">25</span>)</span>
-<span id="cb9-2"><a href="solving-one-dimensional-optimization-problems.html#cb9-2"></a>x_star, f_x_star, R <span class="op">=</span> Fib</span>
-<span id="cb9-3"><a href="solving-one-dimensional-optimization-problems.html#cb9-3"></a><span class="bu">print</span> (<span class="st">&quot;x*:&quot;</span>, x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="solving-one-dimensional-optimization-problems.html#cb33-1"></a>Fib <span class="op">=</span> fib_search(f, <span class="fl">-2.5</span>, <span class="fl">2.5</span>, <span class="dv">25</span>)</span>
+<span id="cb33-2"><a href="solving-one-dimensional-optimization-problems.html#cb33-2"></a>x_star, f_x_star, R <span class="op">=</span> Fib</span>
+<span id="cb33-3"><a href="solving-one-dimensional-optimization-problems.html#cb33-3"></a><span class="bu">print</span> (<span class="st">&quot;x*:&quot;</span>, x_star)</span></code></pre></div>
 <pre><code>## x*: 1.999966677774075</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="solving-one-dimensional-optimization-problems.html#cb11-1"></a><span class="bu">print</span> (<span class="st">&quot;f(x*):&quot;</span>, f_x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="solving-one-dimensional-optimization-problems.html#cb35-1"></a><span class="bu">print</span> (<span class="st">&quot;f(x*):&quot;</span>, f_x_star)</span></code></pre></div>
 <pre><code>## f(x*): -42.99999994448275</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="solving-one-dimensional-optimization-problems.html#cb13-1"></a><span class="bu">print</span> (<span class="st">&quot;Final Reduction Ratio:&quot;</span>, R[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="solving-one-dimensional-optimization-problems.html#cb37-1"></a><span class="bu">print</span> (<span class="st">&quot;Final Reduction Ratio:&quot;</span>, R[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
 <pre><code>## Final Reduction Ratio: 0.0</code></pre>
 <p>We see that <span class="math inline">\(x^* \sim 2\)</span>, <span class="math inline">\(f(x^*) \sim -43\)</span> and the final <em>Reduction Ration</em> is 0. Now, to show the positions of <span class="math inline">\(x^*\)</span> and <span class="math inline">\(f(x^*)\)</span> on the graph of the objective function, we write the following code:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="solving-one-dimensional-optimization-problems.html#cb15-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
-<span id="cb15-2"><a href="solving-one-dimensional-optimization-problems.html#cb15-2"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="solving-one-dimensional-optimization-problems.html#cb16-1"></a>plt.plot([x_star], [f_x_star], <span class="st">&#39;ko&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="solving-one-dimensional-optimization-problems.html#cb17-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="solving-one-dimensional-optimization-problems.html#cb18-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="solving-one-dimensional-optimization-problems.html#cb19-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="solving-one-dimensional-optimization-problems.html#cb20-1"></a>plt.title(<span class="st">&quot;$x^*$ denoted as broken blue line and $f(x^*)$ denoted as the black dot&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="solving-one-dimensional-optimization-problems.html#cb21-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-5.png" width="672" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="solving-one-dimensional-optimization-problems.html#cb39-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb39-2"><a href="solving-one-dimensional-optimization-problems.html#cb39-2"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="solving-one-dimensional-optimization-problems.html#cb40-1"></a>plt.plot([x_star], [f_x_star], <span class="st">&#39;ko&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="solving-one-dimensional-optimization-problems.html#cb41-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="solving-one-dimensional-optimization-problems.html#cb42-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="solving-one-dimensional-optimization-problems.html#cb43-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="solving-one-dimensional-optimization-problems.html#cb44-1"></a>plt.title(<span class="st">&quot;$x^*$ denoted as broken blue line and $f(x^*)$ denoted as the black dot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="solving-one-dimensional-optimization-problems.html#cb45-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-53.png" width="672" /></p>
 <p>We can modify our function in such a way that all the optimization data in every step are collected
 and displayed as a <code>DataFrame</code>:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="solving-one-dimensional-optimization-problems.html#cb22-1"></a></span>
-<span id="cb22-2"><a href="solving-one-dimensional-optimization-problems.html#cb22-2"></a><span class="kw">def</span> fib_search(f, xl, xr, n):    </span>
-<span id="cb22-3"><a href="solving-one-dimensional-optimization-problems.html#cb22-3"></a>    F <span class="op">=</span> fibonacci(n)</span>
-<span id="cb22-4"><a href="solving-one-dimensional-optimization-problems.html#cb22-4"></a>    L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
-<span id="cb22-5"><a href="solving-one-dimensional-optimization-problems.html#cb22-5"></a>    ini <span class="op">=</span> L0</span>
-<span id="cb22-6"><a href="solving-one-dimensional-optimization-problems.html#cb22-6"></a>    Li <span class="op">=</span> (F[n<span class="dv">-2</span>]<span class="op">/</span>F[n])<span class="op">*</span>L0</span>
-<span id="cb22-7"><a href="solving-one-dimensional-optimization-problems.html#cb22-7"></a>    </span>
-<span id="cb22-8"><a href="solving-one-dimensional-optimization-problems.html#cb22-8"></a>    R <span class="op">=</span> [Li<span class="op">/</span>L0]</span>
-<span id="cb22-9"><a href="solving-one-dimensional-optimization-problems.html#cb22-9"></a>    a <span class="op">=</span> [xl]</span>
-<span id="cb22-10"><a href="solving-one-dimensional-optimization-problems.html#cb22-10"></a>    b <span class="op">=</span> [xr]</span>
-<span id="cb22-11"><a href="solving-one-dimensional-optimization-problems.html#cb22-11"></a>    F1 <span class="op">=</span> [f(xl)]</span>
-<span id="cb22-12"><a href="solving-one-dimensional-optimization-problems.html#cb22-12"></a>    F2 <span class="op">=</span> [f(xr)]</span>
-<span id="cb22-13"><a href="solving-one-dimensional-optimization-problems.html#cb22-13"></a></span>
-<span id="cb22-14"><a href="solving-one-dimensional-optimization-problems.html#cb22-14"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
-<span id="cb22-15"><a href="solving-one-dimensional-optimization-problems.html#cb22-15"></a>        <span class="co">#print(&quot;reduction ratio:&quot;, Li/ini)</span></span>
-<span id="cb22-16"><a href="solving-one-dimensional-optimization-problems.html#cb22-16"></a>        <span class="cf">if</span> Li <span class="op">&gt;</span> L0<span class="op">/</span><span class="dv">2</span>:</span>
-<span id="cb22-17"><a href="solving-one-dimensional-optimization-problems.html#cb22-17"></a>            x1 <span class="op">=</span> xr <span class="op">-</span> Li</span>
-<span id="cb22-18"><a href="solving-one-dimensional-optimization-problems.html#cb22-18"></a>            x2 <span class="op">=</span> xl <span class="op">+</span> Li</span>
-<span id="cb22-19"><a href="solving-one-dimensional-optimization-problems.html#cb22-19"></a>        <span class="cf">else</span>:</span>
-<span id="cb22-20"><a href="solving-one-dimensional-optimization-problems.html#cb22-20"></a>            x1 <span class="op">=</span> xl <span class="op">+</span> Li</span>
-<span id="cb22-21"><a href="solving-one-dimensional-optimization-problems.html#cb22-21"></a>            x2 <span class="op">=</span> xr <span class="op">-</span> Li</span>
-<span id="cb22-22"><a href="solving-one-dimensional-optimization-problems.html#cb22-22"></a>            </span>
-<span id="cb22-23"><a href="solving-one-dimensional-optimization-problems.html#cb22-23"></a>        f1, f2 <span class="op">=</span> f(x1), f(x2)</span>
-<span id="cb22-24"><a href="solving-one-dimensional-optimization-problems.html#cb22-24"></a>        </span>
-<span id="cb22-25"><a href="solving-one-dimensional-optimization-problems.html#cb22-25"></a>        <span class="cf">if</span> f1 <span class="op">&lt;</span> f2:</span>
-<span id="cb22-26"><a href="solving-one-dimensional-optimization-problems.html#cb22-26"></a>            xr <span class="op">=</span> x2</span>
-<span id="cb22-27"><a href="solving-one-dimensional-optimization-problems.html#cb22-27"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0</span>
-<span id="cb22-28"><a href="solving-one-dimensional-optimization-problems.html#cb22-28"></a>        <span class="cf">elif</span> f1 <span class="op">&gt;</span> f2:</span>
-<span id="cb22-29"><a href="solving-one-dimensional-optimization-problems.html#cb22-29"></a>            xl <span class="op">=</span> x1</span>
-<span id="cb22-30"><a href="solving-one-dimensional-optimization-problems.html#cb22-30"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0</span>
-<span id="cb22-31"><a href="solving-one-dimensional-optimization-problems.html#cb22-31"></a>        <span class="cf">else</span>:</span>
-<span id="cb22-32"><a href="solving-one-dimensional-optimization-problems.html#cb22-32"></a>            xl, xr <span class="op">=</span> x1, x2</span>
-<span id="cb22-33"><a href="solving-one-dimensional-optimization-problems.html#cb22-33"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>(xr <span class="op">-</span> xl)</span>
-<span id="cb22-34"><a href="solving-one-dimensional-optimization-problems.html#cb22-34"></a>            </span>
-<span id="cb22-35"><a href="solving-one-dimensional-optimization-problems.html#cb22-35"></a>        L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
-<span id="cb22-36"><a href="solving-one-dimensional-optimization-problems.html#cb22-36"></a>        R <span class="op">+=</span> [Li<span class="op">/</span>ini,] </span>
-<span id="cb22-37"><a href="solving-one-dimensional-optimization-problems.html#cb22-37"></a>        a <span class="op">+=</span> [xl, ]</span>
-<span id="cb22-38"><a href="solving-one-dimensional-optimization-problems.html#cb22-38"></a>        b <span class="op">+=</span> [xr, ]</span>
-<span id="cb22-39"><a href="solving-one-dimensional-optimization-problems.html#cb22-39"></a>        F1 <span class="op">+=</span> [f1, ]</span>
-<span id="cb22-40"><a href="solving-one-dimensional-optimization-problems.html#cb22-40"></a>        F2 <span class="op">+=</span> [f2, ]</span>
-<span id="cb22-41"><a href="solving-one-dimensional-optimization-problems.html#cb22-41"></a>        </span>
-<span id="cb22-42"><a href="solving-one-dimensional-optimization-problems.html#cb22-42"></a>    data <span class="op">=</span> {<span class="st">&#39;n&#39;</span> : <span class="bu">range</span>(<span class="dv">0</span>, n),</span>
-<span id="cb22-43"><a href="solving-one-dimensional-optimization-problems.html#cb22-43"></a>            <span class="st">&#39;xl&#39;</span>: a,</span>
-<span id="cb22-44"><a href="solving-one-dimensional-optimization-problems.html#cb22-44"></a>            <span class="st">&#39;xr&#39;</span>: b,</span>
-<span id="cb22-45"><a href="solving-one-dimensional-optimization-problems.html#cb22-45"></a>            <span class="st">&#39;f(x1)&#39;</span>: F1,</span>
-<span id="cb22-46"><a href="solving-one-dimensional-optimization-problems.html#cb22-46"></a>            <span class="st">&#39;f(x2)&#39;</span>: F2,</span>
-<span id="cb22-47"><a href="solving-one-dimensional-optimization-problems.html#cb22-47"></a>            <span class="st">&#39;Reduction Ratio&#39;</span>: R}</span>
-<span id="cb22-48"><a href="solving-one-dimensional-optimization-problems.html#cb22-48"></a></span>
-<span id="cb22-49"><a href="solving-one-dimensional-optimization-problems.html#cb22-49"></a>    df <span class="op">=</span> pd.DataFrame(data, columns <span class="op">=</span> [<span class="st">&#39;n&#39;</span>, <span class="st">&#39;xl&#39;</span>, <span class="st">&#39;xr&#39;</span>, <span class="st">&#39;f(x1)&#39;</span>, <span class="st">&#39;f(x2)&#39;</span>, <span class="st">&#39;Reduction Ratio&#39;</span>])</span>
-<span id="cb22-50"><a href="solving-one-dimensional-optimization-problems.html#cb22-50"></a>    <span class="cf">return</span> df</span>
-<span id="cb22-51"><a href="solving-one-dimensional-optimization-problems.html#cb22-51"></a></span>
-<span id="cb22-52"><a href="solving-one-dimensional-optimization-problems.html#cb22-52"></a>df <span class="op">=</span> fib_search(f, <span class="fl">-2.5</span>, <span class="fl">2.5</span>, <span class="dv">25</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="solving-one-dimensional-optimization-problems.html#cb46-1"></a></span>
+<span id="cb46-2"><a href="solving-one-dimensional-optimization-problems.html#cb46-2"></a><span class="kw">def</span> fib_search(f, xl, xr, n):    </span>
+<span id="cb46-3"><a href="solving-one-dimensional-optimization-problems.html#cb46-3"></a>    F <span class="op">=</span> fibonacci(n)</span>
+<span id="cb46-4"><a href="solving-one-dimensional-optimization-problems.html#cb46-4"></a>    L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
+<span id="cb46-5"><a href="solving-one-dimensional-optimization-problems.html#cb46-5"></a>    ini <span class="op">=</span> L0</span>
+<span id="cb46-6"><a href="solving-one-dimensional-optimization-problems.html#cb46-6"></a>    Li <span class="op">=</span> (F[n<span class="dv">-2</span>]<span class="op">/</span>F[n])<span class="op">*</span>L0</span>
+<span id="cb46-7"><a href="solving-one-dimensional-optimization-problems.html#cb46-7"></a>    </span>
+<span id="cb46-8"><a href="solving-one-dimensional-optimization-problems.html#cb46-8"></a>    R <span class="op">=</span> [Li<span class="op">/</span>L0]</span>
+<span id="cb46-9"><a href="solving-one-dimensional-optimization-problems.html#cb46-9"></a>    a <span class="op">=</span> [xl]</span>
+<span id="cb46-10"><a href="solving-one-dimensional-optimization-problems.html#cb46-10"></a>    b <span class="op">=</span> [xr]</span>
+<span id="cb46-11"><a href="solving-one-dimensional-optimization-problems.html#cb46-11"></a>    F1 <span class="op">=</span> [f(xl)]</span>
+<span id="cb46-12"><a href="solving-one-dimensional-optimization-problems.html#cb46-12"></a>    F2 <span class="op">=</span> [f(xr)]</span>
+<span id="cb46-13"><a href="solving-one-dimensional-optimization-problems.html#cb46-13"></a></span>
+<span id="cb46-14"><a href="solving-one-dimensional-optimization-problems.html#cb46-14"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb46-15"><a href="solving-one-dimensional-optimization-problems.html#cb46-15"></a>        <span class="co">#print(&quot;reduction ratio:&quot;, Li/ini)</span></span>
+<span id="cb46-16"><a href="solving-one-dimensional-optimization-problems.html#cb46-16"></a>        <span class="cf">if</span> Li <span class="op">&gt;</span> L0<span class="op">/</span><span class="dv">2</span>:</span>
+<span id="cb46-17"><a href="solving-one-dimensional-optimization-problems.html#cb46-17"></a>            x1 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb46-18"><a href="solving-one-dimensional-optimization-problems.html#cb46-18"></a>            x2 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb46-19"><a href="solving-one-dimensional-optimization-problems.html#cb46-19"></a>        <span class="cf">else</span>:</span>
+<span id="cb46-20"><a href="solving-one-dimensional-optimization-problems.html#cb46-20"></a>            x1 <span class="op">=</span> xl <span class="op">+</span> Li</span>
+<span id="cb46-21"><a href="solving-one-dimensional-optimization-problems.html#cb46-21"></a>            x2 <span class="op">=</span> xr <span class="op">-</span> Li</span>
+<span id="cb46-22"><a href="solving-one-dimensional-optimization-problems.html#cb46-22"></a>            </span>
+<span id="cb46-23"><a href="solving-one-dimensional-optimization-problems.html#cb46-23"></a>        f1, f2 <span class="op">=</span> f(x1), f(x2)</span>
+<span id="cb46-24"><a href="solving-one-dimensional-optimization-problems.html#cb46-24"></a>        </span>
+<span id="cb46-25"><a href="solving-one-dimensional-optimization-problems.html#cb46-25"></a>        <span class="cf">if</span> f1 <span class="op">&lt;</span> f2:</span>
+<span id="cb46-26"><a href="solving-one-dimensional-optimization-problems.html#cb46-26"></a>            xr <span class="op">=</span> x2</span>
+<span id="cb46-27"><a href="solving-one-dimensional-optimization-problems.html#cb46-27"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0</span>
+<span id="cb46-28"><a href="solving-one-dimensional-optimization-problems.html#cb46-28"></a>        <span class="cf">elif</span> f1 <span class="op">&gt;</span> f2:</span>
+<span id="cb46-29"><a href="solving-one-dimensional-optimization-problems.html#cb46-29"></a>            xl <span class="op">=</span> x1</span>
+<span id="cb46-30"><a href="solving-one-dimensional-optimization-problems.html#cb46-30"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>L0</span>
+<span id="cb46-31"><a href="solving-one-dimensional-optimization-problems.html#cb46-31"></a>        <span class="cf">else</span>:</span>
+<span id="cb46-32"><a href="solving-one-dimensional-optimization-problems.html#cb46-32"></a>            xl, xr <span class="op">=</span> x1, x2</span>
+<span id="cb46-33"><a href="solving-one-dimensional-optimization-problems.html#cb46-33"></a>            Li <span class="op">=</span> (F[n <span class="op">-</span> i]<span class="op">/</span>F[n <span class="op">-</span> (i <span class="op">-</span> <span class="dv">2</span>)])<span class="op">*</span>(xr <span class="op">-</span> xl)</span>
+<span id="cb46-34"><a href="solving-one-dimensional-optimization-problems.html#cb46-34"></a>            </span>
+<span id="cb46-35"><a href="solving-one-dimensional-optimization-problems.html#cb46-35"></a>        L0 <span class="op">=</span> xr <span class="op">-</span> xl</span>
+<span id="cb46-36"><a href="solving-one-dimensional-optimization-problems.html#cb46-36"></a>        R <span class="op">+=</span> [Li<span class="op">/</span>ini,] </span>
+<span id="cb46-37"><a href="solving-one-dimensional-optimization-problems.html#cb46-37"></a>        a <span class="op">+=</span> [xl, ]</span>
+<span id="cb46-38"><a href="solving-one-dimensional-optimization-problems.html#cb46-38"></a>        b <span class="op">+=</span> [xr, ]</span>
+<span id="cb46-39"><a href="solving-one-dimensional-optimization-problems.html#cb46-39"></a>        F1 <span class="op">+=</span> [f1, ]</span>
+<span id="cb46-40"><a href="solving-one-dimensional-optimization-problems.html#cb46-40"></a>        F2 <span class="op">+=</span> [f2, ]</span>
+<span id="cb46-41"><a href="solving-one-dimensional-optimization-problems.html#cb46-41"></a>        </span>
+<span id="cb46-42"><a href="solving-one-dimensional-optimization-problems.html#cb46-42"></a>    data <span class="op">=</span> {<span class="st">&#39;n&#39;</span> : <span class="bu">range</span>(<span class="dv">0</span>, n),</span>
+<span id="cb46-43"><a href="solving-one-dimensional-optimization-problems.html#cb46-43"></a>            <span class="st">&#39;xl&#39;</span>: a,</span>
+<span id="cb46-44"><a href="solving-one-dimensional-optimization-problems.html#cb46-44"></a>            <span class="st">&#39;xr&#39;</span>: b,</span>
+<span id="cb46-45"><a href="solving-one-dimensional-optimization-problems.html#cb46-45"></a>            <span class="st">&#39;f(x1)&#39;</span>: F1,</span>
+<span id="cb46-46"><a href="solving-one-dimensional-optimization-problems.html#cb46-46"></a>            <span class="st">&#39;f(x2)&#39;</span>: F2,</span>
+<span id="cb46-47"><a href="solving-one-dimensional-optimization-problems.html#cb46-47"></a>            <span class="st">&#39;Reduction Ratio&#39;</span>: R}</span>
+<span id="cb46-48"><a href="solving-one-dimensional-optimization-problems.html#cb46-48"></a></span>
+<span id="cb46-49"><a href="solving-one-dimensional-optimization-problems.html#cb46-49"></a>    df <span class="op">=</span> pd.DataFrame(data, columns <span class="op">=</span> [<span class="st">&#39;n&#39;</span>, <span class="st">&#39;xl&#39;</span>, <span class="st">&#39;xr&#39;</span>, <span class="st">&#39;f(x1)&#39;</span>, <span class="st">&#39;f(x2)&#39;</span>, <span class="st">&#39;Reduction Ratio&#39;</span>])</span>
+<span id="cb46-50"><a href="solving-one-dimensional-optimization-problems.html#cb46-50"></a>    <span class="cf">return</span> df</span>
+<span id="cb46-51"><a href="solving-one-dimensional-optimization-problems.html#cb46-51"></a></span>
+<span id="cb46-52"><a href="solving-one-dimensional-optimization-problems.html#cb46-52"></a>df <span class="op">=</span> fib_search(f, <span class="fl">-2.5</span>, <span class="fl">2.5</span>, <span class="dv">25</span>)</span></code></pre></div>
 <p>Where <code>df</code> looks like this:</p>
 <pre><code>## +----+-----+----------+---------+-----------+-----------+-------------------+
 ## |    |   n |       xl |      xr |     f(x1) |     f(x2) |   Reduction Ratio |
@@ -477,64 +477,64 @@ and displayed as a <code>DataFrame</code>:</p>
 ## | 24 |  24 |  1.99997 | 1.99997 | -43       | -43       |       0           |
 ## +----+-----+----------+---------+-----------+-----------+-------------------+</code></pre>
 <p>The graph of the reduction ratio at each <span class="math inline">\(n\)</span> can be plotted with the following code:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="solving-one-dimensional-optimization-problems.html#cb24-1"></a>plt.xlabel(<span class="st">&quot;n-&gt;&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="solving-one-dimensional-optimization-problems.html#cb25-1"></a>plt.ylabel(<span class="st">&quot;Reduction Ratio -&gt;&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="solving-one-dimensional-optimization-problems.html#cb26-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(df)), df[<span class="st">&#39;Reduction Ratio&#39;</span>])</span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="solving-one-dimensional-optimization-problems.html#cb27-1"></a>plt.title(<span class="st">&quot;Graph of change of reduction ratio at each $n$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="solving-one-dimensional-optimization-problems.html#cb28-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-7.png" width="672" /></p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="solving-one-dimensional-optimization-problems.html#cb48-1"></a>plt.xlabel(<span class="st">&quot;n-&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="solving-one-dimensional-optimization-problems.html#cb49-1"></a>plt.ylabel(<span class="st">&quot;Reduction Ratio -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="solving-one-dimensional-optimization-problems.html#cb50-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(df)), df[<span class="st">&#39;Reduction Ratio&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="solving-one-dimensional-optimization-problems.html#cb51-1"></a>plt.title(<span class="st">&quot;Graph of change of reduction ratio at each $n$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="solving-one-dimensional-optimization-problems.html#cb52-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-55.png" width="672" /></p>
 </div>
 <div id="golden-section-search-method" class="section level2">
 <h2><span class="header-section-number">3.4</span> Golden Section Search Method</h2>
 <p>The <strong>golden section search method</strong> is a modified version of the <strong>Fibonacci search method</strong>. One advantage of the former over the later is that, we do not need to keep a record of the total number of experiment points <span class="math inline">\(n\)</span> beforehand. While selecting <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> inside the interval of uncertainty, we make use of the golden ratio, <span class="math inline">\(\phi = \frac{\sqrt{5} - 1}{2}\)</span> which is the positive root of the quadratic equation given by:
 <span class="math display" id="eq:13">\[\begin{equation}
-    \phi^2+\phi-1=0 \tag{3.13}
+    \phi^2+\phi-1=0 \tag{1.13}
 \end{equation}\]</span></p>
 <p>Given the initial interval <span class="math inline">\([x_l, x_r]\)</span>, we have the initial interval of uncertainty as,
 <span class="math display" id="eq:14">\[\begin{equation}
-L_0 = x_r - x_l \tag{3.14}
+L_0 = x_r - x_l \tag{1.14}
 \end{equation}\]</span></p>
 <p>The new interior points <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are chosen in such a way that both of them lies at a distance <span class="math inline">\(\phi^2L_0\)</span> from either side, i.e,
 <span class="math display" id="eq:15">\[\begin{equation}
-    x_1-x_l = \phi^2L_0 \tag{3.15}
+    x_1-x_l = \phi^2L_0 \tag{1.15}
 \end{equation}\]</span>
 and
 <span class="math display" id="eq:16">\[\begin{equation}
-    x_r-x_2 = \phi^2L_0 \tag{3.16}
+    x_r-x_2 = \phi^2L_0 \tag{1.16}
 \end{equation}\]</span></p>
-<p>Now from Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:13">(3.13)</a> we know
+<p>Now from Eq.<a href="index.html#eq:13">(1.13)</a> we know
 <span class="math display" id="eq:17">\[\begin{equation}
-    L_0 = (\phi^2 + \phi)L_0 \tag{3.17}
+    L_0 = (\phi^2 + \phi)L_0 \tag{1.17}
 \end{equation}\]</span></p>
 <p>The above computations leave us with:
 <span class="math display" id="eq:18">\[\begin{equation}
-x_r - x_1 = \phi L_0 \tag{3.18}
+x_r - x_1 = \phi L_0 \tag{1.18}
 \end{equation}\]</span>
 and
 <span class="math display" id="eq:19">\[\begin{equation}
-    x_2 - x_l = \phi L_0 \tag{3.19}
+    x_2 - x_l = \phi L_0 \tag{1.19}
 \end{equation}\]</span></p>
 <p>Given, <span class="math inline">\(f(x)\)</span> is the nonlinear objective function, we now check whether <span class="math inline">\(f(x_1) &gt; f(x_2)\)</span>. If this is the case, we set <span class="math inline">\(x_l = x_1\)</span>, otherwise if <span class="math inline">\(f(x_1) &gt; f(x_2)\)</span>, we set <span class="math inline">\(x_r=x_2\)</span>. The new interval of uncertainty is set to be <span class="math inline">\(L_i = \phi L_0\)</span> and the previous interval is shrunk. This process of choosing new experimental points and shrinking the interval of uncertainty is continued until the termination condition is satisfied. The termination condition is to check whether the interval of uncertainty is less than a particular tolerance <span class="math inline">\(\epsilon\)</span> usually provided by the user. The <em>golden section search</em> algorithm is given below:</p>
 <p><img src="img%204.png" /></p>
 
 <div class="example">
-<p><span id="exm:unnamed-chunk-13" class="example"><strong>Example 3.2  </strong></span>Let us consider an objective function:
+<p><span id="exm:unnamed-chunk-57" class="example"><strong>Example 3.2  </strong></span>Let us consider an objective function:
 <span class="math display" id="eq:20">\[\begin{equation}
-    f(x) = \frac{1}{16}x^3 - \frac{27}{4}x \tag{3.20}
+    f(x) = \frac{1}{16}x^3 - \frac{27}{4}x \tag{1.20}
 \end{equation}\]</span></p>
 We will use the <em>golden section search</em> method to find the minimizer <span class="math inline">\(x^*\)</span> of this function and compute <span class="math inline">\(f(x^*)\)</span>. Suppose the initial interval be <span class="math inline">\([-10, 10]\)</span> and the tolerance for the termination condition for the algorithm be <span class="math inline">\(\epsilon = 10^{-5}\)</span>. Let us first define the function in Python:
 </div>
 
-<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="solving-one-dimensional-optimization-problems.html#cb29-1"></a><span class="kw">def</span> f(x): <span class="co"># objective function</span></span>
-<span id="cb29-2"><a href="solving-one-dimensional-optimization-problems.html#cb29-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">16</span> <span class="op">-</span> <span class="dv">27</span><span class="op">*</span>x<span class="op">/</span><span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="solving-one-dimensional-optimization-problems.html#cb53-1"></a><span class="kw">def</span> f(x): <span class="co"># objective function</span></span>
+<span id="cb53-2"><a href="solving-one-dimensional-optimization-problems.html#cb53-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">16</span> <span class="op">-</span> <span class="dv">27</span><span class="op">*</span>x<span class="op">/</span><span class="dv">4</span></span></code></pre></div>
 <p>The graph of the objective function:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="solving-one-dimensional-optimization-problems.html#cb30-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>)</span>
-<span id="cb30-2"><a href="solving-one-dimensional-optimization-problems.html#cb30-2"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="solving-one-dimensional-optimization-problems.html#cb31-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="solving-one-dimensional-optimization-problems.html#cb32-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="solving-one-dimensional-optimization-problems.html#cb33-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="solving-one-dimensional-optimization-problems.html#cb34-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-9.png" width="672" /></p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="solving-one-dimensional-optimization-problems.html#cb54-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>)</span>
+<span id="cb54-2"><a href="solving-one-dimensional-optimization-problems.html#cb54-2"></a>plt.plot(x, f(x), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="solving-one-dimensional-optimization-problems.html#cb55-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="solving-one-dimensional-optimization-problems.html#cb56-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="solving-one-dimensional-optimization-problems.html#cb57-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="solving-one-dimensional-optimization-problems.html#cb58-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-57.png" width="672" /></p>
 <p>For tackling this problem, we will not write our own Python function. As already stated in the last chapter, the <code>scipy.optimize</code> package too equips us with solvers to solve these tasks. For this problem, we use the <code>minimize_scalar()</code> function provided by <code>scipy.optimize</code>, which is used for minimization of a scalar function of one variable. The <code>minimize_scalar()</code> function provides the user with the following parameter:</p>
 <ul>
 <li><code>fun</code>: The objective function which must be callable,</li>
@@ -563,10 +563,10 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 <li>This is an <code>int</code> object and states the number of iterations that have been performed by the solver, and</li>
 <li><code>maxcv</code>: This is a <code>float</code> object and represents the maximum constraint evaluation.</li>
 </ul>
-<p>Now returning back to our example, we have <span class="math inline">\(f(x)\)</span> defined by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:20">(3.20)</a>, we use the <em>golden section search method</em> to find its minimizer. Using the <code>minimize_scalar()</code> function and setting parameters <code>method = 'golden'</code>, <code>bounds = (-10, 10)</code> and <code>tol = 10**-5</code> we can get our solution. We see that the initial interval has been set to <span class="math inline">\([-10, 10]\)</span> and the tolerance <span class="math inline">\(\epsilon\)</span> has been set <span class="math inline">\(10^{-5}\)</span>. We write the Python code:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="solving-one-dimensional-optimization-problems.html#cb35-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize_scalar</span>
-<span id="cb35-2"><a href="solving-one-dimensional-optimization-problems.html#cb35-2"></a>result <span class="op">=</span> minimize_scalar(f, bounds <span class="op">=</span> (<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), method <span class="op">=</span> <span class="st">&#39;golden&#39;</span>, tol <span class="op">=</span> <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
-<span id="cb35-3"><a href="solving-one-dimensional-optimization-problems.html#cb35-3"></a><span class="bu">print</span>(result)</span></code></pre></div>
+<p>Now returning back to our example, we have <span class="math inline">\(f(x)\)</span> defined by Eq.<a href="index.html#eq:20">(1.20)</a>, we use the <em>golden section search method</em> to find its minimizer. Using the <code>minimize_scalar()</code> function and setting parameters <code>method = 'golden'</code>, <code>bounds = (-10, 10)</code> and <code>tol = 10**-5</code> we can get our solution. We see that the initial interval has been set to <span class="math inline">\([-10, 10]\)</span> and the tolerance <span class="math inline">\(\epsilon\)</span> has been set <span class="math inline">\(10^{-5}\)</span>. We write the Python code:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="solving-one-dimensional-optimization-problems.html#cb59-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize_scalar</span>
+<span id="cb59-2"><a href="solving-one-dimensional-optimization-problems.html#cb59-2"></a>result <span class="op">=</span> minimize_scalar(f, bounds <span class="op">=</span> (<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>), method <span class="op">=</span> <span class="st">&#39;golden&#39;</span>, tol <span class="op">=</span> <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
+<span id="cb59-3"><a href="solving-one-dimensional-optimization-problems.html#cb59-3"></a><span class="bu">print</span>(result)</span></code></pre></div>
 <pre><code>##      fun: -26.99999999991886
 ##     nfev: 32
 ##      nit: 26
@@ -610,14 +610,14 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 ## | 31 |  6.00001 | -27        |
 ## +----+----------+------------+</code></pre>
 <p>The optimization steps can be plotted too. The graph with all the function evaluations along with the minimizer <span class="math inline">\(f(x^*)\)</span> at <span class="math inline">\(x^*\)</span> has been denoted as a blue dotted line in the below figure which can be generated using the following Python code:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="solving-one-dimensional-optimization-problems.html#cb38-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="solving-one-dimensional-optimization-problems.html#cb39-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="solving-one-dimensional-optimization-problems.html#cb40-1"></a>plt.axvline(x<span class="op">=</span>result.x, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="solving-one-dimensional-optimization-problems.html#cb41-1"></a>plt.axhline(y<span class="op">=</span>result.fun, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="solving-one-dimensional-optimization-problems.html#cb42-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="solving-one-dimensional-optimization-problems.html#cb43-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="solving-one-dimensional-optimization-problems.html#cb44-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-11.png" width="672" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="solving-one-dimensional-optimization-problems.html#cb62-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="solving-one-dimensional-optimization-problems.html#cb63-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="solving-one-dimensional-optimization-problems.html#cb64-1"></a>plt.axvline(x<span class="op">=</span>result.x, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="solving-one-dimensional-optimization-problems.html#cb65-1"></a>plt.axhline(y<span class="op">=</span>result.fun, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="solving-one-dimensional-optimization-problems.html#cb66-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb67-1"><a href="solving-one-dimensional-optimization-problems.html#cb67-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="solving-one-dimensional-optimization-problems.html#cb68-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{16}</span><span class="st">x^3 - </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{27}{4}</span><span class="st">x$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-59.png" width="672" /></p>
 <p>If we analyse closely the optimization data in the dataframe and look at the third, fourth and fifth steps, we see that <span class="math inline">\(f(x[3]) ~\sim -16.55\)</span>, <span class="math inline">\(f(x[4]) \sim 120.1\)</span> and again <span class="math inline">\(f(x[5]) ~\sim -16.55\)</span>. This interesting overshooting can be also seen in the visualization given by the above figure.</p>
 <p>We next discuss <em>interpolation</em> methods to find the minimum of a nonlinear unimodal objective function. This methods use polynomial approximation for modeling the objective function. We will study two methods under this class of methods:</p>
 <ul>
@@ -630,134 +630,134 @@ We will use the <em>golden section search</em> method to find the minimizer <spa
 <p>Suppose, the objective function is <span class="math inline">\(f(x), x\in \mathbb{R}\)</span> and the minimizer is <span class="math inline">\(x^*\)</span>. Powell’s method use successive quadratic interpolation curves for fitting to the objective function data. This gives a sequence of approximations to <span class="math inline">\(x^*\)</span>, denoted by <span class="math inline">\(x_t\)</span>.</p>
 <p>Initially three data points <span class="math inline">\(x_0, x_1, x_2 \in \mathbb{R}\)</span> are provided. The interpolating quadratic polynomial through these data points <span class="math inline">\(P(x)\)</span> is as followed:
 <span class="math display" id="eq:21">\[\begin{equation}
-    P(x) = f(x_0) + (x - x_0)f[x_0, x_1] + (x-x_0)(x-x_1)f[x_0, x_1, x_2] \tag{3.21}
+    P(x) = f(x_0) + (x - x_0)f[x_0, x_1] + (x-x_0)(x-x_1)f[x_0, x_1, x_2] \tag{1.21}
 \end{equation}\]</span>
 where,
 <span class="math display" id="eq:22">\[\begin{equation}
-    f[x, y] = \frac{f(y) - f(x)}{y - x} \tag{3.22}
+    f[x, y] = \frac{f(y) - f(x)}{y - x} \tag{1.22}
 \end{equation}\]</span>
 is the first order forward divided difference, and
 <span class="math display" id="eq:23">\[\begin{equation}
-    f[x, y, z] = \frac{f[y, z] - f[x, y]}{z - x} \tag{3.23}
+    f[x, y, z] = \frac{f[y, z] - f[x, y]}{z - x} \tag{1.23}
 \end{equation}\]</span>
 is the second order forward divided difference. <span class="math inline">\(x_t\)</span> is the point where the slope of <span class="math inline">\(P(x)\)</span> curve is <span class="math inline">\(0\)</span>. To find it, we set,
 <span class="math display" id="eq:24">\[\begin{align}
 &amp; \frac{dP(x)}{dx} = 0 \\
-&amp;\Rightarrow f[x_0, x_1] + f[x_0, x_1, x_t](2x_t - x_0 - x_1) = 0 \tag{3.24}
+&amp;\Rightarrow f[x_0, x_1] + f[x_0, x_1, x_t](2x_t - x_0 - x_1) = 0 \tag{1.24}
 \end{align}\]</span>
 So we end up with <span class="math inline">\(x_t\)</span>,
 <span class="math display" id="eq:25">\[\begin{equation}
-    x_t = \frac{f[x_0, x_1, x_2](x_0, x_1) - f[x_0, x_1]}{2f[x_0, x_1, x_2]} \tag{3.25}
+    x_t = \frac{f[x_0, x_1, x_2](x_0, x_1) - f[x_0, x_1]}{2f[x_0, x_1, x_2]} \tag{1.25}
 \end{equation}\]</span>
 For <span class="math inline">\(x_t\)</span> to be minimum, the following condition regarding the second order forward divided difference should be satisfied,
 <span class="math display" id="eq:26">\[\begin{equation}
-    f[x_0, x_1, x_2] &gt; 0 \tag{3.26}
+    f[x_0, x_1, x_2] &gt; 0 \tag{1.26}
 \end{equation}\]</span></p>
 <p>We can now say that <span class="math inline">\(x_t\)</span> is a good approximation to <span class="math inline">\(x^*\)</span>. The algorithm for <em>Powell’s quadratic interpolation method</em> is given below:</p>
 <p><img src="img%205.png" /></p>
 
 <div class="example">
-<span id="exm:unnamed-chunk-19" class="example"><strong>Example 3.3  </strong></span>Let us consider an objective function:
+<span id="exm:unnamed-chunk-63" class="example"><strong>Example 3.3  </strong></span>Let us consider an objective function:
 <span class="math display" id="eq:27">\[\begin{equation}
-    f(x) = x^4 - 2x^2 + \frac{1}{4} \tag{3.27}
+    f(x) = x^4 - 2x^2 + \frac{1}{4} \tag{2.1}
 \end{equation}\]</span>
-We will use <em>Powell’s quadratic interpolation method</em> to find out the minimizer <span class="math inline">\(x^*\)</span> and the function value at this point, <span class="math inline">\(f(x^*)\)</span>. Let the initial starting point be <span class="math inline">\(x=0.5\)</span>, the discrete step size be <span class="math inline">\(s=10^{-3}\)</span>, the maximum step size be <span class="math inline">\(m=30\)</span> and the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span>. To start with the optimization process, let us first define the objective function given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:27">(3.27)</a>in Python and plot the function:
+We will use <em>Powell’s quadratic interpolation method</em> to find out the minimizer <span class="math inline">\(x^*\)</span> and the function value at this point, <span class="math inline">\(f(x^*)\)</span>. Let the initial starting point be <span class="math inline">\(x=0.5\)</span>, the discrete step size be <span class="math inline">\(s=10^{-3}\)</span>, the maximum step size be <span class="math inline">\(m=30\)</span> and the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span>. To start with the optimization process, let us first define the objective function given by Eq.<a href="introduction-to-unconstrained-optimization.html#eq:27">(2.1)</a>in Python and plot the function:
 </div>
 
-<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="solving-one-dimensional-optimization-problems.html#cb45-1"></a><span class="kw">def</span> f(x): <span class="co"># define the objective function</span></span>
-<span id="cb45-2"><a href="solving-one-dimensional-optimization-problems.html#cb45-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span></span>
-<span id="cb45-3"><a href="solving-one-dimensional-optimization-problems.html#cb45-3"></a>    </span>
-<span id="cb45-4"><a href="solving-one-dimensional-optimization-problems.html#cb45-4"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
-<span id="cb45-5"><a href="solving-one-dimensional-optimization-problems.html#cb45-5"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="solving-one-dimensional-optimization-problems.html#cb46-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="solving-one-dimensional-optimization-problems.html#cb47-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="solving-one-dimensional-optimization-problems.html#cb48-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="solving-one-dimensional-optimization-problems.html#cb49-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-13.png" width="672" /></p>
-<p>We will now write functions for the first order forward divided difference and the second order forward divided difference given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:22">(3.22)</a> and Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:22">(3.22)</a>.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="solving-one-dimensional-optimization-problems.html#cb50-1"></a><span class="kw">def</span> f1(x, y): <span class="co"># First order forward divided difference</span></span>
-<span id="cb50-2"><a href="solving-one-dimensional-optimization-problems.html#cb50-2"></a>    <span class="cf">return</span> (f(y) <span class="op">-</span> f(x)) <span class="op">/</span> (y <span class="op">-</span> x)</span>
-<span id="cb50-3"><a href="solving-one-dimensional-optimization-problems.html#cb50-3"></a></span>
-<span id="cb50-4"><a href="solving-one-dimensional-optimization-problems.html#cb50-4"></a><span class="kw">def</span> f2(x, y, z): <span class="co"># Second order forward divided difference</span></span>
-<span id="cb50-5"><a href="solving-one-dimensional-optimization-problems.html#cb50-5"></a>    <span class="cf">return</span> (f1(y, z) <span class="op">-</span> f1(x, y))<span class="op">/</span>(z <span class="op">-</span> x)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb69-1"><a href="solving-one-dimensional-optimization-problems.html#cb69-1"></a><span class="kw">def</span> f(x): <span class="co"># define the objective function</span></span>
+<span id="cb69-2"><a href="solving-one-dimensional-optimization-problems.html#cb69-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span></span>
+<span id="cb69-3"><a href="solving-one-dimensional-optimization-problems.html#cb69-3"></a>    </span>
+<span id="cb69-4"><a href="solving-one-dimensional-optimization-problems.html#cb69-4"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
+<span id="cb69-5"><a href="solving-one-dimensional-optimization-problems.html#cb69-5"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="solving-one-dimensional-optimization-problems.html#cb70-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb71-1"><a href="solving-one-dimensional-optimization-problems.html#cb71-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="solving-one-dimensional-optimization-problems.html#cb72-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="solving-one-dimensional-optimization-problems.html#cb73-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-61.png" width="672" /></p>
+<p>We will now write functions for the first order forward divided difference and the second order forward divided difference given by Eq.<a href="index.html#eq:22">(1.22)</a> and Eq.<a href="index.html#eq:22">(1.22)</a>.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="solving-one-dimensional-optimization-problems.html#cb74-1"></a><span class="kw">def</span> f1(x, y): <span class="co"># First order forward divided difference</span></span>
+<span id="cb74-2"><a href="solving-one-dimensional-optimization-problems.html#cb74-2"></a>    <span class="cf">return</span> (f(y) <span class="op">-</span> f(x)) <span class="op">/</span> (y <span class="op">-</span> x)</span>
+<span id="cb74-3"><a href="solving-one-dimensional-optimization-problems.html#cb74-3"></a></span>
+<span id="cb74-4"><a href="solving-one-dimensional-optimization-problems.html#cb74-4"></a><span class="kw">def</span> f2(x, y, z): <span class="co"># Second order forward divided difference</span></span>
+<span id="cb74-5"><a href="solving-one-dimensional-optimization-problems.html#cb74-5"></a>    <span class="cf">return</span> (f1(y, z) <span class="op">-</span> f1(x, y))<span class="op">/</span>(z <span class="op">-</span> x)</span></code></pre></div>
 <p>Next, we write a function to find out the nearest value to a number <code>n</code> from a list, <code>seq</code> and a function to find out the furthest value to a number <code>n</code> from a list, <code>seq</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="solving-one-dimensional-optimization-problems.html#cb51-1"></a><span class="kw">def</span> nearest_to(seq, n): <span class="co"># Picks the nearest value to a number entered from a list</span></span>
-<span id="cb51-2"><a href="solving-one-dimensional-optimization-problems.html#cb51-2"></a>    <span class="cf">return</span> <span class="bu">min</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span>
-<span id="cb51-3"><a href="solving-one-dimensional-optimization-problems.html#cb51-3"></a>                </span>
-<span id="cb51-4"><a href="solving-one-dimensional-optimization-problems.html#cb51-4"></a><span class="kw">def</span> furthest_to(seq, n): <span class="co"># Picks the furthest value to a number entered from a list</span></span>
-<span id="cb51-5"><a href="solving-one-dimensional-optimization-problems.html#cb51-5"></a>    <span class="cf">return</span> <span class="bu">max</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="solving-one-dimensional-optimization-problems.html#cb75-1"></a><span class="kw">def</span> nearest_to(seq, n): <span class="co"># Picks the nearest value to a number entered from a list</span></span>
+<span id="cb75-2"><a href="solving-one-dimensional-optimization-problems.html#cb75-2"></a>    <span class="cf">return</span> <span class="bu">min</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span>
+<span id="cb75-3"><a href="solving-one-dimensional-optimization-problems.html#cb75-3"></a>                </span>
+<span id="cb75-4"><a href="solving-one-dimensional-optimization-problems.html#cb75-4"></a><span class="kw">def</span> furthest_to(seq, n): <span class="co"># Picks the furthest value to a number entered from a list</span></span>
+<span id="cb75-5"><a href="solving-one-dimensional-optimization-problems.html#cb75-5"></a>    <span class="cf">return</span> <span class="bu">max</span>(seq, key <span class="op">=</span> <span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> n))</span></code></pre></div>
 <p>Let us consider a list be <span class="math inline">\(L = \{1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33\}\)</span> and a number be <span class="math inline">\(0.7\)</span>, we need to find the nearest value to <span class="math inline">\(0.7\)</span> from <span class="math inline">\(L\)</span> and the furthest value to <span class="math inline">\(0.7\)</span> from <span class="math inline">\(L\)</span>. We use the functions:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="solving-one-dimensional-optimization-problems.html#cb52-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
-<span id="cb52-2"><a href="solving-one-dimensional-optimization-problems.html#cb52-2"></a>n <span class="op">=</span> <span class="fl">0.7</span></span>
-<span id="cb52-3"><a href="solving-one-dimensional-optimization-problems.html#cb52-3"></a></span>
-<span id="cb52-4"><a href="solving-one-dimensional-optimization-problems.html#cb52-4"></a><span class="bu">print</span>(<span class="st">&quot;The nearest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, nearest_to(L, n))</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="solving-one-dimensional-optimization-problems.html#cb76-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
+<span id="cb76-2"><a href="solving-one-dimensional-optimization-problems.html#cb76-2"></a>n <span class="op">=</span> <span class="fl">0.7</span></span>
+<span id="cb76-3"><a href="solving-one-dimensional-optimization-problems.html#cb76-3"></a></span>
+<span id="cb76-4"><a href="solving-one-dimensional-optimization-problems.html#cb76-4"></a><span class="bu">print</span>(<span class="st">&quot;The nearest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, nearest_to(L, n))</span></code></pre></div>
 <pre><code>## The nearest value to 0.7 from  [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33] : 1.1</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="solving-one-dimensional-optimization-problems.html#cb54-1"></a><span class="bu">print</span>(<span class="st">&quot;The furthest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, furthest_to(L, n))</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb78-1"><a href="solving-one-dimensional-optimization-problems.html#cb78-1"></a><span class="bu">print</span>(<span class="st">&quot;The furthest value to&quot;</span>, n, <span class="st">&quot;from &quot;</span>, L, <span class="st">&quot;:&quot;</span>, furthest_to(L, n))</span></code></pre></div>
 <pre><code>## The furthest value to 0.7 from  [1.1, 2.7, 3.3, 3.2, 1.8, -0.9, -0.5, -6.33] : -6.33</code></pre>
 <p>We now require to write a function that returns the element from a list that has the maximum value of <span class="math inline">\(f(x)\)</span> where <span class="math inline">\(f\)</span> is the objective function.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="solving-one-dimensional-optimization-problems.html#cb56-1"></a><span class="kw">def</span> maximum_fvalue(seq):</span>
-<span id="cb56-2"><a href="solving-one-dimensional-optimization-problems.html#cb56-2"></a>    fu <span class="op">=</span> f(np.array(seq)) <span class="co"># Converts a Python list to a ndarray object </span></span>
-<span id="cb56-3"><a href="solving-one-dimensional-optimization-problems.html#cb56-3"></a>    <span class="cf">return</span> seq[np.where(fu<span class="op">==</span>np.amax(fu))[<span class="dv">0</span>][<span class="dv">0</span>]] <span class="co"># Picks up the index from the ndarray sequence, the element at which has the maximum f(x) value and returns the element from the sequence</span></span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="solving-one-dimensional-optimization-problems.html#cb80-1"></a><span class="kw">def</span> maximum_fvalue(seq):</span>
+<span id="cb80-2"><a href="solving-one-dimensional-optimization-problems.html#cb80-2"></a>    fu <span class="op">=</span> f(np.array(seq)) <span class="co"># Converts a Python list to a ndarray object </span></span>
+<span id="cb80-3"><a href="solving-one-dimensional-optimization-problems.html#cb80-3"></a>    <span class="cf">return</span> seq[np.where(fu<span class="op">==</span>np.amax(fu))[<span class="dv">0</span>][<span class="dv">0</span>]] <span class="co"># Picks up the index from the ndarray sequence, the element at which has the maximum f(x) value and returns the element from the sequence</span></span></code></pre></div>
 <p>Let us use the same sequence and find out the element from it that fas the maximum value of <span class="math inline">\(f\)</span>,</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="solving-one-dimensional-optimization-problems.html#cb57-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
-<span id="cb57-2"><a href="solving-one-dimensional-optimization-problems.html#cb57-2"></a><span class="bu">print</span>(f(np.array(L))) <span class="co"># Prints the f(x)&#39;s at all the x&#39;s from the sequence </span></span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb81-1"><a href="solving-one-dimensional-optimization-problems.html#cb81-1"></a>L <span class="op">=</span> [<span class="fl">1.1</span>, <span class="fl">2.7</span>, <span class="fl">3.3</span>, <span class="fl">3.2</span>, <span class="fl">1.8</span>, <span class="fl">-0.9</span>, <span class="fl">-0.5</span>, <span class="fl">-6.33</span>]</span>
+<span id="cb81-2"><a href="solving-one-dimensional-optimization-problems.html#cb81-2"></a><span class="bu">print</span>(f(np.array(L))) <span class="co"># Prints the f(x)&#39;s at all the x&#39;s from the sequence </span></span></code></pre></div>
 <pre><code>## [-7.05900000e-01  3.88141000e+01  9.70621000e+01  8.46276000e+01
 ##   4.26760000e+00 -7.13900000e-01 -1.87500000e-01  1.52562895e+03]</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="solving-one-dimensional-optimization-problems.html#cb59-1"></a><span class="bu">print</span>(maximum_fvalue(L)) <span class="co"># Prints the element with the highest f(x) value  </span></span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb83-1"><a href="solving-one-dimensional-optimization-problems.html#cb83-1"></a><span class="bu">print</span>(maximum_fvalue(L)) <span class="co"># Prints the element with the highest f(x) value  </span></span></code></pre></div>
 <pre><code>## -6.33</code></pre>
 <p>We see that from the sequence <span class="math inline">\(-6.33\)</span> has the highest <span class="math inline">\(f\)</span> value, that is <span class="math inline">\(f(-6.33) = 1.52562895\times 10^3\)</span> is the maximum value as can be seen in the printed <code>ndarray</code>. We finally write the function that implements **Powell’s Quadratic Interpolation Algorithm" and name it <code>powell_quad()</code> with the parameters <code>x, s, m,</code> and <code>tol</code>:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="solving-one-dimensional-optimization-problems.html#cb61-1"></a><span class="kw">def</span> powell_quad(x, s, m, tol):</span>
-<span id="cb61-2"><a href="solving-one-dimensional-optimization-problems.html#cb61-2"></a>    <span class="cf">if</span> f(x) <span class="op">&lt;</span> f(x <span class="op">+</span> s):</span>
-<span id="cb61-3"><a href="solving-one-dimensional-optimization-problems.html#cb61-3"></a>        x0 <span class="op">=</span> x <span class="op">-</span> s</span>
-<span id="cb61-4"><a href="solving-one-dimensional-optimization-problems.html#cb61-4"></a>        x1 <span class="op">=</span> x</span>
-<span id="cb61-5"><a href="solving-one-dimensional-optimization-problems.html#cb61-5"></a>        x2 <span class="op">=</span> x <span class="op">+</span> s</span>
-<span id="cb61-6"><a href="solving-one-dimensional-optimization-problems.html#cb61-6"></a>    <span class="cf">else</span>:</span>
-<span id="cb61-7"><a href="solving-one-dimensional-optimization-problems.html#cb61-7"></a>        x0 <span class="op">=</span> x</span>
-<span id="cb61-8"><a href="solving-one-dimensional-optimization-problems.html#cb61-8"></a>        x1 <span class="op">=</span> x <span class="op">+</span> s</span>
-<span id="cb61-9"><a href="solving-one-dimensional-optimization-problems.html#cb61-9"></a>        x2 <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> s</span>
-<span id="cb61-10"><a href="solving-one-dimensional-optimization-problems.html#cb61-10"></a></span>
-<span id="cb61-11"><a href="solving-one-dimensional-optimization-problems.html#cb61-11"></a>    L <span class="op">=</span> [x0, x1, x2] <span class="co"># Set x0, x1 and x2</span></span>
-<span id="cb61-12"><a href="solving-one-dimensional-optimization-problems.html#cb61-12"></a>    XT <span class="op">=</span> []  </span>
-<span id="cb61-13"><a href="solving-one-dimensional-optimization-problems.html#cb61-13"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb61-14"><a href="solving-one-dimensional-optimization-problems.html#cb61-14"></a>        M <span class="op">=</span> f2(L[<span class="dv">0</span>], L[<span class="dv">1</span>], L[<span class="dv">2</span>])</span>
-<span id="cb61-15"><a href="solving-one-dimensional-optimization-problems.html#cb61-15"></a>        xt <span class="op">=</span> (M <span class="op">*</span> (L[<span class="dv">0</span>] <span class="op">+</span> L[<span class="dv">1</span>]) <span class="op">-</span> f1(L[<span class="dv">0</span>], L[<span class="dv">1</span>]))<span class="op">/</span>(<span class="dv">2</span> <span class="op">*</span> M) <span class="co"># The approximate minimizer </span></span>
-<span id="cb61-16"><a href="solving-one-dimensional-optimization-problems.html#cb61-16"></a>        xn <span class="op">=</span> nearest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the nearest to xt</span></span>
-<span id="cb61-17"><a href="solving-one-dimensional-optimization-problems.html#cb61-17"></a>        xf <span class="op">=</span> furthest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the furthest to xt</span></span>
-<span id="cb61-18"><a href="solving-one-dimensional-optimization-problems.html#cb61-18"></a>        <span class="cf">if</span> M <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&gt;</span> m: <span class="co"># Checks for equation 3.26 </span></span>
-<span id="cb61-19"><a href="solving-one-dimensional-optimization-problems.html#cb61-19"></a>            L.remove(xf) <span class="co"># Remove xf from [x0, x1, x2]</span></span>
-<span id="cb61-20"><a href="solving-one-dimensional-optimization-problems.html#cb61-20"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m </span>
-<span id="cb61-21"><a href="solving-one-dimensional-optimization-problems.html#cb61-21"></a>            L <span class="op">+=</span> [value, ]</span>
-<span id="cb61-22"><a href="solving-one-dimensional-optimization-problems.html#cb61-22"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
-<span id="cb61-23"><a href="solving-one-dimensional-optimization-problems.html#cb61-23"></a>        <span class="cf">elif</span> M <span class="op">&lt;</span> <span class="dv">0</span> :</span>
-<span id="cb61-24"><a href="solving-one-dimensional-optimization-problems.html#cb61-24"></a>            L.remove(xn) <span class="co"># Remove xn from [x0, x1, x2]</span></span>
-<span id="cb61-25"><a href="solving-one-dimensional-optimization-problems.html#cb61-25"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m</span>
-<span id="cb61-26"><a href="solving-one-dimensional-optimization-problems.html#cb61-26"></a>            L <span class="op">+=</span> [value, ]</span>
-<span id="cb61-27"><a href="solving-one-dimensional-optimization-problems.html#cb61-27"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
-<span id="cb61-28"><a href="solving-one-dimensional-optimization-problems.html#cb61-28"></a>        <span class="cf">else</span>:</span>
-<span id="cb61-29"><a href="solving-one-dimensional-optimization-problems.html#cb61-29"></a>            <span class="co"># print((xt + xn) / 2, f((xt + xn) / 2)) # If the user wants to print the steps at all function evaluations at the approximate minimizers, uncomment the command</span></span>
-<span id="cb61-30"><a href="solving-one-dimensional-optimization-problems.html#cb61-30"></a>            XT <span class="op">+=</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, ]</span>
-<span id="cb61-31"><a href="solving-one-dimensional-optimization-problems.html#cb61-31"></a>            <span class="cf">if</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&lt;</span> tol: <span class="co"># Check for the terminating condition</span></span>
-<span id="cb61-32"><a href="solving-one-dimensional-optimization-problems.html#cb61-32"></a>                <span class="cf">return</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, f((xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>), XT] <span class="co"># Return the results</span></span>
-<span id="cb61-33"><a href="solving-one-dimensional-optimization-problems.html#cb61-33"></a>            <span class="cf">else</span>:</span>
-<span id="cb61-34"><a href="solving-one-dimensional-optimization-problems.html#cb61-34"></a>                mx <span class="op">=</span> maximum_fvalue(L) </span>
-<span id="cb61-35"><a href="solving-one-dimensional-optimization-problems.html#cb61-35"></a>                L.remove(mx)</span>
-<span id="cb61-36"><a href="solving-one-dimensional-optimization-problems.html#cb61-36"></a>                L <span class="op">+=</span> [xt, ]</span>
-<span id="cb61-37"><a href="solving-one-dimensional-optimization-problems.html#cb61-37"></a>                L.sort() <span class="co"># Replace the element from [x0, x1, x2] having the maximum function value with xt</span></span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb85-1"><a href="solving-one-dimensional-optimization-problems.html#cb85-1"></a><span class="kw">def</span> powell_quad(x, s, m, tol):</span>
+<span id="cb85-2"><a href="solving-one-dimensional-optimization-problems.html#cb85-2"></a>    <span class="cf">if</span> f(x) <span class="op">&lt;</span> f(x <span class="op">+</span> s):</span>
+<span id="cb85-3"><a href="solving-one-dimensional-optimization-problems.html#cb85-3"></a>        x0 <span class="op">=</span> x <span class="op">-</span> s</span>
+<span id="cb85-4"><a href="solving-one-dimensional-optimization-problems.html#cb85-4"></a>        x1 <span class="op">=</span> x</span>
+<span id="cb85-5"><a href="solving-one-dimensional-optimization-problems.html#cb85-5"></a>        x2 <span class="op">=</span> x <span class="op">+</span> s</span>
+<span id="cb85-6"><a href="solving-one-dimensional-optimization-problems.html#cb85-6"></a>    <span class="cf">else</span>:</span>
+<span id="cb85-7"><a href="solving-one-dimensional-optimization-problems.html#cb85-7"></a>        x0 <span class="op">=</span> x</span>
+<span id="cb85-8"><a href="solving-one-dimensional-optimization-problems.html#cb85-8"></a>        x1 <span class="op">=</span> x <span class="op">+</span> s</span>
+<span id="cb85-9"><a href="solving-one-dimensional-optimization-problems.html#cb85-9"></a>        x2 <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> s</span>
+<span id="cb85-10"><a href="solving-one-dimensional-optimization-problems.html#cb85-10"></a></span>
+<span id="cb85-11"><a href="solving-one-dimensional-optimization-problems.html#cb85-11"></a>    L <span class="op">=</span> [x0, x1, x2] <span class="co"># Set x0, x1 and x2</span></span>
+<span id="cb85-12"><a href="solving-one-dimensional-optimization-problems.html#cb85-12"></a>    XT <span class="op">=</span> []  </span>
+<span id="cb85-13"><a href="solving-one-dimensional-optimization-problems.html#cb85-13"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb85-14"><a href="solving-one-dimensional-optimization-problems.html#cb85-14"></a>        M <span class="op">=</span> f2(L[<span class="dv">0</span>], L[<span class="dv">1</span>], L[<span class="dv">2</span>])</span>
+<span id="cb85-15"><a href="solving-one-dimensional-optimization-problems.html#cb85-15"></a>        xt <span class="op">=</span> (M <span class="op">*</span> (L[<span class="dv">0</span>] <span class="op">+</span> L[<span class="dv">1</span>]) <span class="op">-</span> f1(L[<span class="dv">0</span>], L[<span class="dv">1</span>]))<span class="op">/</span>(<span class="dv">2</span> <span class="op">*</span> M) <span class="co"># The approximate minimizer </span></span>
+<span id="cb85-16"><a href="solving-one-dimensional-optimization-problems.html#cb85-16"></a>        xn <span class="op">=</span> nearest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the nearest to xt</span></span>
+<span id="cb85-17"><a href="solving-one-dimensional-optimization-problems.html#cb85-17"></a>        xf <span class="op">=</span> furthest_to(L, xt) <span class="co"># Picks the point from [x0, x1, x2] which is the furthest to xt</span></span>
+<span id="cb85-18"><a href="solving-one-dimensional-optimization-problems.html#cb85-18"></a>        <span class="cf">if</span> M <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&gt;</span> m: <span class="co"># Checks for equation 3.26 </span></span>
+<span id="cb85-19"><a href="solving-one-dimensional-optimization-problems.html#cb85-19"></a>            L.remove(xf) <span class="co"># Remove xf from [x0, x1, x2]</span></span>
+<span id="cb85-20"><a href="solving-one-dimensional-optimization-problems.html#cb85-20"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m </span>
+<span id="cb85-21"><a href="solving-one-dimensional-optimization-problems.html#cb85-21"></a>            L <span class="op">+=</span> [value, ]</span>
+<span id="cb85-22"><a href="solving-one-dimensional-optimization-problems.html#cb85-22"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
+<span id="cb85-23"><a href="solving-one-dimensional-optimization-problems.html#cb85-23"></a>        <span class="cf">elif</span> M <span class="op">&lt;</span> <span class="dv">0</span> :</span>
+<span id="cb85-24"><a href="solving-one-dimensional-optimization-problems.html#cb85-24"></a>            L.remove(xn) <span class="co"># Remove xn from [x0, x1, x2]</span></span>
+<span id="cb85-25"><a href="solving-one-dimensional-optimization-problems.html#cb85-25"></a>            value <span class="op">=</span> <span class="bu">min</span>(L) <span class="op">+</span> m</span>
+<span id="cb85-26"><a href="solving-one-dimensional-optimization-problems.html#cb85-26"></a>            L <span class="op">+=</span> [value, ]</span>
+<span id="cb85-27"><a href="solving-one-dimensional-optimization-problems.html#cb85-27"></a>            L.sort() <span class="co"># Take a step of size m towards the direction of descent from the point with the lowest value</span></span>
+<span id="cb85-28"><a href="solving-one-dimensional-optimization-problems.html#cb85-28"></a>        <span class="cf">else</span>:</span>
+<span id="cb85-29"><a href="solving-one-dimensional-optimization-problems.html#cb85-29"></a>            <span class="co"># print((xt + xn) / 2, f((xt + xn) / 2)) # If the user wants to print the steps at all function evaluations at the approximate minimizers, uncomment the command</span></span>
+<span id="cb85-30"><a href="solving-one-dimensional-optimization-problems.html#cb85-30"></a>            XT <span class="op">+=</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, ]</span>
+<span id="cb85-31"><a href="solving-one-dimensional-optimization-problems.html#cb85-31"></a>            <span class="cf">if</span> <span class="bu">abs</span>(xt <span class="op">-</span> xn) <span class="op">&lt;</span> tol: <span class="co"># Check for the terminating condition</span></span>
+<span id="cb85-32"><a href="solving-one-dimensional-optimization-problems.html#cb85-32"></a>                <span class="cf">return</span> [(xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>, f((xt <span class="op">+</span> xn) <span class="op">/</span> <span class="dv">2</span>), XT] <span class="co"># Return the results</span></span>
+<span id="cb85-33"><a href="solving-one-dimensional-optimization-problems.html#cb85-33"></a>            <span class="cf">else</span>:</span>
+<span id="cb85-34"><a href="solving-one-dimensional-optimization-problems.html#cb85-34"></a>                mx <span class="op">=</span> maximum_fvalue(L) </span>
+<span id="cb85-35"><a href="solving-one-dimensional-optimization-problems.html#cb85-35"></a>                L.remove(mx)</span>
+<span id="cb85-36"><a href="solving-one-dimensional-optimization-problems.html#cb85-36"></a>                L <span class="op">+=</span> [xt, ]</span>
+<span id="cb85-37"><a href="solving-one-dimensional-optimization-problems.html#cb85-37"></a>                L.sort() <span class="co"># Replace the element from [x0, x1, x2] having the maximum function value with xt</span></span></code></pre></div>
 <p>Now returning back to our original example problem, we have <span class="math inline">\(x = 0.5\)</span>, <span class="math inline">\(s=10^{-3}\)</span>, <span class="math inline">\(m=30\)</span> and <span class="math inline">\(\epsilon=10^{-5}\)</span>. We will use these values as parameter values for our function <code>powell_quad()</code> and check the result:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="solving-one-dimensional-optimization-problems.html#cb62-1"></a>res <span class="op">=</span> powell_quad(<span class="fl">0.5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">3</span>, <span class="dv">30</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
-<span id="cb62-2"><a href="solving-one-dimensional-optimization-problems.html#cb62-2"></a>x_star <span class="op">=</span> res[<span class="dv">0</span>]</span>
-<span id="cb62-3"><a href="solving-one-dimensional-optimization-problems.html#cb62-3"></a>f_x_star <span class="op">=</span> res[<span class="dv">1</span>]</span>
-<span id="cb62-4"><a href="solving-one-dimensional-optimization-problems.html#cb62-4"></a></span>
-<span id="cb62-5"><a href="solving-one-dimensional-optimization-problems.html#cb62-5"></a><span class="bu">print</span>(<span class="st">&#39;x*:&#39;</span>, x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb86-1"><a href="solving-one-dimensional-optimization-problems.html#cb86-1"></a>res <span class="op">=</span> powell_quad(<span class="fl">0.5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">3</span>, <span class="dv">30</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
+<span id="cb86-2"><a href="solving-one-dimensional-optimization-problems.html#cb86-2"></a>x_star <span class="op">=</span> res[<span class="dv">0</span>]</span>
+<span id="cb86-3"><a href="solving-one-dimensional-optimization-problems.html#cb86-3"></a>f_x_star <span class="op">=</span> res[<span class="dv">1</span>]</span>
+<span id="cb86-4"><a href="solving-one-dimensional-optimization-problems.html#cb86-4"></a></span>
+<span id="cb86-5"><a href="solving-one-dimensional-optimization-problems.html#cb86-5"></a><span class="bu">print</span>(<span class="st">&#39;x*:&#39;</span>, x_star)</span></code></pre></div>
 <pre><code>## x*: 1.000000513307495</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="solving-one-dimensional-optimization-problems.html#cb64-1"></a><span class="bu">print</span>(<span class="st">&#39;f(x*):&#39;</span>, f_x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb88-1"><a href="solving-one-dimensional-optimization-problems.html#cb88-1"></a><span class="bu">print</span>(<span class="st">&#39;f(x*):&#39;</span>, f_x_star)</span></code></pre></div>
 <pre><code>## f(x*): -0.7499999999989462</code></pre>
 <p>Now let us collect the optimization data and store in a dataframe <code>df</code>:</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="solving-one-dimensional-optimization-problems.html#cb66-1"></a>XT <span class="op">=</span> np.array(res[<span class="dv">2</span>])</span>
-<span id="cb66-2"><a href="solving-one-dimensional-optimization-problems.html#cb66-2"></a>F <span class="op">=</span> f(XT)</span>
-<span id="cb66-3"><a href="solving-one-dimensional-optimization-problems.html#cb66-3"></a></span>
-<span id="cb66-4"><a href="solving-one-dimensional-optimization-problems.html#cb66-4"></a>data <span class="op">=</span> {<span class="st">&#39;xt&#39;</span>: XT, <span class="st">&#39;f(xt)&#39;</span>: F}</span>
-<span id="cb66-5"><a href="solving-one-dimensional-optimization-problems.html#cb66-5"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">&#39;xt&#39;</span>, <span class="st">&#39;f(xt)&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb90-1"><a href="solving-one-dimensional-optimization-problems.html#cb90-1"></a>XT <span class="op">=</span> np.array(res[<span class="dv">2</span>])</span>
+<span id="cb90-2"><a href="solving-one-dimensional-optimization-problems.html#cb90-2"></a>F <span class="op">=</span> f(XT)</span>
+<span id="cb90-3"><a href="solving-one-dimensional-optimization-problems.html#cb90-3"></a></span>
+<span id="cb90-4"><a href="solving-one-dimensional-optimization-problems.html#cb90-4"></a>data <span class="op">=</span> {<span class="st">&#39;xt&#39;</span>: XT, <span class="st">&#39;f(xt)&#39;</span>: F}</span>
+<span id="cb90-5"><a href="solving-one-dimensional-optimization-problems.html#cb90-5"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">&#39;xt&#39;</span>, <span class="st">&#39;f(xt)&#39;</span>])</span></code></pre></div>
 <p>The last few rows of <code>df</code> looks like:</p>
 <pre><code>## +-----+----------+-----------+
 ## |     |       xt |     f(xt) |
@@ -774,33 +774,33 @@ We will use <em>Powell’s quadratic interpolation method</em> to find out the m
 ## | 183 | 1        | -0.75     |
 ## +-----+----------+-----------+</code></pre>
 <p>To plot the optimization data, type:</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="solving-one-dimensional-optimization-problems.html#cb68-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb69"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb69-1"><a href="solving-one-dimensional-optimization-problems.html#cb69-1"></a>plt.plot(df[<span class="st">&#39;xt&#39;</span>], df[<span class="st">&#39;f(xt)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="solving-one-dimensional-optimization-problems.html#cb70-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb71"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb71-1"><a href="solving-one-dimensional-optimization-problems.html#cb71-1"></a>plt.axhline(y<span class="op">=</span>f_x_star, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="solving-one-dimensional-optimization-problems.html#cb72-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="solving-one-dimensional-optimization-problems.html#cb73-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="solving-one-dimensional-optimization-problems.html#cb74-1"></a>plt.xlim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="solving-one-dimensional-optimization-problems.html#cb75-1"></a>plt.ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">10</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="solving-one-dimensional-optimization-problems.html#cb76-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="solving-one-dimensional-optimization-problems.html#cb77-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-15.png" width="672" /></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb92-1"><a href="solving-one-dimensional-optimization-problems.html#cb92-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb93-1"><a href="solving-one-dimensional-optimization-problems.html#cb93-1"></a>plt.plot(df[<span class="st">&#39;xt&#39;</span>], df[<span class="st">&#39;f(xt)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb94-1"><a href="solving-one-dimensional-optimization-problems.html#cb94-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb95-1"><a href="solving-one-dimensional-optimization-problems.html#cb95-1"></a>plt.axhline(y<span class="op">=</span>f_x_star, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb96-1"><a href="solving-one-dimensional-optimization-problems.html#cb96-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb97-1"><a href="solving-one-dimensional-optimization-problems.html#cb97-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb98-1"><a href="solving-one-dimensional-optimization-problems.html#cb98-1"></a>plt.xlim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb99-1"><a href="solving-one-dimensional-optimization-problems.html#cb99-1"></a>plt.ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb100-1"><a href="solving-one-dimensional-optimization-problems.html#cb100-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb101-1"><a href="solving-one-dimensional-optimization-problems.html#cb101-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-63.png" width="672" /></p>
 <p>We notice that the blue dashed line gives the position of <span class="math inline">\(x^*\)</span> and the green dashed line gives the corresponding <span class="math inline">\(f(x^*)\)</span> value.</p>
 <p>Now, we change our original problem a little bit and consider the initial starting point to be <span class="math inline">\(x=-0.5\)</span> and reduce the maximum step size to <span class="math inline">\(m=10\)</span> , keeping all the other parameters same.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb78-1"><a href="solving-one-dimensional-optimization-problems.html#cb78-1"></a>res <span class="op">=</span> powell_quad(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
-<span id="cb78-2"><a href="solving-one-dimensional-optimization-problems.html#cb78-2"></a>x_star <span class="op">=</span> res[<span class="dv">0</span>]</span>
-<span id="cb78-3"><a href="solving-one-dimensional-optimization-problems.html#cb78-3"></a>f_x_star <span class="op">=</span> res[<span class="dv">1</span>]</span>
-<span id="cb78-4"><a href="solving-one-dimensional-optimization-problems.html#cb78-4"></a></span>
-<span id="cb78-5"><a href="solving-one-dimensional-optimization-problems.html#cb78-5"></a><span class="bu">print</span>(<span class="st">&#39;x*:&#39;</span>, x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb102-1"><a href="solving-one-dimensional-optimization-problems.html#cb102-1"></a>res <span class="op">=</span> powell_quad(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span>
+<span id="cb102-2"><a href="solving-one-dimensional-optimization-problems.html#cb102-2"></a>x_star <span class="op">=</span> res[<span class="dv">0</span>]</span>
+<span id="cb102-3"><a href="solving-one-dimensional-optimization-problems.html#cb102-3"></a>f_x_star <span class="op">=</span> res[<span class="dv">1</span>]</span>
+<span id="cb102-4"><a href="solving-one-dimensional-optimization-problems.html#cb102-4"></a></span>
+<span id="cb102-5"><a href="solving-one-dimensional-optimization-problems.html#cb102-5"></a><span class="bu">print</span>(<span class="st">&#39;x*:&#39;</span>, x_star)</span></code></pre></div>
 <pre><code>## x*: -1.0000000470794883</code></pre>
-<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="solving-one-dimensional-optimization-problems.html#cb80-1"></a><span class="bu">print</span>(<span class="st">&#39;f(x*):&#39;</span>, f_x_star)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb104-1"><a href="solving-one-dimensional-optimization-problems.html#cb104-1"></a><span class="bu">print</span>(<span class="st">&#39;f(x*):&#39;</span>, f_x_star)</span></code></pre></div>
 <pre><code>## f(x*): -0.7499999999999911</code></pre>
 <p>Now let us collect the optimization data and store in a dataframe <code>df</code>:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb82-1"><a href="solving-one-dimensional-optimization-problems.html#cb82-1"></a>XT <span class="op">=</span> np.array(res[<span class="dv">2</span>])</span>
-<span id="cb82-2"><a href="solving-one-dimensional-optimization-problems.html#cb82-2"></a>F <span class="op">=</span> f(XT)</span>
-<span id="cb82-3"><a href="solving-one-dimensional-optimization-problems.html#cb82-3"></a></span>
-<span id="cb82-4"><a href="solving-one-dimensional-optimization-problems.html#cb82-4"></a>data <span class="op">=</span> {<span class="st">&#39;xt&#39;</span>: XT, <span class="st">&#39;f(xt)&#39;</span>: F}</span>
-<span id="cb82-5"><a href="solving-one-dimensional-optimization-problems.html#cb82-5"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">&#39;xt&#39;</span>, <span class="st">&#39;f(xt)&#39;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb106-1"><a href="solving-one-dimensional-optimization-problems.html#cb106-1"></a>XT <span class="op">=</span> np.array(res[<span class="dv">2</span>])</span>
+<span id="cb106-2"><a href="solving-one-dimensional-optimization-problems.html#cb106-2"></a>F <span class="op">=</span> f(XT)</span>
+<span id="cb106-3"><a href="solving-one-dimensional-optimization-problems.html#cb106-3"></a></span>
+<span id="cb106-4"><a href="solving-one-dimensional-optimization-problems.html#cb106-4"></a>data <span class="op">=</span> {<span class="st">&#39;xt&#39;</span>: XT, <span class="st">&#39;f(xt)&#39;</span>: F}</span>
+<span id="cb106-5"><a href="solving-one-dimensional-optimization-problems.html#cb106-5"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">&#39;xt&#39;</span>, <span class="st">&#39;f(xt)&#39;</span>])</span></code></pre></div>
 <p>The last few rows of <code>df</code> looks like:</p>
 <pre><code>## +----+-----------+-----------+
 ## |    |        xt |     f(xt) |
@@ -817,48 +817,48 @@ We will use <em>Powell’s quadratic interpolation method</em> to find out the m
 ## | 32 | -1        | -0.75     |
 ## +----+-----------+-----------+</code></pre>
 <p>To plot the optimization data, type:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb84-1"><a href="solving-one-dimensional-optimization-problems.html#cb84-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb85"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb85-1"><a href="solving-one-dimensional-optimization-problems.html#cb85-1"></a>plt.plot(df[<span class="st">&#39;xt&#39;</span>], df[<span class="st">&#39;f(xt)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb86"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb86-1"><a href="solving-one-dimensional-optimization-problems.html#cb86-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb87"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb87-1"><a href="solving-one-dimensional-optimization-problems.html#cb87-1"></a>plt.axhline(y<span class="op">=</span>f_x_star, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb88"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb88-1"><a href="solving-one-dimensional-optimization-problems.html#cb88-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb89"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb89-1"><a href="solving-one-dimensional-optimization-problems.html#cb89-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb90"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb90-1"><a href="solving-one-dimensional-optimization-problems.html#cb90-1"></a>plt.xlim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb91"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb91-1"><a href="solving-one-dimensional-optimization-problems.html#cb91-1"></a>plt.ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">10</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb92"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb92-1"><a href="solving-one-dimensional-optimization-problems.html#cb92-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb93"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb93-1"><a href="solving-one-dimensional-optimization-problems.html#cb93-1"></a>plt.show()</span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-17.png" width="672" /></p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb108-1"><a href="solving-one-dimensional-optimization-problems.html#cb108-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb109-1"><a href="solving-one-dimensional-optimization-problems.html#cb109-1"></a>plt.plot(df[<span class="st">&#39;xt&#39;</span>], df[<span class="st">&#39;f(xt)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb110-1"><a href="solving-one-dimensional-optimization-problems.html#cb110-1"></a>plt.axvline(x<span class="op">=</span>x_star, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb111-1"><a href="solving-one-dimensional-optimization-problems.html#cb111-1"></a>plt.axhline(y<span class="op">=</span>f_x_star, color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb112-1"><a href="solving-one-dimensional-optimization-problems.html#cb112-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb113-1"><a href="solving-one-dimensional-optimization-problems.html#cb113-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb114-1"><a href="solving-one-dimensional-optimization-problems.html#cb114-1"></a>plt.xlim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb115-1"><a href="solving-one-dimensional-optimization-problems.html#cb115-1"></a>plt.ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb116-1"><a href="solving-one-dimensional-optimization-problems.html#cb116-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) =  x^4 - 2x^2 + </span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{1}{4}</span><span class="st">$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb117-1"><a href="solving-one-dimensional-optimization-problems.html#cb117-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-65.png" width="672" /></p>
 <p>We have <span class="math inline">\(x^* \sim -1\)</span> and <span class="math inline">\(f(x^*) \sim -0.75\)</span>, i.e, now the <span class="math inline">\(x^*\)</span> converges to the local minimum on the left side.</p>
 </div>
 <div id="inverse-quadratic-interpolation-method" class="section level2">
 <h2><span class="header-section-number">3.6</span> Inverse Quadratic Interpolation Method</h2>
 <p>The main motivation of using the <strong>inverse quadratic interpolation method</strong> [refer to <em>An Introduction to Numerical Methods and Analysis</em> by <em>James F. Epperson</em>] is to use the quadratic interpolation method to find the inverse of the objective function <span class="math inline">\(f(x)\)</span>. This algorithm forms an integral part of the <em>Brent’s method</em> for optimization, which we will study later in this chapter. In this method, we have three initial points to start with, given by, <span class="math inline">\(x_0, x_1, x_2 \in \mathbb{R}\)</span>. Our aim is to find the polynomial <span class="math inline">\(q(f(x))\)</span>, such that,
 <span class="math display" id="eq:28">\[\begin{equation}
-    q(f(x_j)) = x_j \tag{3.28}
+    q(f(x_j)) = x_j \tag{2.2}
 \end{equation}\]</span>
 which identifies,
 <span class="math display" id="eq:29">\[\begin{equation}
-    q = f^{-1} \tag{3.29}
+    q = f^{-1} \tag{2.3}
 \end{equation}\]</span></p>
 <p>Now, using the divided difference forms we can write,
 <span class="math display" id="eq:30">\[\begin{align}
     q(y) &amp;= f^{-1}(y_0) + (y - y_0)\frac{f^{-1}(y_1) - f^{-1}(y_0)}{y_1 - y_0}\\ 
     &amp;+ \frac{(y-y_0)(y-y_1)}{(y_2-y_0)}(\frac{f^{-1}(y_2) - f^{-1}(y_1)}{y_2 - y_1} - \frac{f^{-1}(y_1) - f^{-1}(y_0)}{y_1 - y_0})\\
-    &amp;= x_0 + (y-y_0) \frac{(x-x_0}{(y_1-y_0)}\\ &amp;+\frac{(y-y_0)(y-y_1)}{(y_2-y_0)}(\frac{(x_2 - x_1)}{(y_2-y_1)} - \frac{(x_1-x_0)}{(y_1-y_0)}) \tag{3.30}
+    &amp;= x_0 + (y-y_0) \frac{(x-x_0}{(y_1-y_0)}\\ &amp;+\frac{(y-y_0)(y-y_1)}{(y_2-y_0)}(\frac{(x_2 - x_1)}{(y_2-y_1)} - \frac{(x_1-x_0)}{(y_1-y_0)}) \tag{2.4}
 \end{align}\]</span></p>
 <p>where,
 <span class="math display" id="eq:31">\[\begin{equation}
-    y_j = f(x_j) \tag{3.31}
+    y_j = f(x_j) \tag{2.5}
 \end{equation}\]</span></p>
-<p>Now, the approximate minimizer <span class="math inline">\(x_t\)</span> is the value <span class="math inline">\(q(0)=x_t\)</span>, i.e, at <span class="math inline">\(y=0\)</span>. Putting <span class="math inline">\(y=0\)</span> in Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:30">(3.30)</a>, we have,</p>
+<p>Now, the approximate minimizer <span class="math inline">\(x_t\)</span> is the value <span class="math inline">\(q(0)=x_t\)</span>, i.e, at <span class="math inline">\(y=0\)</span>. Putting <span class="math inline">\(y=0\)</span> in Eq.<a href="introduction-to-unconstrained-optimization.html#eq:30">(2.4)</a>, we have,</p>
 <p><span class="math display" id="eq:32">\[\begin{equation}
-    x_t = q(0) = x_0 - y_0 \frac{(x_1 - x_0)}{(y_1 - y_0)} + \frac{y_0y_1}{(y_2 - y_0)}(\frac{(x_2 - x_1)}{(y_2 - y_1)} - \frac{(x_1 - x_0)}{(y_1 - y_0)}) \tag{3.32}
+    x_t = q(0) = x_0 - y_0 \frac{(x_1 - x_0)}{(y_1 - y_0)} + \frac{y_0y_1}{(y_2 - y_0)}(\frac{(x_2 - x_1)}{(y_2 - y_1)} - \frac{(x_1 - x_0)}{(y_1 - y_0)}) \tag{2.6}
 \end{equation}\]</span></p>
 <p><span class="math inline">\(x_t\)</span> can be considered as a good approximate of <span class="math inline">\(x^*\)</span> after satisfactory number of optimizations steps of the algorithm. The algorithm for <em>inverse quadratic interpolation method</em> is given below:</p>
 <p><img src="img%206.png" /></p>
 <p>The above alogorithm looks very simple and it will be left as an exercise for the reader to implement this using Python. An objective function <span class="math inline">\(f(x)\)</span> can be selected to test the results using this algorithm. Let
 <span class="math display" id="eq:33">\[\begin{equation}
-    f(x) = 2 - e^x \tag{3.33}
+    f(x) = 2 - e^x \tag{2.7}
 \end{equation}\]</span>
 One can take the initial experimental point to be <span class="math inline">\(x=1\)</span>, the step size to be <span class="math inline">\(s=10^{-5}\)</span> and the tolerance to be <span class="math inline">\(\epsilon=10^{-8}\)</span>.
 \end{example}</p>
@@ -874,44 +874,44 @@ One can take the initial experimental point to be <span class="math inline">\(x=
 <h2><span class="header-section-number">3.7</span> Newton’s Method</h2>
 <p>For a given objective function <span class="math inline">\(f(x), x\in \mathbb{R}\)</span>, the necessary condition for it to contain a minimizer <span class="math inline">\(x^*\)</span>, is that <span class="math inline">\(\frac{df}{dx}(x^*)=0\)</span>. The aim of these direct root-finding methods is thus to obtain the solution of the equation,
 <span class="math display" id="eq:34">\[\begin{equation}
-    \frac{df}{dx}(x)=0 \tag{3.34}
+    \frac{df}{dx}(x)=0 \tag{2.8}
 \end{equation}\]</span></p>
 <p>At point <span class="math inline">\(x_j\)</span>, the Taylor’s expansion of the objective function, up to the second order terms is given by,
 <span class="math display" id="eq:35">\[\begin{equation}
-    f(x) = f(x_j) + (x - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) \tag{3.35}
+    f(x) = f(x_j) + (x - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) \tag{2.9}
 \end{equation}\]</span></p>
 <p>Now,
 <span class="math display" id="eq:36">\[\begin{equation}
-    \frac{df}{dx}(x_j) = 0 \tag{3.36}
+    \frac{df}{dx}(x_j) = 0 \tag{2.10}
 \end{equation}\]</span>
 so,</p>
-<p>Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:35">(3.35)</a> reduces to
+<p>Eq.<a href="introduction-to-unconstrained-optimization.html#eq:35">(2.9)</a> reduces to
 <span class="math display" id="eq:37">\[\begin{equation}
-    f(x) = f(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) \tag{3.37}
+    f(x) = f(x_j) + \frac{1}{2}(x - x_j)^2\frac{d^2f}{dx^2}(x_j) \tag{2.11}
 \end{equation}\]</span></p>
-<p>Here <span class="math inline">\(\frac{d^2f}{dx^2}(x_j)\)</span> is a constant. Now, we find the derivative of Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:37">(3.37)</a> and set it to <span class="math inline">\(0\)</span> following Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:34">(3.34)</a>
+<p>Here <span class="math inline">\(\frac{d^2f}{dx^2}(x_j)\)</span> is a constant. Now, we find the derivative of Eq.<a href="introduction-to-unconstrained-optimization.html#eq:37">(2.11)</a> and set it to <span class="math inline">\(0\)</span> following Eq.<a href="introduction-to-unconstrained-optimization.html#eq:34">(2.8)</a>
 <span class="math display" id="eq:38">\[\begin{align}
 \frac{df}{dx}(x) &amp;= 0 \\
-\frac{df}{dx}(x_j) + (x - x_j)\frac{d^2f}{dx^2}(x_j) &amp;= 0 \tag{3.38}
+\frac{df}{dx}(x_j) + (x - x_j)\frac{d^2f}{dx^2}(x_j) &amp;= 0 \tag{2.12}
 \end{align}\]</span></p>
 <p>We get,
 <span class="math display" id="eq:39">\[\begin{equation}
-    x = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} \tag{3.39}
+    x = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} \tag{2.13}
 \end{equation}\]</span></p>
-<p><span class="math inline">\(x_j\)</span> denotes an approximation to the minimizer <span class="math inline">\(x^*\)</span> of <span class="math inline">\(f(x)\)</span>. An improved approximation in the form of an iterative process can be given using Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:39">(3.39)</a>,
+<p><span class="math inline">\(x_j\)</span> denotes an approximation to the minimizer <span class="math inline">\(x^*\)</span> of <span class="math inline">\(f(x)\)</span>. An improved approximation in the form of an iterative process can be given using Eq.<a href="introduction-to-unconstrained-optimization.html#eq:39">(2.13)</a>,
 <span class="math display" id="eq:40">\[\begin{equation}
-    x_{j+1} = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} \tag{3.40}
+    x_{j+1} = x_j - \frac{\frac{df}{dx}(x_j)}{\frac{d^2f}{dx^2}(x_j)} \tag{2.14}
 \end{equation}\]</span></p>
 <p>The termination condition for convergence after a sufficient number of large iterations to <span class="math inline">\(x^*\)</span> is given by:
 <span class="math display" id="eq:41">\[\begin{equation}
-    |\frac{df}{dx}(x_{j+1})| \leq \epsilon \tag{3.41}
+    |\frac{df}{dx}(x_{j+1})| \leq \epsilon \tag{2.15}
 \end{equation}\]</span></p>
 <p>where, <span class="math inline">\(\epsilon\)</span> is the tolerance set by the user for the optimization algorithm. In numerical analysis literature, the <em>Newton’s method</em> is also sometimes called the <em>Newton-Raphson method</em>, because it was originally designed by Newton and was later improved by Raphson. The <em>Newton’s method</em> has a fast convergence property called the <em>quadratic convergence</em>.</p>
 
 <div class="definition">
-<span id="def:unnamed-chunk-35" class="definition"><strong>Definition 3.2  </strong></span>For a twice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Newton’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to be  to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
+<span id="def:unnamed-chunk-79" class="definition"><strong>Definition 3.2  </strong></span>For a twice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Newton’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to be  to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
 <span class="math display" id="eq:42">\[\begin{equation}
-    |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M &gt; \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} \tag{3.42}
+    |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M &gt; \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} \tag{2.16}
 \end{equation}\]</span>
 </div>
 
