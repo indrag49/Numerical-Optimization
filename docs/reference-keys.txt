@@ -75,6 +75,17 @@ exm:unnamed-chunk-50
 exm:unnamed-chunk-57
 exm:unnamed-chunk-63
 def:unnamed-chunk-79
+our-pledge
+our-standards
+enforcement-responsibilities
+scope
+enforcement
+enforcement-guidelines
+correction
+warning
+temporary-ban
+permanent-ban
+attribution
 what-is-numerical-optimization
 introduction-to-optimization
 a-solution

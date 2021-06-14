@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 What is Numerical Optimization? | Introduction to Mathematical Optimization</title>
+  <meta name="description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 What is Numerical Optimization? | Introduction to Mathematical Optimization" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://indrag49.github.io/Numerical-Optimization/" />
+  
+  <meta property="og:description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 What is Numerical Optimization? | Introduction to Mathematical Optimization" />
+  
+  <meta name="twitter:description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  
+
+<meta name="author" content="indranil Ghosh" />
+
+
+<meta name="date" content="2021-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="contributor-covenant-code-of-conduct.html"/>
+<link rel="next" href="introduction-to-unconstrained-optimization.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mathematical Optimization</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Book Description</a></li>
+<li class="chapter" data-level="" data-path="licence.html"><a href="licence.html"><i class="fa fa-check"></i>Licence</a></li>
+<li class="chapter" data-level="" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html"><i class="fa fa-check"></i>Contributor Covenant Code of Conduct</a><ul>
+<li class="chapter" data-level="0.1" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#our-pledge"><i class="fa fa-check"></i><b>0.1</b> Our Pledge</a></li>
+<li class="chapter" data-level="0.2" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#our-standards"><i class="fa fa-check"></i><b>0.2</b> Our Standards</a></li>
+<li class="chapter" data-level="0.3" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#enforcement-responsibilities"><i class="fa fa-check"></i><b>0.3</b> Enforcement Responsibilities</a></li>
+<li class="chapter" data-level="0.4" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#scope"><i class="fa fa-check"></i><b>0.4</b> Scope</a></li>
+<li class="chapter" data-level="0.5" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#enforcement"><i class="fa fa-check"></i><b>0.5</b> Enforcement</a></li>
+<li class="chapter" data-level="0.6" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#enforcement-guidelines"><i class="fa fa-check"></i><b>0.6</b> Enforcement Guidelines</a><ul>
+<li class="chapter" data-level="0.6.1" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#correction"><i class="fa fa-check"></i><b>0.6.1</b> 1. Correction</a></li>
+<li class="chapter" data-level="0.6.2" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#warning"><i class="fa fa-check"></i><b>0.6.2</b> 2. Warning</a></li>
+<li class="chapter" data-level="0.6.3" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#temporary-ban"><i class="fa fa-check"></i><b>0.6.3</b> 3. Temporary Ban</a></li>
+<li class="chapter" data-level="0.6.4" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#permanent-ban"><i class="fa fa-check"></i><b>0.6.4</b> 4. Permanent Ban</a></li>
+</ul></li>
+<li class="chapter" data-level="0.7" data-path="contributor-covenant-code-of-conduct.html"><a href="contributor-covenant-code-of-conduct.html#attribution"><i class="fa fa-check"></i><b>0.7</b> Attribution</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
+<li class="chapter" data-level="1.1" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
+<li class="chapter" data-level="1.2" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
+<li class="chapter" data-level="1.4" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#feasible-region"><i class="fa fa-check"></i><b>1.4</b> Feasible Region</a></li>
+<li class="chapter" data-level="1.5" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#discrete-optimization-problems"><i class="fa fa-check"></i><b>1.5</b> Discrete Optimization Problems</a></li>
+<li class="chapter" data-level="1.6" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#linear-programming-problems"><i class="fa fa-check"></i><b>1.6</b> Linear Programming Problems</a></li>
+<li class="chapter" data-level="1.7" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#stochastic-optimization-problems"><i class="fa fa-check"></i><b>1.7</b> Stochastic Optimization Problems</a></li>
+<li class="chapter" data-level="1.8" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#scaling-of-decision-variables"><i class="fa fa-check"></i><b>1.8</b> Scaling of Decision Variables</a></li>
+<li class="chapter" data-level="1.9" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#gradient-vector-and-hessian-matrix-of-the-objective-function"><i class="fa fa-check"></i><b>1.9</b> Gradient Vector and Hessian Matrix of the Objective Function</a></li>
+<li class="chapter" data-level="1.10" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#directional-derivative-of-the-objective-function"><i class="fa fa-check"></i><b>1.10</b> Directional Derivative of the Objective Function</a></li>
+<li class="chapter" data-level="1.11" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#positive-definite-and-positive-semi-definite-matrices"><i class="fa fa-check"></i><b>1.11</b> Positive Definite and Positive Semi-definite Matrices</a></li>
+<li class="chapter" data-level="1.12" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#what-is-convexity"><i class="fa fa-check"></i><b>1.12</b> What is Convexity?</a></li>
+<li class="chapter" data-level="1.13" data-path="what-is-numerical-optimization.html"><a href="what-is-numerical-optimization.html#numerical-optimization-algorithms"><i class="fa fa-check"></i><b>1.13</b> Numerical Optimization Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#the-unconstrained-optimization-problem"><i class="fa fa-check"></i><b>2.1</b> The Unconstrained Optimization Problem</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#smooth-functions"><i class="fa fa-check"></i><b>2.2</b> Smooth Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#taylors-theorem"><i class="fa fa-check"></i><b>2.3</b> Taylor’s Theorem</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-necessary-conditions"><i class="fa fa-check"></i><b>2.4.2</b> Second-Order Necessary Conditions</a></li>
+<li class="chapter" data-level="2.4.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-sufficient-conditions"><i class="fa fa-check"></i><b>2.4.3</b> Second-Order Sufficient Conditions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#algorithms-for-solving-unconstrained-minimization-tasks"><i class="fa fa-check"></i><b>2.5</b> Algorithms for Solving Unconstrained Minimization Tasks</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html"><i class="fa fa-check"></i><b>3</b> Solving One Dimensional Optimization Problems</a><ul>
+<li class="chapter" data-level="3.1" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#one-dimensional-optimization-problems"><i class="fa fa-check"></i><b>3.1</b> One Dimensional Optimization Problems</a></li>
+<li class="chapter" data-level="3.2" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#what-is-a-unimodal-function"><i class="fa fa-check"></i><b>3.2</b> What is a Unimodal Function?</a></li>
+<li class="chapter" data-level="3.3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#fibonacci-search-method"><i class="fa fa-check"></i><b>3.3</b> Fibonacci Search Method</a></li>
+<li class="chapter" data-level="3.4" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#golden-section-search-method"><i class="fa fa-check"></i><b>3.4</b> Golden Section Search Method</a></li>
+<li class="chapter" data-level="3.5" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#powells-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.5</b> Powell’s Quadratic Interpolation Method</a></li>
+<li class="chapter" data-level="3.6" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#inverse-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.6</b> Inverse Quadratic Interpolation Method</a></li>
+<li class="chapter" data-level="3.7" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#newtons-method"><i class="fa fa-check"></i><b>3.7</b> Newton’s Method</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to Mathematical Optimization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="what-is-numerical-optimization" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> What is Numerical Optimization?</h1>
+<p>This chapter gives an introduction to the basics of numerical optimization and will help build the tools required for our in-depth understanding in the later chapters. Some fundamental linear algebra concepts will be touched which will be required for further studies in optimization along with introduction to simple Python codes.</p>
+<hr />
+<div id="introduction-to-optimization" class="section level2">
+<h2><span class="header-section-number">1.1</span> Introduction to Optimization</h2>
+<p>Let <span class="math inline">\(f(\mathbf{x})\)</span> be a scalar function of a vector of variables <span class="math inline">\(\mathbf{x} = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} \in \mathbb{R}^n\)</span>. <em>Numerical Optimization</em> is the minimization or maximization of this function <span class="math inline">\(f\)</span> subject to constraints on <span class="math inline">\(\mathbf{x}\)</span>. This <span class="math inline">\(f\)</span> is a scalar function of <span class="math inline">\(\mathbf{x}\)</span>, also known as the <em>objective function</em> and the continuous components <span class="math inline">\(x_i \in \mathbf{x}\)</span> are called the <em>decision variables</em>.</p>
+<p>The optimization problem is formulated in the following way:</p>
+<p><span class="math display" id="eq:1">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; f(\mathbf{x}) \\
+&amp;\text{subject to} &amp;      &amp; g_k(\mathbf{x}) \leq 0,\ k=1,2,..., m\\
+&amp;                  &amp;      &amp; h_k(\mathbf{x}) = 0,\ k=1,2,..., r\\
+&amp;                  &amp;      &amp; m,r &lt; n.\tag{1.1}
+\end{align}\]</span></p>
+<p>Here, <span class="math inline">\(g_k(\mathbf{x})\)</span> and <span class="math inline">\(h_k(\mathbf{x})\)</span> are scalar functions too (like <span class="math inline">\(f(\mathbf{x})\)</span>) and are called <em>constraint functions</em>. The constraint functions define some specific equations and/or inequalities that <span class="math inline">\(\mathbf{x}\)</span> should satisfy.</p>
+</div>
+<div id="a-solution" class="section level2">
+<h2><span class="header-section-number">1.2</span> A Solution</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-1" class="definition"><strong>Definition 1.1  </strong></span>A <em>solution</em> of <span class="math inline">\(f(\mathbf{x})\)</span> is a point <span class="math inline">\(\mathbf{x^*}\)</span> which denotes the optimum vector that solves equation <a href="what-is-numerical-optimization.html#eq:1">(1.1)</a>, corresponding to the optimum value <span class="math inline">\(f(\mathbf{x^*})\)</span>.
+</div>
+
+<p>In case of a <em>minimization</em> problem, the optimum vector <span class="math inline">\(\mathbf{x^*}\)</span> is referred to as the <em>global minimizer</em> of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f\)</span> attains the least possible value at <span class="math inline">\(\mathbf{x^*}\)</span>. To design an algorithm that finds out the global minimizer for a function is quite difficult, as in most cases we do not have the idea of the overall shape of <span class="math inline">\(f\)</span>. Mostly our knowledge is restricted to a local portion of <span class="math inline">\(f\)</span>.</p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-2" class="definition"><strong>Definition 1.2  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x\)</span>.
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-3" class="definition"><strong>Definition 1.3  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) \leq f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>.
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-4" class="definition"><strong>Definition 1.4  </strong></span>A point <span class="math inline">\(\mathbf{x^*}\)</span> is called a <em>strong local minimizer</em> of <span class="math inline">\(f\)</span> if there is a neighborhood <span class="math inline">\(\mathcal{N}\)</span> of <span class="math inline">\(\mathbf{x^*}\)</span> such that <span class="math inline">\(f(\mathbf{x^*}) &lt; f(\mathbf{x}) \forall\ x \in \mathcal{N}\)</span>, with <span class="math inline">\(\mathbf{x} \neq \mathbf{x}^*\)</span>.
+</div>
+
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-5" class="definition"><strong>Definition 1.5  </strong></span>For an objective function <span class="math inline">\(f(\mathbf{x})\)</span> where, <span class="math inline">\(\mathbf{x} \in \mathbb{R}^2\)</span>, a point <span class="math inline">\(\mathbf{x}^s=\begin{bmatrix} x_1^s \\ x_2^s \end{bmatrix}\)</span> is called a <em>saddle point</em> if <span class="math inline">\(\forall\ \mathbf{x}\)</span>, there exists an <span class="math inline">\(\epsilon&gt;0\)</span>, such that the following conditions are satisfied:</p>
+<ul>
+<li><span class="math inline">\(\frac{\partial f}{\partial x_1}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>,</li>
+<li><span class="math inline">\(\frac{\partial f}{\partial x_2}(\mathbf{x}) \mid_{(x_1^s, x_2^s)} &lt; \epsilon\)</span>, and</li>
+<li><span class="math inline">\([\frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) - (\frac{\partial^2f}{\partial x_1 \partial x_2}(\mathbf{x}))^2]\mid_{(x_1^s, x_2^s)} &lt; 0\)</span></li>
+</ul>
+generating the following chain of inequalities: <span class="math inline">\(f(\mathbf{x})\mid_{(x_1, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2^s)} \leq f(\mathbf{x})\mid_{(x_1^s, x_2)}\)</span>.
+</div>
+
+<p>An example of a saddle point is shown below:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="maximization" class="section level2">
+<h2><span class="header-section-number">1.3</span> Maximization</h2>
+<p>We just defined a <em>minimization</em> problem as our optimization task. We could do the same with a <em>maximization</em> problem with little tweaks. The problem <span class="math inline">\(\underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x})\)</span> can be formulated as:
+<span class="math display" id="eq:2">\[\begin{equation}
+    \underset{\mathbf{x} \in \mathbb{R}^n}{max} f(\mathbf{x}) = - \underset{\mathbf{x} \in \mathbb{R}^n}{min}\{- f(\mathbf{x})\}
+    \tag{1.2}
+\end{equation}\]</span>
+We then apply any minimization technique after setting <span class="math inline">\(\hat{f}(\mathbf{x}) = - f(\mathbf{x})\)</span>. Further, for the inequality constraints for the maximization problem, given by <span class="math inline">\(g_k(\mathbf{x}) \geq 0\)</span>, we set
+<span class="math display" id="eq:3">\[\begin{equation}
+    \hat{g}_k(\mathbf{x})=-g_k(\mathbf{x})
+    \tag{1.3}
+\end{equation}\]</span></p>
+<p>The problem thus has become,</p>
+<p><span class="math display" id="eq:4">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; \hat{f}(\mathbf{x})\\ 
+&amp;\text{subject to} &amp;      &amp; \hat{g}_k(\mathbf{x}) \leq 0,\ k=1,2,..., m\\
+&amp;                  &amp;      &amp; h_k(\mathbf{x}) = 0,\ k=1,2,..., r\\
+&amp;                  &amp;      &amp; m,r &lt; n.\tag{1.4}
+\end{align}\]</span></p>
+<p>After the solution <span class="math inline">\(\mathbf{x^*}\)</span> is computed, the maximum value of the problem is given by: <span class="math inline">\(-\hat{f}(\mathbf{x^*})\)</span>.</p>
+</div>
+<div id="feasible-region" class="section level2">
+<h2><span class="header-section-number">1.4</span> Feasible Region</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-7" class="definition"><strong>Definition 1.6  </strong></span>A <em>feasible region</em> is the set of those points which satisfy all the constraints provided.
+</div>
+
+</div>
+<div id="discrete-optimization-problems" class="section level2">
+<h2><span class="header-section-number">1.5</span> Discrete Optimization Problems</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-8" class="definition"><strong>Definition 1.7  </strong></span>The optimization problems whose variables <span class="math inline">\(\mathbf{x}\)</span> take on integer values, and the constraints have the form either <span class="math inline">\(x_i \in \mathcal{Z}\)</span> or <span class="math inline">\(x_i \in \{0, 1\}\)</span> are called <em>discrete optimization problems</em>.
+</div>
+
+<p>The above class of problems are also sometimes called <em>integer programming</em> problems. The fundamental characteristic of a discrete optimization problem is that, <span class="math inline">\(x_i\)</span> is drawn from a countable set.</p>
+</div>
+<div id="linear-programming-problems" class="section level2">
+<h2><span class="header-section-number">1.6</span> Linear Programming Problems</h2>
+<p>The class of optimization problems where both the objective function <span class="math inline">\(f(\mathbf{x})\)</span> and the constraints are linear functions of the variable vector <span class="math inline">\(\mathbf{x}\)</span>, are called the <em>linear programming problems</em>.</p>
+<p>A linear programming problem can be formulated in the following way:</p>
+<p><span class="math display" id="eq:5">\[\begin{align}
+&amp;\!\min_{\mathbf{x} \in \mathbb{R}^n}        &amp;\qquad&amp; f(\mathbf{x})=\mathbf{c}^T\mathbf{x},\\ 
+&amp;\text{subject to} &amp;      &amp; \mathbf{A}\mathbf{x} \leq \mathbf{b},\\
+&amp;                  &amp;      &amp; \mathbf{x} \geq \mathbf{0},\\
+&amp;                  &amp;      &amp; \mathbf{c} \in \mathbb{R}^n, \mathbf{b} \in \mathbb{R}^m, \mathbf{A}\in \mathbb{R}^{m \times n}. \tag{1.5}
+\end{align}\]</span></p>
+</div>
+<div id="stochastic-optimization-problems" class="section level2">
+<h2><span class="header-section-number">1.7</span> Stochastic Optimization Problems</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-9" class="definition"><strong>Definition 1.8  </strong></span>The class of optimization problems, where the decision variables <span class="math inline">\(x_i \in \mathbf{x}\)</span> depend on the outcomes of a random phenomenon besides consisting of random objective function and constraints are called <em>stochastic optimization problems</em>.
+</div>
+
+<p>Some examples of stochastic optimization methods are: <em>simulated annealing</em>, <em>quantum annealing</em>, <em>genetic algorithms</em>, etc.</p>
+</div>
+<div id="scaling-of-decision-variables" class="section level2">
+<h2><span class="header-section-number">1.8</span> Scaling of Decision Variables</h2>
+<p>While formulating optimization problems, it must be guaranteed that the scale of the decision variables are approximately of the same order. If this is not taken care of, some optimization algorithms that are sensitive to scaling will perform poorly and will flounder to converge to the solution. Two of the fundamental fields that get disturbed due to poor scaling are computing the optimized step lengths and the numerical gradients. One of the widely accepted best practices is to make the decision variables dimensionless and vary them approximately between 0 and 1. One should always prefer optimization algorithms that are not sensitive to scaling.</p>
+</div>
+<div id="gradient-vector-and-hessian-matrix-of-the-objective-function" class="section level2">
+<h2><span class="header-section-number">1.9</span> Gradient Vector and Hessian Matrix of the Objective Function</h2>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-10" class="definition"><strong>Definition 1.9  </strong></span>For a differentiable objective function <span class="math inline">\(f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, its <em>gradient vector</em> given by <span class="math inline">\(\nabla f(\mathbf{x}): \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span>, is defined at the point <span class="math inline">\(\mathbf{x}\)</span> in the <span class="math inline">\(n\)</span>-dimensional space as the vector of first order partial derivatives:</p>
+<span class="math display" id="eq:6">\[\begin{equation}
+\nabla f(\mathbf{x})= \begin{pmatrix} \frac{\partial f}{\partial x_1}(\mathbf{x})\\
+    \vdots \\
+    \frac{\partial f}{\partial x_n}(\mathbf{x})
+    \end{pmatrix}\tag{1.6}
+\end{equation}\]</span>
+</div>
+
+<p>Now, if <span class="math inline">\(f(\mathbf{x})\)</span> is smooth, the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> is always perpendicular to the contours at the point <span class="math inline">\(\mathbf{x}\)</span>. The gradient vector is thus in the direction of the maximum increase of <span class="math inline">\(f(\mathbf{x})\)</span>. Look at the figure below.</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-12" class="definition"><strong>Definition 1.10  </strong></span>For a twice continuously differentiable function <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span>, its <em>Hessian matrix</em> given by <span class="math inline">\(\mathbf{H}(f(\mathbf{x}))\)</span> is defined at the point <span class="math inline">\(\mathbf{x}\)</span> in the <span class="math inline">\(n \times n\)</span>-dimensional space as the matrix of second order partial derivatives:
+<span class="math display" id="eq:7">\[\begin{equation}
+    \mathbf{H} f(\mathbf{x})=\frac{\partial ^2 f}{\partial x_i \partial x_j} = \begin{pmatrix} \frac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_1 \partial x_n}(\mathbf{x})\\
+    \frac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_2 \partial x_n}(\mathbf{x}) \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+    \frac{\partial^2 f}{\partial x_n \partial x_1}(\mathbf{x}) &amp; \frac{\partial^2 f}{\partial x_n \partial x_2}(\mathbf{x}) &amp; \ldots &amp; \frac{\partial^2 f}{\partial x_n^2}(\mathbf{x})
+    \end{pmatrix}\tag{1.7}
+\end{equation}\]</span>
+</div>
+
+<p>One important relation that we will keep in mind is that the <em>Hessian matrix</em> is the <em>Jacobian</em> of the <em>gradient vector</em> of <span class="math inline">\(f(\mathbf{x})\)</span>, where the <em>Jacobian matrix</em> of a vector-valued function <span class="math inline">\(\mathbf{F}(\mathbf{x})\)</span> is the matrix of all its first order partial derivatives, given by, <span class="math inline">\(\mathbf{JF}(\mathbf{x})= \begin{pmatrix} \frac{\partial \mathbf{F}}{\partial x_1} &amp; \ldots \frac{\partial \mathbf{F}}{\partial x_n} \end{pmatrix}\)</span>. The relation is as followed:
+<span class="math display" id="eq:8">\[\begin{equation}
+    \mathbf{H} f(\mathbf{x}) = \mathbf{J}(\nabla f(\mathbf{x})) \tag{1.8}
+\end{equation}\]</span></p>
+<p>Let us consider an example now.</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-13" class="example"><strong>Example 1.1  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> and the Hessian matrix <span class="math inline">\(\mathbf{H} f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span>. The gradient vector is <span class="math inline">\(\nabla f(\mathbf{x}) = \begin{pmatrix} 2x_2^3+x_3^3 \\ 6x_1x_2^2+6x_2x_3 \\ 3x_2^2+3x_3^2x_1 \end{pmatrix}\)</span>. So <span class="math inline">\(\nabla f(\mathbf{x})| \mathbf{p} = \begin{pmatrix} 43 \\ 60 \\ 39 \end{pmatrix}\)</span>. The Hessian matrix is therefore given by, <span class="math inline">\(\mathbf{H}f(\mathbf{x}) = \begin{pmatrix} 0 &amp; 6x_2^2 &amp; 3x_3^2 \\ 6x_2^2 &amp; 12x_1x_2+6x_3 &amp; 6x_2 \\ 3x_3^2 &amp; 6x_2 &amp; 6x_3x_1 \end{pmatrix}\)</span> and at point <span class="math inline">\(\mathbf{p}\)</span>, <span class="math inline">\(\mathbf{H} f(\mathbf{x})|\mathbf{p} = \begin{pmatrix} 0 &amp; 24 &amp; 27 \\ 24 &amp; 42 &amp; 12 \\ 27 &amp; 12 &amp; 18 \end{pmatrix}\)</span>.
+</div>
+
+<p>We will try to work out the same example with Python scripting now. For that we need an extra package called <a href="https://github.com/HIPS/autograd"><code>autograd</code></a>, besides the <a href="https://numpy.org/"><code>numpy</code></a> package. The <code>autograd</code> package is used for automatically differentiating native Python and Numpy code. Fundamentally <code>autograd</code> is used in <em>gradient-based optimization</em>. First <code>pip</code> install the <code>autograd package</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="what-is-numerical-optimization.html#cb1-1"></a>pip install autograd</span></code></pre></div>
+<p>Now, after it is downloaded, we type the following in our notebook:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="what-is-numerical-optimization.html#cb2-1"></a><span class="im">import</span> autograd.numpy <span class="im">as</span> au</span>
+<span id="cb2-2"><a href="what-is-numerical-optimization.html#cb2-2"></a><span class="im">from</span> autograd <span class="im">import</span> grad, jacobian </span>
+<span id="cb2-3"><a href="what-is-numerical-optimization.html#cb2-3"></a></span>
+<span id="cb2-4"><a href="what-is-numerical-optimization.html#cb2-4"></a>p <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb2-5"><a href="what-is-numerical-optimization.html#cb2-5"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
+<span id="cb2-6"><a href="what-is-numerical-optimization.html#cb2-6"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>]<span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">3</span><span class="op">+</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span><span class="op">*</span>x[<span class="dv">2</span>]<span class="op">+</span>x[<span class="dv">2</span>]<span class="op">**</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">0</span>]</span>
+<span id="cb2-7"><a href="what-is-numerical-optimization.html#cb2-7"></a>grad_f <span class="op">=</span> grad(f) <span class="co"># gradient of the objective function</span></span>
+<span id="cb2-8"><a href="what-is-numerical-optimization.html#cb2-8"></a>hessian_f <span class="op">=</span> jacobian(grad_f) <span class="co"># Hessian of the objective function</span></span>
+<span id="cb2-9"><a href="what-is-numerical-optimization.html#cb2-9"></a></span>
+<span id="cb2-10"><a href="what-is-numerical-optimization.html#cb2-10"></a><span class="bu">print</span>(<span class="st">&quot;gradient vector:&quot;</span>,grad_f(p))</span></code></pre></div>
+<pre><code>## gradient vector: [43. 60. 39.]</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="what-is-numerical-optimization.html#cb4-1"></a><span class="bu">print</span>(<span class="st">&quot;Hessian matrix:</span><span class="ch">\n</span><span class="st">&quot;</span>,hessian_f(p))</span></code></pre></div>
+<pre><code>## Hessian matrix:
+##  [[ 0. 24. 27.]
+##  [24. 42. 12.]
+##  [27. 12. 18.]]</code></pre>
+</div>
+<div id="directional-derivative-of-the-objective-function" class="section level2">
+<h2><span class="header-section-number">1.10</span> Directional Derivative of the Objective Function</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-16" class="definition"><strong>Definition 1.11  </strong></span>For a real valued objective function <span class="math inline">\(f(\mathbf{x})\)</span> and a feasible direction <span class="math inline">\(\mathbf{\delta}\)</span>, the <em>directional derivative</em> of <span class="math inline">\(f(\mathbf{x})\)</span> in the direction <span class="math inline">\(\mathbf{\delta}\)</span> is given by:
+<span class="math display" id="eq:9">\[\begin{equation}
+    \frac{\partial f}{\partial \mathbf{\delta}}(\mathbf{x}) = \lim_{\alpha \to 0} \frac{f(\mathbf{x} + \alpha \mathbf{\delta}) - f(\mathbf{x})}{\alpha} \tag{1.9}
+\end{equation}\]</span>
+where <span class="math inline">\(\|\mathbf{\delta}\| = 1\)</span>.
+</div>
+
+<p>Now for <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>, let us consider the differential equation:
+<span class="math display" id="eq:10">\[\begin{equation}
+    df(\mathbf{x}) = \frac{\partial f(\mathbf{x})}{\partial x_1}dx_1 + \ldots + \frac{\partial f(\mathbf{x})}{\partial x_n}dx_n = \nabla^Tf(\mathbf{x})d\mathbf{x} = \langle \nabla f(\mathbf{x}), d\mathbf{x} \rangle \tag{1.10}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\langle .,. \rangle\)</span> denotes the dot product between two matrices and/or vectors. Now let us consider a function <span class="math inline">\(\hat{f}(\mathbf{x}) = f(\hat{\mathbf{x}} + \alpha \mathbf{\delta})\)</span>, such that for a point <span class="math inline">\(\mathbf{x}\)</span> passing through the point <span class="math inline">\(\hat{\mathbf{x}}\)</span> on the line through <span class="math inline">\(\hat{\mathbf{x}}\)</span> in the direction <span class="math inline">\(\mathbf{\delta}\)</span> is given by <span class="math inline">\(\mathbf{x}(\alpha) = \hat{\mathbf{x}} + \alpha \mathbf{\delta}\)</span>. now, for an infinitesimal change <span class="math inline">\(d\alpha\)</span>, we have <span class="math inline">\(d\mathbf{x}=\mathbf{\delta}d\alpha\)</span>. Thus, the differential at the point <span class="math inline">\(\mathbf{x}\)</span> in the given direction is <span class="math inline">\(d\hat{f}=\nabla^Tf(\mathbf{x})\delta d\alpha\)</span> So, the directional derivative now can be written as:
+<span class="math display" id="eq:11">\[\begin{equation}
+    \frac{\partial f}{\partial \mathbf{\delta}}(\mathbf{x}) = \frac{d}{d\alpha}f(\mathbf{x}+\alpha\mathbf{\delta})|_{\alpha=0} = \nabla^Tf(\mathbf{x})\mathbf{\delta} \tag{1.11}
+\end{equation}\]</span></p>
+<p>Now,let us look into a simple example:</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-17" class="example"><strong>Example 1.2  </strong></span>Let an objective function be <span class="math inline">\(f(\mathbf{x}) = 2x_1x_2^3+3x_2^2x_3 + x_3^3x_1\)</span>. We will find out the gradient vector <span class="math inline">\(\nabla f(\mathbf{x})\)</span> at the point <span class="math inline">\(\mathbf{p} = \begin{pmatrix} 1 &amp; 2 &amp; 3 \end{pmatrix}\)</span> and then calculate the directional derivative in the direction <span class="math inline">\(\mathbf{\delta}=\begin{pmatrix} \frac{1}{\sqrt{35}} &amp; \frac{3}{\sqrt{35}} &amp; \frac{5}{\sqrt{35}} \end{pmatrix}\)</span>. We will use the same <code>autograd</code> package to calculate the same using Python.
+</div>
+
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="what-is-numerical-optimization.html#cb6-1"></a>p <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb6-2"><a href="what-is-numerical-optimization.html#cb6-2"></a>delta <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>], dtype<span class="op">=</span><span class="bu">float</span>)<span class="op">/</span>np.sqrt(<span class="dv">35</span>)</span>
+<span id="cb6-3"><a href="what-is-numerical-optimization.html#cb6-3"></a><span class="kw">def</span> f(x):</span>
+<span id="cb6-4"><a href="what-is-numerical-optimization.html#cb6-4"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>]<span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">3</span><span class="op">+</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span><span class="op">*</span>x[<span class="dv">2</span>]<span class="op">+</span>x[<span class="dv">2</span>]<span class="op">**</span><span class="dv">3</span><span class="op">*</span>x[<span class="dv">0</span>]</span>
+<span id="cb6-5"><a href="what-is-numerical-optimization.html#cb6-5"></a>grad_f <span class="op">=</span> grad(f)</span>
+<span id="cb6-6"><a href="what-is-numerical-optimization.html#cb6-6"></a></span>
+<span id="cb6-7"><a href="what-is-numerical-optimization.html#cb6-7"></a><span class="bu">print</span>(<span class="st">&quot;directional derivative:&quot;</span>, grad_f(p).dot(delta))</span></code></pre></div>
+<pre><code>## directional derivative: 70.65489569530399</code></pre>
+<p>We will see that the directional derivative is <span class="math inline">\(\approx 70.655\)</span>.</p>
+</div>
+<div id="positive-definite-and-positive-semi-definite-matrices" class="section level2">
+<h2><span class="header-section-number">1.11</span> Positive Definite and Positive Semi-definite Matrices</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-19" class="definition"><strong>Definition 1.12  </strong></span>A real matrix <span class="math inline">\(\mathbf{M}\in \mathbb{R}^{N\times N}\)</span> is a <em>positive definite</em> matrix if for any real vector <span class="math inline">\(\mathbf{v} \in \mathbb{R}^n\)</span> other than the null vector, the following is satisfied:
+<span class="math display" id="eq:12">\[\begin{equation}
+    \mathbf{v}^T\mathbf{M}\mathbf{v} &gt; 0 \tag{1.12}
+\end{equation}\]</span>
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-20" class="definition"><strong>Definition 1.13  </strong></span>A real matrix <span class="math inline">\(\mathbf{M}\in \mathbb{R}^{N\times N}\)</span> is a <em>positive semi-definite</em> matrix if for any real vector <span class="math inline">\(\mathbf{v} \in \mathbb{R}^n\)</span>, the following is satisfied:
+<span class="math display" id="eq:13">\[\begin{equation}
+    \mathbf{v}^T\mathbf{M}\mathbf{v} \geq 0 \tag{1.13}
+\end{equation}\]</span>
+</div>
+
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-21" class="theorem"><strong>Theorem 1.1  </strong></span>All the eigenvalues of a positive definite matrix are positive.
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> If <span class="math inline">\(\lambda\)</span> be an eigenvalue (real) of <span class="math inline">\(\mathbf{M}\)</span> and <span class="math inline">\(\mathbf{v}\)</span> be the corresponding eigenvector, then we have the following well known equation:
+<span class="math display" id="eq:14">\[\begin{equation}
+    \mathbf{Mv}=\lambda\mathbf{v} \tag{1.14}
+\end{equation}\]</span>
+Now multiplying the equation with <span class="math inline">\(\mathbf{v}^T\)</span> on the left, we get the following:</p>
+<p><span class="math display" id="eq:15">\[\begin{align}
+\mathbf{v}^T\mathbf{Mv}&amp;=\lambda\mathbf{v}^T\mathbf{v}\\ 
+&amp;=\lambda \|\mathbf{v}\|^2 \tag{1.15}
+\end{align}\]</span></p>
+Now the <span class="math inline">\(L.H.S\)</span> is positive as <span class="math inline">\(\mathbf{M}\)</span> is positive definite and <span class="math inline">\(\|bm{v}\|^2\)</span> is positive too. This implies that the eigenvalue <span class="math inline">\(\lambda\)</span> is positive.
+</div>
+
+<p>The above proof can be extended to positive semi-definite matrix too in which case the eigenvalues are non-negative, i.e, either 0 or positive and we will exploit these properties in our python script to check for positive definiteness or positive semi-definiteness of a given matrix.</p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-23" class="example"><strong>Example 1.3  </strong></span>We use a Python script to compute the eigenvalues and check whether the following matrices are positive definite, positive semi-definite or negative-definite:</p>
+<ul>
+<li><span class="math inline">\(\begin{pmatrix}2 &amp; -1 &amp; 0 \\ -1 &amp; 2 &amp; -1\\ 0 &amp; -1 &amp; 2 \end{pmatrix}\)</span></li>
+<li><span class="math inline">\(\begin{pmatrix} -2 &amp; 4\\ 4 &amp; -8 \end{pmatrix}\)</span></li>
+<li><span class="math inline">\(\begin{pmatrix} -2 &amp; 2\\ 2 &amp; -4 \end{pmatrix}\)</span>
+</div></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="what-is-numerical-optimization.html#cb8-1"></a>M <span class="op">=</span> np.array(([<span class="dv">2</span>, <span class="dv">-1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">-1</span>], [<span class="dv">0</span>, <span class="dv">-1</span>, <span class="dv">2</span>]), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb8-2"><a href="what-is-numerical-optimization.html#cb8-2"></a><span class="co">#M = np.array(([-2, 4], [4, -8]), dtype=float)</span></span>
+<span id="cb8-3"><a href="what-is-numerical-optimization.html#cb8-3"></a><span class="co">#M = np.array(([-2, 2], [2, -4]), dtype=float)</span></span>
+<span id="cb8-4"><a href="what-is-numerical-optimization.html#cb8-4"></a></span>
+<span id="cb8-5"><a href="what-is-numerical-optimization.html#cb8-5"></a>eigs <span class="op">=</span> np.linalg.eigvals(M)</span>
+<span id="cb8-6"><a href="what-is-numerical-optimization.html#cb8-6"></a><span class="bu">print</span>(<span class="st">&quot;The eigenvalues of M:&quot;</span>, eigs)</span></code></pre></div>
+<pre><code>## The eigenvalues of M: [3.41421356 2.         0.58578644]</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="what-is-numerical-optimization.html#cb10-1"></a><span class="cf">if</span> (np.<span class="bu">all</span>(eigs<span class="op">&gt;</span><span class="dv">0</span>)):</span>
+<span id="cb10-2"><a href="what-is-numerical-optimization.html#cb10-2"></a>    <span class="bu">print</span>(<span class="st">&quot;M is positive definite&quot;</span>)</span>
+<span id="cb10-3"><a href="what-is-numerical-optimization.html#cb10-3"></a><span class="cf">elif</span> (np.<span class="bu">all</span>(eigs<span class="op">&gt;=</span><span class="dv">0</span>)):</span>
+<span id="cb10-4"><a href="what-is-numerical-optimization.html#cb10-4"></a>    <span class="bu">print</span>(<span class="st">&quot;M is positive semi-definite&quot;</span>)</span>
+<span id="cb10-5"><a href="what-is-numerical-optimization.html#cb10-5"></a><span class="cf">else</span>:</span>
+<span id="cb10-6"><a href="what-is-numerical-optimization.html#cb10-6"></a>    <span class="bu">print</span>(<span class="st">&quot;M is negative definite&quot;</span>)</span></code></pre></div>
+<pre><code>## M is positive definite</code></pre>
+<p>Running the script for the first matrix tells us that it is positive definite. The Reader is asked to try out the code for the other two matrices.</p>
+</div>
+<div id="what-is-convexity" class="section level2">
+<h2><span class="header-section-number">1.12</span> What is Convexity?</h2>
+
+<div class="definition">
+<span id="def:unnamed-chunk-25" class="definition"><strong>Definition 1.14  </strong></span>A set <span class="math inline">\(\mathbf{X} \subset \mathbb{R}^n\)</span> is said to be a <em>convex set</em> if <span class="math inline">\(\forall\ \mathbf{x}, \mathbf{y} \in \mathbf{X}\)</span> and <span class="math inline">\(\alpha \in [0, 1]\)</span>, the following is satisfied:
+<span class="math display" id="eq:16">\[\begin{equation}
+    (1-\alpha)\mathbf{x} + \alpha \mathbf{y} \in \mathbf{X} \tag{1.16}
+\end{equation}\]</span>
+If the above condition is not satisfied, the set is a <em>non-convex set</em>.
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-26" class="definition"><strong>Definition 1.15  </strong></span>A function <span class="math inline">\(f: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> is called a <em>convex function</em> if for every two points <span class="math inline">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^n\)</span> and <span class="math inline">\(\alpha \in [0,1]\)</span>, the following condition is satisfied:
+<span class="math display" id="eq:17">\[\begin{equation}
+
+f(\alpha \mathbf{x} + (1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{x})+(1-\alpha)f(\mathbf{y}) \tag{1.17}
+\end{equation}\]</span>
+</div>
+
+
+<div class="definition">
+<span id="def:unnamed-chunk-27" class="definition"><strong>Definition 1.16  </strong></span>The function is <em>strictly convex</em> if <span class="math inline">\(\leq\)</span> symbol is replaced by <span class="math inline">\(&lt;\)</span>. In the similar way, one can define a <em>concave function</em> too.
+</div>
+
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-28" class="definition"><strong>Definition 1.17  </strong></span>A constrained optimization problem is called a <em>convex programming problem</em> if the following properties are satisfied:</p>
+<ul>
+<li>the objective function <span class="math inline">\(f(\mathbf{x})\)</span> is convex,</li>
+<li>the equality constraint functions <span class="math inline">\(h_k(\mathbf{x})\)</span> are linear, and</li>
+<li>the inequality constraint functions <span class="math inline">\(g_k(\mathbf{x})\)</span> are concave</li>
+</ul>
+</div>
+
+<p>This concept of convexity is used in practically solving many optimization problems in the real world. Now to test for convexity of <span class="math inline">\(f(\mathbf{x})\)</span> we study the following two theorems:</p>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-29" class="theorem"><strong>Theorem 1.2  </strong></span>If <span class="math inline">\(f(\mathbf{x})\)</span> is a differentiable objective function defined over the convex set <span class="math inline">\(\mathbf{S} \subseteq \mathbb{R}^n\)</span>, then <span class="math inline">\(\forall\ \mathbf{y}, \mathbf{z} \in \mathbf{S}\)</span>, <span class="math inline">\(f(\mathbf{x})\)</span> is convex over <span class="math inline">\(\mathbf{S}\)</span> if and only if
+<span class="math display" id="eq:18">\[\begin{equation}
+    f(\mathbf{y})+\nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z}) \tag{1.18}
+\end{equation}\]</span>
+</div>
+
+
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> <span class="math inline">\(f(\mathbf{x})\)</span> is convex over <span class="math inline">\(\mathbf{S}\)</span> implies that <span class="math inline">\(\forall\ \mathbf{y}, \mathbf{z} \in \mathbf{S}\)</span> and <span class="math inline">\(\forall\ \alpha \in [0,1]\)</span> the following equation is hold:
+<span class="math display" id="eq:19">\[\begin{equation}
+    f(\alpha \mathbf{z} + (1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{y}) + (1-\alpha)f(\mathbf{y}) \tag{1.19}
+\end{equation}\]</span>
+implying,
+<span class="math display" id="eq:20">\[\begin{equation}
+    \frac{f(\mathbf{y} + \alpha(\mathbf{z}-\mathbf{y})) - f(\mathbf{y})}{\alpha} \leq f(\mathbf{z}) - f(\mathbf{y}) \tag{1.20}
+\end{equation}\]</span>
+Now, the difference inequality can be turned into a differential inequality by taking <span class="math inline">\(\lim_{\alpha \to 0}\)</span>:
+<span class="math display" id="eq:21">\[\begin{equation}
+    \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} \leq f(\mathbf{z}) - f(\mathbf{y}) \tag{1.21}
+\end{equation}\]</span>
+The <span class="math inline">\(L.H.S\)</span> is the <em>directional derivative</em> and thus from <a href="what-is-numerical-optimization.html#eq:11">(1.11)</a> this can be written as:
+<span class="math display" id="eq:22">\[\begin{equation}
+    \frac{df(\mathbf{y})}{d\alpha}\mid_{\mathbf{y}-\mathbf{z}} = \nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{y}) \tag{1.22}
+\end{equation}\]</span>
+Now from <a href="what-is-numerical-optimization.html#eq:17">(1.17)</a> and <a href="what-is-numerical-optimization.html#eq:18">(1.18)</a>, the following inequality can be written: <span class="math inline">\(f(\mathbf{y}) + \nabla^Tf(\mathbf{y})(\mathbf{z}-\mathbf{y}) \leq f(\mathbf{z})\)</span>. Now, to work on the other way round, if <a href="what-is-numerical-optimization.html#eq:14">(1.14)</a> is true, then for <span class="math inline">\(\mathbf{x}=\alpha\mathbf{z}+(1-\alpha)\mathbf{y} \in \mathbf{S}\)</span> and <span class="math inline">\(\alpha \in [0,1]\)</span>, we will have the following inequalities:
+<span class="math display" id="eq:23">\[\begin{equation}
+    f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{z}-\mathbf{x}) \leq f(\mathbf{z}) \tag{1.23}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:24">\[\begin{equation}
+    f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x}) \leq f(\mathbf{y}) \tag{1.24}
+\end{equation}\]</span>
+Now (<a href="what-is-numerical-optimization.html#eq:23">(1.23)</a> <span class="math inline">\(\times \alpha) +\)</span> <a href="what-is-numerical-optimization.html#eq:24">(1.24)</a><span class="math inline">\(\times (1-\alpha)) \implies\)</span>
+<span class="math display" id="eq:25">\[\begin{equation}
+    \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{x}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}) - f(\mathbf{x}) \tag{1.25}
+\end{equation}\]</span>
+now <span class="math inline">\(L.H.S = 0\)</span> since <span class="math inline">\(\alpha(\mathbf{z}-\mathbf{x})+(1-\alpha)(\mathbf{y}-\mathbf{x})=0\)</span>. So we get,
+<span class="math display">\[f(\mathbf{x})=f(\alpha\mathbf{z}+(1-\alpha)\mathbf{y}) \leq \alpha f(\mathbf{z}) + (1-\alpha)f(\mathbf{y}).\]</span> The converse relation is also satisfied, which completes our proof.
+</div>
+
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-31" class="theorem"><strong>Theorem 1.3  </strong></span>If <span class="math inline">\(f(\mathbf{x})\)</span> is defined over an open convex set <span class="math inline">\(\mathbf{S} \subseteq \mathbb{R}^n\)</span> and if the Hessian matrix <span class="math inline">\(\mathbf{H}f(\mathbf{x})\)</span> is positive definite <span class="math inline">\(\forall\ \mathbf{x} \in \mathbf{S}\)</span>, then <span class="math inline">\(f(\mathbf{x})\)</span> is <em>strictly convex</em> over the set <span class="math inline">\(\mathbf{S}\)</span>.
+</div>
+
+
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> Let <span class="math inline">\(\mathbf{x}, \mathbf{y} \in \mathbf{S}\)</span>. Using Taylor expansion, the function <span class="math inline">\(f(\mathbf{y})\)</span> can be written as,
+<span class="math display" id="eq:26">\[\begin{align}
+f(\mathbf{y})&amp;=f(\mathbf{x} + (\mathbf{y} - \mathbf{x}))\\ 
+&amp;=f(\mathbf{x}) + \nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x}) + \frac{1}{2}(\mathbf{y}-\mathbf{x})^T\mathbf{H}f(\mathbf{x} + \alpha(\mathbf{y} - \mathbf{x}))(\mathbf{y} - \mathbf{x}) \tag{1.26}
+\end{align}\]</span>
+where <span class="math inline">\(\alpha \in [0,1]\)</span>. Now positive definite Hessian matrix implies that <span class="math inline">\(f(\mathbf{y}) &gt; f(\mathbf{x})+\nabla^Tf(\mathbf{x})(\mathbf{y}-\mathbf{x})\)</span>. Now from Theorem 1.2 it can be said that <span class="math inline">\(f(\mathbf{x})\)</span> is strictly convex, thus proving the theorem.
+</div>
+
+</div>
+<div id="numerical-optimization-algorithms" class="section level2">
+<h2><span class="header-section-number">1.13</span> Numerical Optimization Algorithms</h2>
+<p>Optimization Algorithms are iterative techniques that follow the following fundamental steps:</p>
+<ul>
+<li>Initialize with a guess of the decision variables <span class="math inline">\(\mathbf{x}\)</span>,</li>
+<li>Iterate through the process of generating a list of improving estimates,</li>
+<li>check whether the terminating conditions are met, and the estimates will be probably stop at the solution point <span class="math inline">\(\mathbf{x}^*\)</span>.</li>
+</ul>
+<p>The book by Nocedal and Wright [<em>Nocedal, Jorge, and Stephen Wright. Numerical optimization. Springer Science &amp; Business Media, 2006.</em>] states that most of the optimization strategies make use of either the objective function <span class="math inline">\(f(\mathbf{x})\)</span>, the constraint functions <span class="math inline">\(g(\mathbf{x})\)</span> and <span class="math inline">\(h(\mathbf{x})\)</span>, the first or second derivatives of these said functions, information collected during previous iterations and/or local information gathered at the present point. As Nocedal and Wright mentions, a good optimization algorithm should have the following fundamental properties:</p>
+<ul>
+<li><strong>Robustness</strong>: For all acceptable initial points chosen, the algorithm should operate well on a broad range of problems, in their particular class.</li>
+<li><strong>Efficiency</strong>: The time complexity and the space complexity of the algorithm should be practicable</li>
+<li><strong>Accuracy</strong>: The solution should be as precise as possible, with the caveat that it should not be too much delicate to errors in the data or to numerical rounding and/or truncating errors while it is being executed on a machine.</li>
+</ul>
+<p>There might be some trade offs allowed between speed and memory, between speed and robustness, etc.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="contributor-covenant-code-of-conduct.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="introduction-to-unconstrained-optimization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/indrag49/Numerical-Optimization/edit/master/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/indrag49/Numerical-Optimization/blob/master/index.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
