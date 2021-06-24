@@ -761,10 +761,54 @@ The termination condition for convergence after a sufficient number of large ite
 where, $\epsilon$ is the tolerance set by the user for the optimization algorithm. In numerical analysis literature, the *Newton's method* is also sometimes called the *Newton-Raphson method*, because it was originally designed by Newton and was later improved by Raphson. The *Newton's method* has a fast convergence property called the *quadratic convergence*.
 
 ```{definition}
-For a twice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Newton's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to be \textit{quadratically convergent} to $x^*$ if the following condition is satisfied:
+For a twice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Newton's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to be *quadratically convergent* to $x^*$ if the following condition is satisfied:
 \begin{equation}
     |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M > \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} (\#eq:42)
 \end{equation}
 ```
+
+```{proof}
+Let us consider
+\begin{equation}
+    \epsilon_j = x_j - x^* (\#eq:43)
+\end{equation}
+Now, using Taylor's expansion up to the linear term, we can write,
+\begin{equation}
+    f(x) = f(x_j) + (x - x_j) \frac{df}{dx}(x_j) (\#eq:44)
+\end{equation}
+As $f(x) = 0$, we have,
+\begin{eqnarray}
+0 &=& f(x_j) + (x - x_j) \frac{df}{dx}(x_j) \nonumber \\
+x &=& x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j)} (\#eq:45)
+\end{eqnarray}
+This can be written in term of an iteration method:
+\begin{equation}
+    x_{j+1} =  x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j)} (\#eq:46)
+\end{equation}
+Now using Taylor's expansion around the point $x^*$,
+\begin{equation}
+    f(x^*) = f(x_j - \epsilon_j) = f(x_j) - \epsilon_j\frac{df}{dx}(x_j) + \frac{\epsilon_j^2}{2!}\frac{d^2f}{dx^2}(\beta_j) (\#eq:47)
+\end{equation}
+where, $\beta_j \in (x_j, x^*)$. Along with the fact $f(x^*) = 0$, we use Eq.\@ref(eq:43) in Eq.\@ref(eq:44) and get,
+\begin{equation}
+    0 = f(x_j) - (x_j - x^*)\frac{df}{dx}(x_j) + \frac{\epsilon_j^2}{2}\frac{d^2f}{dx^2}(\beta_j) (\#eq:48)
+\end{equation}
+As we know, $\frac{df}{dx}$ is continuous and $\frac{df}{dx}(x^*) \neq 0$, the value $\frac{df}{dx}(x_j) \neq 0$ for those values of $x_j$ where $x_j$ is very close to $x^*$. Dividing Eq.\@ref(eq:45) with $\frac{df}{dx}(x_j)$, we have,
+\begin{equation}
+    0 = \frac{f(x_j)}{\frac{df}{dx}(x_j)} - (x_j -  x^*) + \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} (\#eq:49)
+\end{equation}
+Now using Eq.\@ref(eq:46), 
+\begin{eqnarray}
+    0 &=& (x_j - x_{j+1}) - (x_j - x^*) + \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} \nonumber \\
+    x_{j+1} - x^* &=&  \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} = \frac{1}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)}(x_j - x^*)^2 \nonumber \\
+    |x_{j+1} - x_j| &\leq& \frac{1}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)}|x_j - x^*|^2 (\#eq:50)
+\end{eqnarray}
+Now, $\frac{df}{dx}(x_j)$ converges to $\frac{df}{dx}(x^*)$ due to continuity of $f(x)$. $\beta_j$, lying between $x_j$ and $x^*$ converges to $x^*$ too, resulting in the convergence of $\frac{d^2f}{dx^2}(\beta_j)$ to $\frac{d^2f}{dx^2}(x^*)$. So, As $j \to \infty$, we have
+\begin{equation}
+    |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M > \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} (\#eq:51)
+\end{equation}
+This completes our proof of *quadratic convergence* for the *Newton's method*. [refer *quadratic convergence of Newton's method*, Michael Overton]
+```
+
 
 **This chapter is under development**

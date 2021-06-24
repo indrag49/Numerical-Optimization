@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-06-22" />
+<meta name="date" content="2021-06-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -909,10 +909,54 @@ so,</p>
 <p>where, <span class="math inline">\(\epsilon\)</span> is the tolerance set by the user for the optimization algorithm. In numerical analysis literature, the <em>Newton’s method</em> is also sometimes called the <em>Newton-Raphson method</em>, because it was originally designed by Newton and was later improved by Raphson. The <em>Newton’s method</em> has a fast convergence property called the <em>quadratic convergence</em>.</p>
 
 <div class="definition">
-<span id="def:unnamed-chunk-35" class="definition"><strong>Definition 3.2  </strong></span>For a twice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Newton’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to be  to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
+<span id="def:unnamed-chunk-35" class="definition"><strong>Definition 3.2  </strong></span>For a twice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Newton’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to be <em>quadratically convergent</em> to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
 <span class="math display" id="eq:42">\[\begin{equation}
     |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M &gt; \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} \tag{3.42}
 \end{equation}\]</span>
+</div>
+
+
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> Let us consider
+<span class="math display" id="eq:43">\[\begin{equation}
+    \epsilon_j = x_j - x^* \tag{3.43}
+\end{equation}\]</span>
+Now, using Taylor’s expansion up to the linear term, we can write,
+<span class="math display" id="eq:44">\[\begin{equation}
+    f(x) = f(x_j) + (x - x_j) \frac{df}{dx}(x_j) \tag{3.44}
+\end{equation}\]</span>
+As <span class="math inline">\(f(x) = 0\)</span>, we have,
+<span class="math display" id="eq:45">\[\begin{eqnarray}
+0 &amp;=&amp; f(x_j) + (x - x_j) \frac{df}{dx}(x_j) \nonumber \\
+x &amp;=&amp; x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j)} \tag{3.45}
+\end{eqnarray}\]</span>
+This can be written in term of an iteration method:
+<span class="math display" id="eq:46">\[\begin{equation}
+    x_{j+1} =  x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j)} \tag{3.46}
+\end{equation}\]</span>
+Now using Taylor’s expansion around the point <span class="math inline">\(x^*\)</span>,
+<span class="math display" id="eq:47">\[\begin{equation}
+    f(x^*) = f(x_j - \epsilon_j) = f(x_j) - \epsilon_j\frac{df}{dx}(x_j) + \frac{\epsilon_j^2}{2!}\frac{d^2f}{dx^2}(\beta_j) \tag{3.47}
+\end{equation}\]</span>
+where, <span class="math inline">\(\beta_j \in (x_j, x^*)\)</span>. Along with the fact <span class="math inline">\(f(x^*) = 0\)</span>, we use Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:43">(3.43)</a> in Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:44">(3.44)</a> and get,
+<span class="math display" id="eq:48">\[\begin{equation}
+    0 = f(x_j) - (x_j - x^*)\frac{df}{dx}(x_j) + \frac{\epsilon_j^2}{2}\frac{d^2f}{dx^2}(\beta_j) \tag{3.48}
+\end{equation}\]</span>
+As we know, <span class="math inline">\(\frac{df}{dx}\)</span> is continuous and <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span>, the value <span class="math inline">\(\frac{df}{dx}(x_j) \neq 0\)</span> for those values of <span class="math inline">\(x_j\)</span> where <span class="math inline">\(x_j\)</span> is very close to <span class="math inline">\(x^*\)</span>. Dividing Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:45">(3.45)</a> with <span class="math inline">\(\frac{df}{dx}(x_j)\)</span>, we have,
+<span class="math display" id="eq:49">\[\begin{equation}
+    0 = \frac{f(x_j)}{\frac{df}{dx}(x_j)} - (x_j -  x^*) + \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} \tag{3.49}
+\end{equation}\]</span>
+Now using Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:46">(3.46)</a>,
+<span class="math display" id="eq:50">\[\begin{eqnarray}
+    0 &amp;=&amp; (x_j - x_{j+1}) - (x_j - x^*) + \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} \nonumber \\
+    x_{j+1} - x^* &amp;=&amp;  \frac{\epsilon_j^2}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)} = \frac{1}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)}(x_j - x^*)^2 \nonumber \\
+    |x_{j+1} - x_j| &amp;\leq&amp; \frac{1}{2}\frac{\frac{d^2f}{dx^2}(\beta_j)}{\frac{df}{dx}(x_j)}|x_j - x^*|^2 \tag{3.50}
+\end{eqnarray}\]</span>
+Now, <span class="math inline">\(\frac{df}{dx}(x_j)\)</span> converges to <span class="math inline">\(\frac{df}{dx}(x^*)\)</span> due to continuity of <span class="math inline">\(f(x)\)</span>. <span class="math inline">\(\beta_j\)</span>, lying between <span class="math inline">\(x_j\)</span> and <span class="math inline">\(x^*\)</span> converges to <span class="math inline">\(x^*\)</span> too, resulting in the convergence of <span class="math inline">\(\frac{d^2f}{dx^2}(\beta_j)\)</span> to <span class="math inline">\(\frac{d^2f}{dx^2}(x^*)\)</span>. So, As <span class="math inline">\(j \to \infty\)</span>, we have
+<span class="math display" id="eq:51">\[\begin{equation}
+    |x_{j+1} - x^*| \leq M|x_j - x^*|^2, \text{ if } M &gt; \frac{|\frac{d^2f}{dx^2}(x^*)|}{2|\frac{df}{dx}(x^*)|} \tag{3.51}
+\end{equation}\]</span>
+This completes our proof of <em>quadratic convergence</em> for the <em>Newton’s method</em>. [refer <em>quadratic convergence of Newton’s method</em>, Michael Overton]
 </div>
 
 <p><strong>This chapter is under development</strong></p>
