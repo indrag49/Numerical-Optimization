@@ -810,5 +810,64 @@ Now, $\frac{df}{dx}(x_j)$ converges to $\frac{df}{dx}(x^*)$ due to continuity of
 This completes our proof of *quadratic convergence* for the *Newton's method*. [refer *quadratic convergence of Newton's method*, Michael Overton]
 ```
 
+The algorithm for the *Newton's method* is given below:
+
+![](img 7.png)
+
+```{example}
+Let us consider the objective function,
+\begin{equation}
+    f(x) = x^3 + x^2 - 1 (\#eq:52)
+\end{equation}
+We will use the *Newton's method* to find the root $x^*$ of the objective function, along with the function value $f(x^*)$ at this point. Let the initial experimental point of the iteration be $x_j = 2.0$ and the tolerance be $\epsilon = 10^{-6}$. In the algorithm aboave we see that we have to define two functions besides the objective function. They are `fprime()` for $\frac{df}{dx}$, i.e, the first derivative and `fprime2()` for $\frac{d^2f}{dx^2}$, i.e, the second derivative. We will use the `autograd` package we discussed before, to define the derivative functions. Let us start with defining the objective function first:
+```
+
+```{python, results=FALSE}
+def f(x): # objective function
+    return x**3 + x**2 -1
+
+l = np.linspace(-2, 2, 100)
+plt.plot(l, f(l), 'r-')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("Graph of $f(x) =  x^3 + x^2 - 1$")
+plt.show()
+```
+
+We now define the functions for the first derivative and the second derivative of $f(x)$:
+
+```{python, echo=FALSE}
+import autograd.numpy as au
+from autograd import grad, jacobian
+```
+
+```{python}
+fprime = grad(f) # first derivative of f(x)
+fprime2 = grad(fprime) # second derivative of f(x)
+```
+
+To find the value of these derivatives at a given point, we write our code in the following way:
+
+
+
+```{python}
+print(fprime(0.)) # first derivative of f(x) at point x=0
+print(fprime2(0.75)) # second derivative of f(x) at point 0.75
+```
+
+Now, to implement *Newton's method*, we will first introduce the `root_scalar()` function of the `scipy.optimize` package, which is used for direct root finding for scalar nonlinear objective functions. We will now discuss the parameters of the `root_scalar()` function:
+
+* `f`: This is the objective function whose root we need to find, and should be a `callable` Python data type. It can also be a function returning the objective function and its derivatives.
+* `x0`: This is the initial experimental point of the optimization process. This is an optional parameter and is a `float`.
+* `x1`: This is the second experimental point of the optimization process. This is an optional parameter and is a `float` too.
+* `fprime`: This is an optional parameter and can be of two data types:
+  * `callable`: If `fprime` is a `callable` function, it should return the first derivative of the objective function, and must accept the same arguments as the objective function, 
+  * `bool`: If `fprime` is a Boolean data type, `f` should return the objective function and its first derivative.
+* `fprime2`:This is an optional parameter and can be of two data types:
+  * `callable`: If `fprime2` is a `callable` function, it should return the second derivative of the objective function, and must accept the same arguments as the objective function,
+  * `bool`: If `fprime` is a Boolean data type, `f` should return the objective function and both its first and second derivatives.
+* `xtol`: This is the absolute tolerance value for termination of the optimization process. This is an optional parameter and is a `float`.
+* `rtol`: This is the relative tolerance value for termination of the optimization process. This is an optional parameter and is a `float`.
+
 
 **This chapter is under development**

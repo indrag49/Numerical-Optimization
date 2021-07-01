@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-06-24" />
+<meta name="date" content="2021-07-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -959,6 +959,53 @@ Now, <span class="math inline">\(\frac{df}{dx}(x_j)\)</span> converges to <span 
 This completes our proof of <em>quadratic convergence</em> for the <em>Newton’s method</em>. [refer <em>quadratic convergence of Newton’s method</em>, Michael Overton]
 </div>
 
+<p>The algorithm for the <em>Newton’s method</em> is given below:</p>
+<p><img src="img%207.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-37" class="example"><strong>Example 3.4  </strong></span>Let us consider the objective function,
+<span class="math display" id="eq:52">\[\begin{equation}
+    f(x) = x^3 + x^2 - 1 \tag{3.52}
+\end{equation}\]</span>
+We will use the <em>Newton’s method</em> to find the root <span class="math inline">\(x^*\)</span> of the objective function, along with the function value <span class="math inline">\(f(x^*)\)</span> at this point. Let the initial experimental point of the iteration be <span class="math inline">\(x_j = 2.0\)</span> and the tolerance be <span class="math inline">\(\epsilon = 10^{-6}\)</span>. In the algorithm aboave we see that we have to define two functions besides the objective function. They are <code>fprime()</code> for <span class="math inline">\(\frac{df}{dx}\)</span>, i.e, the first derivative and <code>fprime2()</code> for <span class="math inline">\(\frac{d^2f}{dx^2}\)</span>, i.e, the second derivative. We will use the <code>autograd</code> package we discussed before, to define the derivative functions. Let us start with defining the objective function first:
+</div>
+
+<div class="sourceCode" id="cb94"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb94-1"><a href="solving-one-dimensional-optimization-problems.html#cb94-1"></a><span class="kw">def</span> f(x): <span class="co"># objective function</span></span>
+<span id="cb94-2"><a href="solving-one-dimensional-optimization-problems.html#cb94-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">3</span> <span class="op">+</span> x<span class="op">**</span><span class="dv">2</span> <span class="dv">-1</span></span>
+<span id="cb94-3"><a href="solving-one-dimensional-optimization-problems.html#cb94-3"></a></span>
+<span id="cb94-4"><a href="solving-one-dimensional-optimization-problems.html#cb94-4"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)</span>
+<span id="cb94-5"><a href="solving-one-dimensional-optimization-problems.html#cb94-5"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb95-1"><a href="solving-one-dimensional-optimization-problems.html#cb95-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb96-1"><a href="solving-one-dimensional-optimization-problems.html#cb96-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb97-1"><a href="solving-one-dimensional-optimization-problems.html#cb97-1"></a>plt.title(<span class="st">&quot;Graph of $f(x) =  x^3 + x^2 - 1$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb98-1"><a href="solving-one-dimensional-optimization-problems.html#cb98-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-19.png" width="672" /></p>
+<p>We now define the functions for the first derivative and the second derivative of <span class="math inline">\(f(x)\)</span>:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb99-1"><a href="solving-one-dimensional-optimization-problems.html#cb99-1"></a>fprime <span class="op">=</span> grad(f) <span class="co"># first derivative of f(x)</span></span>
+<span id="cb99-2"><a href="solving-one-dimensional-optimization-problems.html#cb99-2"></a>fprime2 <span class="op">=</span> grad(fprime) <span class="co"># second derivative of f(x)</span></span></code></pre></div>
+<p>To find the value of these derivatives at a given point, we write our code in the following way:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb100-1"><a href="solving-one-dimensional-optimization-problems.html#cb100-1"></a><span class="bu">print</span>(fprime(<span class="fl">0.</span>)) <span class="co"># first derivative of f(x) at point x=0</span></span></code></pre></div>
+<pre><code>## 0.0</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb102-1"><a href="solving-one-dimensional-optimization-problems.html#cb102-1"></a><span class="bu">print</span>(fprime2(<span class="fl">0.75</span>)) <span class="co"># second derivative of f(x) at point 0.75</span></span></code></pre></div>
+<pre><code>## 6.5</code></pre>
+<p>Now, to implement <em>Newton’s method</em>, we will first introduce the <code>root_scalar()</code> function of the <code>scipy.optimize</code> package, which is used for direct root finding for scalar nonlinear objective functions. We will now discuss the parameters of the <code>root_scalar()</code> function:</p>
+<ul>
+<li><code>f</code>: This is the objective function whose root we need to find, and should be a <code>callable</code> Python data type. It can also be a function returning the objective function and its derivatives.</li>
+<li><code>x0</code>: This is the initial experimental point of the optimization process. This is an optional parameter and is a <code>float</code>.</li>
+<li><code>x1</code>: This is the second experimental point of the optimization process. This is an optional parameter and is a <code>float</code> too.</li>
+<li><code>fprime</code>: This is an optional parameter and can be of two data types:
+<ul>
+<li><code>callable</code>: If <code>fprime</code> is a <code>callable</code> function, it should return the first derivative of the objective function, and must accept the same arguments as the objective function,</li>
+<li><code>bool</code>: If <code>fprime</code> is a Boolean data type, <code>f</code> should return the objective function and its first derivative.</li>
+</ul></li>
+<li><code>fprime2</code>:This is an optional parameter and can be of two data types:
+<ul>
+<li><code>callable</code>: If <code>fprime2</code> is a <code>callable</code> function, it should return the second derivative of the objective function, and must accept the same arguments as the objective function,</li>
+<li><code>bool</code>: If <code>fprime</code> is a Boolean data type, <code>f</code> should return the objective function and both its first and second derivatives.</li>
+</ul></li>
+<li><code>xtol</code>: This is the absolute tolerance value for termination of the optimization process. This is an optional parameter and is a <code>float</code>.</li>
+<li><code>rtol</code>: This is the relative tolerance value for termination of the optimization process. This is an optional parameter and is a <code>float</code>.</li>
+</ul>
 <p><strong>This chapter is under development</strong></p>
 
 </div>
