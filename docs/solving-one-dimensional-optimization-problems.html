@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-01" />
+<meta name="date" content="2021-07-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,6 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#powells-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.5</b> Powell’s Quadratic Interpolation Method</a></li>
 <li class="chapter" data-level="3.6" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#inverse-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.6</b> Inverse Quadratic Interpolation Method</a></li>
 <li class="chapter" data-level="3.7" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#newtons-method"><i class="fa fa-check"></i><b>3.7</b> Newton’s Method</a></li>
+<li class="chapter" data-level="3.8" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#halleys-method"><i class="fa fa-check"></i><b>3.8</b> Halley’s Method</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -1005,7 +1006,97 @@ We will use the <em>Newton’s method</em> to find the root <span class="math in
 </ul></li>
 <li><code>xtol</code>: This is the absolute tolerance value for termination of the optimization process. This is an optional parameter and is a <code>float</code>.</li>
 <li><code>rtol</code>: This is the relative tolerance value for termination of the optimization process. This is an optional parameter and is a <code>float</code>.</li>
+<li><code>maxiter</code>: This indicates the maximum number of of iterations the optimization process should run before termination. This is an optional parameter and is an <code>int</code>,</li>
+<li><code>args</code>: This is a <code>tuple</code> of the extra arguments that can be passed to the objective function and its derivatives. This is an optional parameter too,</li>
+<li><code>bracket</code>: This is an optional parameter which indicates an interval that brackets the root of the objective function and is a sequence of two floats,</li>
+<li><code>method</code>: Although an optional parameter, the <code>method</code> parameter is one of the most important parameters that indicate the specific solver that we are going to use for our optimization task. This is a <code>str</code> data type and has the following solvers predefined in it:
+<ul>
+<li><code>'newton'</code>: This is <em>Newton’s method</em> for root finding,</li>
+<li><code>'halley'</code>: This is <em>Halley’s method</em> for root finding,</li>
+<li><code>'secant'</code>: This is the <em>Secant method</em> for root finding,</li>
+<li><code>'bisect'</code>: This is the <em>bisection method</em> for root finding,</li>
+<li><code>'brentq'</code>: This is the method to find the root of an objective function <span class="math inline">\(f(x)\)</span> using the classic <em>Brent’s method</em>, in a bracketing interval,</li>
+<li><code>'brenth'</code>: This is used for finding the root of an objective function in a bracketing interval using <em>Brent’s method</em> with hyperbolic extrapolation,</li>
+<li><code>'ridder'</code>: This is the <em>Ridder’s method</em> of root finding, and</li>
+<li><code>'toms748'</code>: This is the implementation of the root finding algorithm designed by Alefed, Potro and Shi , called <em>Algorithm 748</em>.</li>
+</ul></li>
+<li><code>options</code>: This is an optional parameter and is a Python dictionary which specifies the solver options given by the following parameters:
+<ul>
+<li><code>solver</code>: This is a <code>str</code> and specifies the type of optimization solver, for example, <code>'minimize_scalar'</code>, <code>'root_scalar'</code>, etc.</li>
+<li><code>method</code>: This is a <code>str</code> and is an optional parameter. If not provided, it shows all the methods available for a selected solver,</li>
+<li><code>disp</code>: This is a <code>bool</code> and is an optional parameter too. If selected <code>True</code>, all the results are printed instead of returning.</li>
+</ul></li>
 </ul>
+<p>The <code>root_scalar()</code> function returns the solution as <code>RootResults</code> object. The important attributes of the <code>RootResults</code> object is defined as:</p>
+<ul>
+<li><code>root</code>: This is the approximate value of the root of the objective function and is a <code>float</code>,</li>
+<li><code>iterations</code>: This indicates the number of iterations the optimization process takes to determine the root of the objective function and is an <code>int</code>,</li>
+<li><code>function_calls</code>: This indicates the total number of function evaluations during the optimization process and is an <code>int</code>,</li>
+<li><code>converged</code>: This is a <code>bool</code> and denotes whether the optimization routine has converged or not,</li>
+<li><code>flag</code>: This is a <code>str</code> and gives a description of the cause of termination of the optimization process.</li>
+</ul>
+<p>Now, returning back to the original problem, where we intend to find the root of the objective function given by Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:52">(3.52)</a>, using the <em>Newton’s method</em>, and using the given value of the initial experimental point and the tolerance, we write the following Python code:</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb104-1"><a href="solving-one-dimensional-optimization-problems.html#cb104-1"></a><span class="im">from</span> scipy <span class="im">import</span> optimize</span>
+<span id="cb104-2"><a href="solving-one-dimensional-optimization-problems.html#cb104-2"></a><span class="kw">def</span> FP(x): <span class="co"># Returns the objective function, its first and second derivative at the point x</span></span>
+<span id="cb104-3"><a href="solving-one-dimensional-optimization-problems.html#cb104-3"></a>    <span class="cf">return</span> f(x), fprime(x), fprime2(x)</span>
+<span id="cb104-4"><a href="solving-one-dimensional-optimization-problems.html#cb104-4"></a></span>
+<span id="cb104-5"><a href="solving-one-dimensional-optimization-problems.html#cb104-5"></a>sol <span class="op">=</span> optimize.root_scalar(FP, x0<span class="op">=</span><span class="fl">2.</span>, fprime<span class="op">=</span><span class="va">True</span>, fprime2<span class="op">=</span><span class="va">True</span>, xtol<span class="op">=</span><span class="dv">10</span><span class="op">**-</span><span class="dv">6</span>, method<span class="op">=</span><span class="st">&#39;newton&#39;</span>) <span class="co"># The solver code, using the method = &#39;newton&#39;</span></span>
+<span id="cb104-6"><a href="solving-one-dimensional-optimization-problems.html#cb104-6"></a><span class="bu">print</span>(sol) <span class="co"># Prints the results</span></span></code></pre></div>
+<pre><code>##       converged: True
+##            flag: &#39;converged&#39;
+##  function_calls: 6
+##      iterations: 6
+##            root: 0.7548776662468297</code></pre>
+<p>We see the root is approximately <span class="math inline">\(0.75\)</span>, the convergence was successful and there have been <span class="math inline">\(6\)</span> iterations in the optimization process and the function has been evaluated <span class="math inline">\(6\)</span> times too. The optimization data has been collected and is shown below:</p>
+<pre><code>## +----+----------+--------------+
+## |    |        x |         f(x) |
+## |----+----------+--------------|
+## |  0 | 2        | 11           |
+## |  1 | 1.3125   |  2.98364     |
+## |  2 | 0.929637 |  0.667639    |
+## |  3 | 0.779671 |  0.0818387   |
+## |  4 | 0.75548  |  0.00193987  |
+## |  5 | 0.754878 |  1.18294e-06 |
+## +----+----------+--------------+</code></pre>
+<p>The optimization steps can be plotted too. The graph with all the function evaluations along with the minimizer <span class="math inline">\(f(x^*)\)</span> at <span class="math inline">\(x^*\)</span> has been denoted as a blue dotted line in the below figure which can be generated using the following Python code:</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb107-1"><a href="solving-one-dimensional-optimization-problems.html#cb107-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb108-1"><a href="solving-one-dimensional-optimization-problems.html#cb108-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb109-1"><a href="solving-one-dimensional-optimization-problems.html#cb109-1"></a>plt.axvline(x<span class="op">=</span>sol.root, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb110-1"><a href="solving-one-dimensional-optimization-problems.html#cb110-1"></a>plt.axhline(y<span class="op">=</span>f(sol.root), color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb111-1"><a href="solving-one-dimensional-optimization-problems.html#cb111-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb112-1"><a href="solving-one-dimensional-optimization-problems.html#cb112-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb113-1"><a href="solving-one-dimensional-optimization-problems.html#cb113-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = x^3 + x^2 - 1$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-21.png" width="672" /></p>
+</div>
+<div id="halleys-method" class="section level2">
+<h2><span class="header-section-number">3.8</span> Halley’s Method</h2>
+<p>For the objective function <span class="math inline">\(f(x), x\in \mathbb{R}\)</span>, the necessary condition that the minimizer <span class="math inline">\(x^*\)</span> exists is that <span class="math inline">\(\frac{df}{dx}(x^*)=0\)</span>. At point <span class="math inline">\(x_j\)</span>, the Taylor’s expansion of the objective function upto the second order term is given by Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:35">(3.35)</a>. A root of <span class="math inline">\(f(x)\)</span> satisfies <span class="math inline">\(f(x)= 0\)</span>, so , we will have,</p>
+<p><span class="math display" id="eq:53">\[\begin{align}
+    0 &amp;= f(x_j) + (x - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)^2\frac{s^2f}{dx^2}(x_j) \nonumber \\
+    &amp;= f(x_j) + (x - x_j)[\frac{df}{dx}(x_j) +\frac{1}{2} (x - x_j)\frac{d^2f}{dx^2}(x_j)] \tag{3.53}
+\end{align}\]</span></p>
+<p>This gives,
+<span class="math display" id="eq:54">\[\begin{equation}
+    x - x_j = -\frac{f(x_j)}{\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)\frac{d^2f}{dx^2}(x_j)} \tag{3.54}
+\end{equation}\]</span></p>
+<p>Now, using the fact from <em>Newton’s iteration</em> that,</p>
+<p><span class="math display">\[\begin{equation}
+    x - x_j = -\frac{f(x_j)}{\frac{df}{dx}(x_j)} \nonumber
+\end{equation}\]</span>
+we can re-write Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:54">(3.54)</a> as,</p>
+<p><span class="math display" id="eq:55">\[\begin{align}
+    x &amp;= x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j) - \frac{1}{2}\frac{f(x_j) \frac{d^2f}{dx^2}(x_j)}{\frac{df}{dx}(x_j)}} \nonumber \\
+    &amp;= x_j - \frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} \tag{3.55}
+\end{align}\]</span></p>
+<p>The iterative method [ref, wolfram mathworld, Halley’s method] can be thus written as
+<span class="math display" id="eq:56">\[\begin{equation}
+    x_{j+1} = x_j - \frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} \tag{3.56}
+\end{equation}\]</span></p>
+<p>The termination condition for convergence after a sufficient number of large iterations to <span class="math inline">\(x^*\)</span> is given by:
+<span class="math display" id="eq:57">\[\begin{equation}
+    |\frac{df}{dx}(x_{j+1})| \leq \epsilon \tag{3.57}
+\end{equation}\]</span>
+where, <span class="math inline">\(\epsilon\)</span> is the tolerance set by the user for the optimization algorithm. The <em>Halley’s method</em> has a fast convergence property called the <em>cubic convergence</em>.</p>
 <p><strong>This chapter is under development</strong></p>
 
 </div>

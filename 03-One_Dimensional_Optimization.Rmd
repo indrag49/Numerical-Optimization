@@ -868,6 +868,114 @@ Now, to implement *Newton's method*, we will first introduce the `root_scalar()`
   * `bool`: If `fprime` is a Boolean data type, `f` should return the objective function and both its first and second derivatives.
 * `xtol`: This is the absolute tolerance value for termination of the optimization process. This is an optional parameter and is a `float`.
 * `rtol`: This is the relative tolerance value for termination of the optimization process. This is an optional parameter and is a `float`.
+* `maxiter`: This indicates the maximum number of of iterations the optimization process should run before termination. This is an optional parameter and is an `int`,
+* `args`: This is a `tuple` of the extra arguments that can be passed to the objective function and its derivatives. This is an optional parameter too,
+* `bracket`: This is an optional parameter which indicates an interval that brackets the root of the objective function and is a sequence of two floats,
+* `method`: Although an optional parameter, the `method` parameter is one of the most important parameters that indicate the specific solver that we are going to use for our optimization task. This is a `str` data type and has the following solvers predefined in it:
+  * `'newton'`: This is *Newton's method* for root finding,
+  * `'halley'`: This is *Halley's method* for root finding,
+  * `'secant'`: This is the *Secant method* for root finding,
+  * `'bisect'`: This is the *bisection method* for root finding,
+  * `'brentq'`: This is the method to find the root of an objective function $f(x)$ using the classic *Brent's method*, in a bracketing interval,
+  * `'brenth'`: This is used for finding the root of an objective function in a bracketing interval using *Brent's method* with hyperbolic extrapolation,
+  * `'ridder'`: This is the *Ridder's method* of root finding, and
+  * `'toms748'`: This is the implementation of the root finding algorithm designed by Alefed, Potro and Shi , called *Algorithm 748*.
+* `options`: This is an optional parameter and is a Python dictionary which specifies the solver options given by the following parameters:
+  * `solver`: This is a `str` and specifies the type of optimization solver, for example, `'minimize_scalar'`, `'root_scalar'`, etc.
+  * `method`: This is a `str` and is an optional parameter. If not provided, it shows all the methods available for a selected solver,
+  * `disp`: This is a `bool` and is an optional parameter too. If selected `True`, all the results are printed instead of returning.
 
+The `root_scalar()` function returns the solution as `RootResults` object. The important attributes of the `RootResults` object is defined as:
+
+* `root`: This is the approximate value of the root of the objective function and is a `float`,
+* `iterations`: This indicates the number of iterations the optimization process takes to determine the root of the objective function and is an `int`,
+* `function_calls`: This indicates the total number of function evaluations during the optimization process and is an `int`,
+* `converged`: This is a `bool` and denotes whether the optimization routine has converged or not,
+* `flag`: This is a `str` and gives a description of the cause of termination of the optimization process.
+
+Now, returning back to the original problem, where we intend to find the root of the objective function given by Eq.\@ref(eq:52), using the *Newton's method*, and using the given value of the initial experimental point and the tolerance, we write the following Python code:
+
+```{python}
+from scipy import optimize
+def FP(x): # Returns the objective function, its first and second derivative at the point x
+    return f(x), fprime(x), fprime2(x)
+
+sol = optimize.root_scalar(FP, x0=2., fprime=True, fprime2=True, xtol=10**-6, method='newton') # The solver code, using the method = 'newton'
+print(sol) # Prints the results
+```
+
+We see the root is approximately $0.75$, the convergence was successful and there have been $6$ iterations in the optimization process and the function has been evaluated $6$ times too. The optimization data has been collected and is shown below:
+
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return x**3 + x**2 -1
+
+def FP(x): # Returns the objective function, its first and second derivative at the point x
+    return F(x), fprime(x), fprime2(x)
+
+sol = optimize.root_scalar(FP, x0=2., fprime=True, fprime2=True, xtol=10**-6, method='newton')
+
+fL = []
+for i in L:
+    fL += [f(i), ]
+data = {'x' : L,
+        'f(x)': fL}
+        
+
+df = pd.DataFrame(data, columns = ['x', 'f(x)'])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The optimization steps can be plotted too. The graph with all the function evaluations along with the minimizer $f(x^*)$ at $x^*$ has been denoted as a blue dotted line in the below figure which can be generated using the following Python code:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-2, 2, 100), f(np.linspace(-2, 2, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=f(sol.root), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = x^3 + x^2 - 1$")
+```
+
+## Halley's Method
+
+For the objective function $f(x), x\in \mathbb{R}$, the necessary condition that the minimizer $x^*$ exists is that $\frac{df}{dx}(x^*)=0$. At point $x_j$, the Taylor's expansion of the objective function upto the second order term is given by Eq.  \@ref(eq:35). A root of $f(x)$ satisfies $f(x)= 0$, so , we will have,
+
+\begin{align}
+    0 &= f(x_j) + (x - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)^2\frac{s^2f}{dx^2}(x_j) \nonumber \\
+    &= f(x_j) + (x - x_j)[\frac{df}{dx}(x_j) +\frac{1}{2} (x - x_j)\frac{d^2f}{dx^2}(x_j)] (\#eq:53)
+\end{align}
+
+This gives,
+\begin{equation}
+    x - x_j = -\frac{f(x_j)}{\frac{df}{dx}(x_j) + \frac{1}{2}(x - x_j)\frac{d^2f}{dx^2}(x_j)} (\#eq:54)
+\end{equation}
+
+Now, using the fact from *Newton's iteration* that,
+
+\begin{equation}
+    x - x_j = -\frac{f(x_j)}{\frac{df}{dx}(x_j)} \nonumber
+\end{equation}
+we can re-write Eq. \@ref(eq:54) as,
+
+\begin{align}
+    x &= x_j - \frac{f(x_j)}{\frac{df}{dx}(x_j) - \frac{1}{2}\frac{f(x_j) \frac{d^2f}{dx^2}(x_j)}{\frac{df}{dx}(x_j)}} \nonumber \\
+    &= x_j - \frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} (\#eq:55)
+\end{align}
+
+The iterative method [ref, wolfram mathworld, Halley's method] can be thus written as
+\begin{equation}
+    x_{j+1} = x_j - \frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} (\#eq:56)
+\end{equation} 
+
+The termination condition for convergence after a sufficient number of large iterations to $x^*$ is given by:
+\begin{equation}
+    |\frac{df}{dx}(x_{j+1})| \leq \epsilon (\#eq:57)
+\end{equation}
+where, $\epsilon$ is the tolerance set by the user for the optimization algorithm. The *Halley's method* has a fast convergence property called the *cubic convergence*.
 
 **This chapter is under development**

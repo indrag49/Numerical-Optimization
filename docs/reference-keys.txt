@@ -122,3 +122,9 @@ eq:a
 thm:unnamed-chunk-2
 exm:unnamed-chunk-4
 exm:unnamed-chunk-9
+halleys-method
+eq:53
+eq:54
+eq:55
+eq:56
+eq:57
