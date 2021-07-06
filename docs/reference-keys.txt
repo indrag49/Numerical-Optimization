@@ -140,3 +140,9 @@ exm:unnamed-chunk-47
 eq:66
 eq:67
 secant-method
+eq:68
+eq:69
+eq:70
+eq:71
+exm:unnamed-chunk-52
+eq:72

@@ -980,9 +980,9 @@ where, $\epsilon$ is the tolerance set by the user for the optimization algorith
 
 ```{definition}
 For a thrice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Halley's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to show \textit{cubic convergence} to $x^*$ if the following condition is satisfied:
-\begin{equation}
+\begin{align}
     |x_{j+1} - x^*| \leq K|x_j - x^*|^3, \text{ if } K > -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} (\#eq:58)
-\end{equation}
+\end{align}
 ```
 
 ```{proof}
@@ -1104,8 +1104,66 @@ The formulation of the *secant method* looks similar to that of \@ref(eq:38).
 \frac{df}{dx}(x_j) + s\frac{d^2f}{dx^2}(x_j) = 0 (\#eq:67)
 \end{equation}
 
-Where, $s$ is the slope of the line connecting the points $(a, \frac{df}{dx}(a))$ and $(b, \frac{df}{dx}(b))$ on the $x-\frac{df}{dx}$ plane. $a$ and $b$ are two different approximations to the root of the objective function.
+Where, $s$ is the slope of the line connecting the points $(a, \frac{df}{dx}(a))$ and $(b, \frac{df}{dx}(b))$ on the $x-\frac{df}{dx}$ plane. $a$ and $b$ are two different approximations to the root of the objective function. We know the equation for the slope,
+\begin{align}
+s = \frac{\frac{df}{dx}(b) - \frac{df}{dx}(a)}{b - a} (\#eq:68)
+\end{align}
 
+So, \@ref(eq:67) can be written as:
+\begin{eqnarray}
+    x &-& x_j = -\frac{\frac{df}{dx}(x_j)}{s} \nonumber \\
+    x &=& x_j - \frac{\frac{df}{dx}(a)(b - a)}{\frac{df}{dx}(b) - \frac{df}{dx}(a)} = a - \frac{\frac{df}{dx}(a)(a - b)}{\frac{df}{dx}(a) - \frac{df}{dx}(b)} (\#eq:69)
+\end{eqnarray}
 
+The iterative process, known as the *secant method* is thus given by,
+\begin{equation}
+    x_{j+1} = x_j - \frac{\frac{df}{dx}(x_j)(x_j - x_{j-1})}{\frac{df}{dx}(x_j) - \frac{df}{dx}(x_{j+1})} (\#eq:70)
+\end{equation}
+
+The *secant* of a curve is a line that intersects the curve at minimum of two distinct points. As $b \to a$, the secant approaches $\frac{d^2f}{dx^2}(a)$. Due to this reason, the *secant method* is also called the *quasi-Newton method*. The root $x^*$ lies between the points $a$ and $b$ if the following condition is satisfied:
+
+\begin{equation}
+    \frac{df}{dx}(a)\frac{df}{dx}(b) < 0 (\#eq:71)
+\end{equation}
+
+As we have seen, the iteration process demands two initial points to start with, i.e, $a$ and $b$. The iterates $x_j$ converges to the root of the objective function when $a$ and $b$ are close to the root. The order of convergence for the process is given by the number $\phi=\frac{\sqrt{5}+1}{2} \approx 1.618$, which is the golden ratio, i.e, the *secant method* has a *superlinear convergence*, unlike a quadratic or a cubic convergence.
+
+The algorithm of the *secant method* is given below:
+
+![](img 9.png)
+```{example}
+Let us consider an objective function given by,
+\begin{equation}
+    f(x) = x\cos(x^2 - 7x) - 2x (\#eq:72)
+\end{equation}
+We will find the root of this objective function, given the two starting points are $a=-1.5$ and $b=1$ and the tolerance $\epsilon = 10^{-7}$.
+```
+
+The plot for this objective function can be generated in the following way:
+
+```{python, results=FALSE}
+def f(x): return x*au.cos(x**2-7*x)-2*x
+l = np.linspace(-3, 3., 1000)
+plt.plot(l, f(l), 'r-')
+plt.xlabel('x->')
+plt.ylabel('f(x)->')
+plt.show()
+```
+
+The corresponding $x-\frac{df}{dx}(x)$ plot is given below:
+
+```{python, results=FALSE}
+def f(x): return x*au.cos(x**2-7*x)-2*x
+l = np.linspace(-3, 3., 1000)
+G = grad(f)
+h=[]
+for i in l:
+    h+=[G(i),]
+h = np.array(h)
+plt.plot(l, h, 'b-')
+plt.xlabel('x->')
+plt.ylabel('$\\frac{df}{dx}(x)$->')
+plt.show()
+```
 
 **This chapter is under development**

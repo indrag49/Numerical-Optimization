@@ -1101,9 +1101,9 @@ where, <span class="math inline">\(\epsilon\)</span> is the tolerance set by the
 
 <div class="definition">
 <span id="def:unnamed-chunk-45" class="definition"><strong>Definition 3.3  </strong></span>For a thrice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Halley’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to show  to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
-<span class="math display" id="eq:58">\[\begin{equation}
+<span class="math display" id="eq:58">\[\begin{align}
     |x_{j+1} - x^*| \leq K|x_j - x^*|^3, \text{ if } K &gt; -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \tag{3.58}
-\end{equation}\]</span>
+\end{align}\]</span>
 </div>
 
 
@@ -1197,7 +1197,56 @@ We will use the  to find the root <span class="math inline">\(x^*\)</span> of th
 <p><span class="math display" id="eq:67">\[\begin{equation}
 \frac{df}{dx}(x_j) + s\frac{d^2f}{dx^2}(x_j) = 0 \tag{3.67}
 \end{equation}\]</span></p>
-<p>Where, <span class="math inline">\(s\)</span> is the slope of the line connecting the points <span class="math inline">\((a, \frac{df}{dx}(a))\)</span> and <span class="math inline">\((b, \frac{df}{dx}(b))\)</span> on the <span class="math inline">\(x-\frac{df}{dx}\)</span> plane. <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are two different approximations to the root of the objective function.</p>
+<p>Where, <span class="math inline">\(s\)</span> is the slope of the line connecting the points <span class="math inline">\((a, \frac{df}{dx}(a))\)</span> and <span class="math inline">\((b, \frac{df}{dx}(b))\)</span> on the <span class="math inline">\(x-\frac{df}{dx}\)</span> plane. <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are two different approximations to the root of the objective function. We know the equation for the slope,
+<span class="math display" id="eq:68">\[\begin{align}
+s = \frac{\frac{df}{dx}(b) - \frac{df}{dx}(a)}{b - a} \tag{3.68}
+\end{align}\]</span></p>
+<p>So, <a href="solving-one-dimensional-optimization-problems.html#eq:67">(3.67)</a> can be written as:
+<span class="math display" id="eq:69">\[\begin{eqnarray}
+    x &amp;-&amp; x_j = -\frac{\frac{df}{dx}(x_j)}{s} \nonumber \\
+    x &amp;=&amp; x_j - \frac{\frac{df}{dx}(a)(b - a)}{\frac{df}{dx}(b) - \frac{df}{dx}(a)} = a - \frac{\frac{df}{dx}(a)(a - b)}{\frac{df}{dx}(a) - \frac{df}{dx}(b)} \tag{3.69}
+\end{eqnarray}\]</span></p>
+<p>The iterative process, known as the <em>secant method</em> is thus given by,
+<span class="math display" id="eq:70">\[\begin{equation}
+    x_{j+1} = x_j - \frac{\frac{df}{dx}(x_j)(x_j - x_{j-1})}{\frac{df}{dx}(x_j) - \frac{df}{dx}(x_{j+1})} \tag{3.70}
+\end{equation}\]</span></p>
+<p>The <em>secant</em> of a curve is a line that intersects the curve at minimum of two distinct points. As <span class="math inline">\(b \to a\)</span>, the secant approaches <span class="math inline">\(\frac{d^2f}{dx^2}(a)\)</span>. Due to this reason, the <em>secant method</em> is also called the <em>quasi-Newton method</em>. The root <span class="math inline">\(x^*\)</span> lies between the points <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> if the following condition is satisfied:</p>
+<p><span class="math display" id="eq:71">\[\begin{equation}
+    \frac{df}{dx}(a)\frac{df}{dx}(b) &lt; 0 \tag{3.71}
+\end{equation}\]</span></p>
+<p>As we have seen, the iteration process demands two initial points to start with, i.e, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. The iterates <span class="math inline">\(x_j\)</span> converges to the root of the objective function when <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are close to the root. The order of convergence for the process is given by the number <span class="math inline">\(\phi=\frac{\sqrt{5}+1}{2} \approx 1.618\)</span>, which is the golden ratio, i.e, the <em>secant method</em> has a <em>superlinear convergence</em>, unlike a quadratic or a cubic convergence.</p>
+<p>The algorithm of the <em>secant method</em> is given below:</p>
+<img src="img%209.png" />
+
+<div class="example">
+<span id="exm:unnamed-chunk-52" class="example"><strong>Example 3.6  </strong></span>Let us consider an objective function given by,
+<span class="math display" id="eq:72">\[\begin{equation}
+    f(x) = x\cos(x^2 - 7x) - 2x \tag{3.72}
+\end{equation}\]</span>
+We will find the root of this objective function, given the two starting points are <span class="math inline">\(a=-1.5\)</span> and <span class="math inline">\(b=1\)</span> and the tolerance <span class="math inline">\(\epsilon = 10^{-7}\)</span>.
+</div>
+
+<p>The plot for this objective function can be generated in the following way:</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb125-1"><a href="solving-one-dimensional-optimization-problems.html#cb125-1"></a><span class="kw">def</span> f(x): <span class="cf">return</span> x<span class="op">*</span>au.cos(x<span class="op">**</span><span class="dv">2-7</span><span class="op">*</span>x)<span class="op">-</span><span class="dv">2</span><span class="op">*</span>x</span>
+<span id="cb125-2"><a href="solving-one-dimensional-optimization-problems.html#cb125-2"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="fl">3.</span>, <span class="dv">1000</span>)</span>
+<span id="cb125-3"><a href="solving-one-dimensional-optimization-problems.html#cb125-3"></a>plt.plot(l, f(l), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb126-1"><a href="solving-one-dimensional-optimization-problems.html#cb126-1"></a>plt.xlabel(<span class="st">&#39;x-&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb127-1"><a href="solving-one-dimensional-optimization-problems.html#cb127-1"></a>plt.ylabel(<span class="st">&#39;f(x)-&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb128-1"><a href="solving-one-dimensional-optimization-problems.html#cb128-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-25.png" width="672" /></p>
+<p>The corresponding <span class="math inline">\(x-\frac{df}{dx}(x)\)</span> plot is given below:</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb129-1"><a href="solving-one-dimensional-optimization-problems.html#cb129-1"></a><span class="kw">def</span> f(x): <span class="cf">return</span> x<span class="op">*</span>au.cos(x<span class="op">**</span><span class="dv">2-7</span><span class="op">*</span>x)<span class="op">-</span><span class="dv">2</span><span class="op">*</span>x</span>
+<span id="cb129-2"><a href="solving-one-dimensional-optimization-problems.html#cb129-2"></a>l <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="fl">3.</span>, <span class="dv">1000</span>)</span>
+<span id="cb129-3"><a href="solving-one-dimensional-optimization-problems.html#cb129-3"></a>G <span class="op">=</span> grad(f)</span>
+<span id="cb129-4"><a href="solving-one-dimensional-optimization-problems.html#cb129-4"></a>h<span class="op">=</span>[]</span>
+<span id="cb129-5"><a href="solving-one-dimensional-optimization-problems.html#cb129-5"></a><span class="cf">for</span> i <span class="kw">in</span> l:</span>
+<span id="cb129-6"><a href="solving-one-dimensional-optimization-problems.html#cb129-6"></a>    h<span class="op">+=</span>[G(i),]</span>
+<span id="cb129-7"><a href="solving-one-dimensional-optimization-problems.html#cb129-7"></a>h <span class="op">=</span> np.array(h)</span>
+<span id="cb129-8"><a href="solving-one-dimensional-optimization-problems.html#cb129-8"></a>plt.plot(l, h, <span class="st">&#39;b-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb130-1"><a href="solving-one-dimensional-optimization-problems.html#cb130-1"></a>plt.xlabel(<span class="st">&#39;x-&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb131-1"><a href="solving-one-dimensional-optimization-problems.html#cb131-1"></a>plt.ylabel(<span class="st">&#39;$</span><span class="ch">\\</span><span class="st">frac</span><span class="sc">{df}{dx}</span><span class="st">(x)$-&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb132-1"><a href="solving-one-dimensional-optimization-problems.html#cb132-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-27.png" width="672" /></p>
 <p><strong>This chapter is under development</strong></p>
 
 </div>
