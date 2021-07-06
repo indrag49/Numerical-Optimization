@@ -978,4 +978,134 @@ The termination condition for convergence after a sufficient number of large ite
 \end{equation}
 where, $\epsilon$ is the tolerance set by the user for the optimization algorithm. The *Halley's method* has a fast convergence property called the *cubic convergence*.
 
+```{definition}
+For a thrice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Halley's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to show \textit{cubic convergence} to $x^*$ if the following condition is satisfied:
+\begin{equation}
+    |x_{j+1} - x^*| \leq K|x_j - x^*|^3, \text{ if } K > -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} (\#eq:58)
+\end{equation}
+```
+
+```{proof}
+Assuming that the third derivative of the objective function exists and is continuous in a neighborhood of $x^*$ and $x_j$ lies in that neighborhood, using the Taylor's expansion up to the third order term, we get,
+\begin{align}
+    & &f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2!}(x^* - x_j)^2\frac{d^2f}{dx^2}(x_j)\nonumber \\ & &+ \frac{1}{3!}(x^* - x_j)^3\frac{d^3f}{dx^3}(\alpha) \nonumber \\
+    &\implies& 0 = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x^* - x_j)^2\frac{d^2f}{dx^2}(x_j)\nonumber \\ & &+ \frac{1}{6}(x^* - x_j)^3\frac{d^3f}{dx^3}(\alpha) (\#eq:59)
+\end{align}
+And also, using Taylor's theorem up to second order terms,
+\begin{align}
+    & &f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2!}(x^* - x_j)^2\frac{d^2f}{dx^2}(\beta) \nonumber \\
+    &\implies&f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x^* - x_j)^2\frac{d^2f}{dx^2}(\beta) (\#eq:60)
+\end{align}
+Here, $\alpha, \beta \in [x^*, x_j]$. Now, (Eq. \@ref(eq:59) $\times 2 \frac{df}{dx}(x_j) -$ (Eq. \@ref(eq:60)) $\times (x^* - x_j)\frac{d^2f}{dx^2}(x_j)$ gives, 
+                          
+\begin{align}
+0 &=& 2f(x_j)\frac{df}{dx}(x_j) + 2(x^* - x_j)[\frac{df}{dx}(x_j)]^2 + \frac{1}{3}(x^* - x_j)^3\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) \nonumber \\
+&-& (x^*-x_j)f(x_j)\frac{d^2f}{dx^2}(x_j) - \frac{1}{2}(x^* - x_J)^3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta) \nonumber \\
+&=& 2f(x_j)\frac{df}{dx}(x_j) + (x^* - x_j)(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)) \nonumber \\
+&+& (x^* - x_J)^3(\frac{1}{3}\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - \frac{1}{2}\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)) (\#eq:61)
+\end{align}
+
+Now, dividing Eq. \@ref(eq:61) with $(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))$, we have,
+\begin{align}
+x^* - x_j &=& -\frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} \nonumber \\ &-& (x^* - x_j)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))}(\#eq:62)
+\end{align}
+
+Now subtracting Eq. \@ref(eq:56) from Eq. \@ref(eq:62), we have,
+\begin{align}
+x^* - x_{j+1} = - (x^* - x_j)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} (\#eq:63)
+\end{align}
+
+which can be written as,
+\begin{align}
+& &x_{j+1} - x^* = - (x_j - x^*)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \nonumber \\
+& &|x_{j+1} - x^*| \leq -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} |(x_j - x^*)|^3 (\#eq:64)
+\end{align}
+
+Now, $\frac{df}{dx}(x_j)$ converges to $\frac{df}{dx}(x^*)$ and $\frac{d^2f}{dx^2}(x_j)$ converges to $\frac{d^2f}{dx^2}(x^*)$ due to continuity of $f(x)$. $\beta, \alpha$, lying between $x_j$ and $x^*$ converges to $x^*$ too, resulting in the convergence of $\frac{d^2f}{dx^2}(\beta)$ to $\frac{d^2f}{dx^2}(x^*)$ and $\frac{d^3f}{dx^3}(\alpha)$ to $\frac{d^3f}{dx^3}(x^*)$. So, As $j \to \infty$, we have
+
+\begin{equation}
+    |x_{j+1} - x^*| \leq K |x_j - x^*|^3, \text{ if }K > -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} (\#eq:65)
+\end{equation}
+This completes our proof of *cubic convergence* for *Halley's method*.
+```
+
+The algorithm of the *Halley's method* is given below:
+
+![](img 8.png)
+
+```{example}
+Let us consider the objective function,
+\begin{equation}
+    f(x) = x^3 -6x^2+11x-6 (\#eq:66)
+\end{equation}
+We will use the \textit{Halley's method} to find the root $x^*$ of the objective function, along with the function value $f(x^*)$ at this point. Let the initial experimental point of the iteration be $x_0 = 3.7$ and the tolerance be $\epsilon = 10^{-6}$. We define the objective function, and its derivatives in the similar way in Python as we did for the *Newton's method*
+```
+
+```{python}
+def f(x): # Objective function
+    return x**3 - 6*x**2 + 11*x - 6
+
+fprime = grad(f) # First derivative of the objective function
+fprime2 = grad(fprime) # Second derivative of the objective function 
+```
+
+Next, we  use the `root_scalar()` function of the `scipy.optimize` module and set the attributes `x0=3.7`, `method = 'halley'`, `xtol=10**-6` and so on, according to our need.
+
+```{python}
+def FP(x): # Returns the objective function and its derivatives
+    return f(x), fprime(x), fprime2(x)
+
+sol = optimize.root_scalar(FP, x0=3.7, fprime=True, fprime2=True, xtol=10**-6, method='halley')
+print(sol)
+```
+
+where, we notice that the root is $\sim 3$. The optimization data has been collected and is shown below:
+
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return x**3 - 6*x**2 + 11*x - 6
+
+def FP(x): # Returns the objective function and its derivatives
+    return F(x), fprime(x), fprime2(x)
+
+sol = optimize.root_scalar(FP, x0=3.7, fprime=True, fprime2=True, xtol=10**-6, method='halley')
+
+fL = []
+for i in L:
+    fL += [f(i), ]
+data = {'x' : L,
+        'f(x)': fL}
+        
+
+df = pd.DataFrame(data, columns = ['x', 'f(x)'])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(2, 5, 100), f(np.linspace(2, 5, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=f(sol.root), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = x^3-6x^2+11x-6$")
+```
+
+## Secant Method
+
+The formulation of the *secant method* looks similar to that of \@ref(eq:38). 
+
+\begin{equation}
+\frac{df}{dx}(x_j) + s\frac{d^2f}{dx^2}(x_j) = 0 (\#eq:67)
+\end{equation}
+
+Where, $s$ is the slope of the line connecting the points $(a, \frac{df}{dx}(a))$ and $(b, \frac{df}{dx}(b))$ on the $x-\frac{df}{dx}$ plane. $a$ and $b$ are two different approximations to the root of the objective function.
+
+
+
 **This chapter is under development**

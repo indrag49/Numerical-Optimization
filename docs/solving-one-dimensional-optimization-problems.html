@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-04" />
+<meta name="date" content="2021-07-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -172,6 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#inverse-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.6</b> Inverse Quadratic Interpolation Method</a></li>
 <li class="chapter" data-level="3.7" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#newtons-method"><i class="fa fa-check"></i><b>3.7</b> Newton’s Method</a></li>
 <li class="chapter" data-level="3.8" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#halleys-method"><i class="fa fa-check"></i><b>3.8</b> Halley’s Method</a></li>
+<li class="chapter" data-level="3.9" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#secant-method"><i class="fa fa-check"></i><b>3.9</b> Secant Method</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -1097,6 +1098,106 @@ we can re-write Eq. <a href="solving-one-dimensional-optimization-problems.html#
     |\frac{df}{dx}(x_{j+1})| \leq \epsilon \tag{3.57}
 \end{equation}\]</span>
 where, <span class="math inline">\(\epsilon\)</span> is the tolerance set by the user for the optimization algorithm. The <em>Halley’s method</em> has a fast convergence property called the <em>cubic convergence</em>.</p>
+
+<div class="definition">
+<span id="def:unnamed-chunk-45" class="definition"><strong>Definition 3.3  </strong></span>For a thrice differentiable objective function <span class="math inline">\(f(x)\)</span>, assuming that its minimizer <span class="math inline">\(x^*\)</span> lies in the interval <span class="math inline">\((x_l, x_r)\)</span>, with <span class="math inline">\(\frac{df}{dx}(x^*) \neq 0\)</span> and <span class="math inline">\(f(x^*) = 0\)</span>, for the Halley’s iteration, if <span class="math inline">\(x_j\)</span> converges to <span class="math inline">\(x^*\)</span> for a large number of iterations, <span class="math inline">\(j \to \infty\)</span>, <span class="math inline">\(x_j\)</span> is said to show  to <span class="math inline">\(x^*\)</span> if the following condition is satisfied:
+<span class="math display" id="eq:58">\[\begin{equation}
+    |x_{j+1} - x^*| \leq K|x_j - x^*|^3, \text{ if } K &gt; -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \tag{3.58}
+\end{equation}\]</span>
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> Assuming that the third derivative of the objective function exists and is continuous in a neighborhood of <span class="math inline">\(x^*\)</span> and <span class="math inline">\(x_j\)</span> lies in that neighborhood, using the Taylor’s expansion up to the third order term, we get,
+<span class="math display" id="eq:59">\[\begin{align}
+    &amp; &amp;f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2!}(x^* - x_j)^2\frac{d^2f}{dx^2}(x_j)\nonumber \\ &amp; &amp;+ \frac{1}{3!}(x^* - x_j)^3\frac{d^3f}{dx^3}(\alpha) \nonumber \\
+    &amp;\implies&amp; 0 = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x^* - x_j)^2\frac{d^2f}{dx^2}(x_j)\nonumber \\ &amp; &amp;+ \frac{1}{6}(x^* - x_j)^3\frac{d^3f}{dx^3}(\alpha) \tag{3.59}
+\end{align}\]</span>
+And also, using Taylor’s theorem up to second order terms,
+<span class="math display" id="eq:60">\[\begin{align}
+    &amp; &amp;f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2!}(x^* - x_j)^2\frac{d^2f}{dx^2}(\beta) \nonumber \\
+    &amp;\implies&amp;f(x^*) = f(x_j) + (x^* - x_j)\frac{df}{dx}(x_j) + \frac{1}{2}(x^* - x_j)^2\frac{d^2f}{dx^2}(\beta) \tag{3.60}
+\end{align}\]</span>
+Here, <span class="math inline">\(\alpha, \beta \in [x^*, x_j]\)</span>. Now, (Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:59">(3.59)</a> <span class="math inline">\(\times 2 \frac{df}{dx}(x_j) -\)</span> (Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:60">(3.60)</a>) <span class="math inline">\(\times (x^* - x_j)\frac{d^2f}{dx^2}(x_j)\)</span> gives,</p>
+<p><span class="math display" id="eq:61">\[\begin{align}
+0 &amp;=&amp; 2f(x_j)\frac{df}{dx}(x_j) + 2(x^* - x_j)[\frac{df}{dx}(x_j)]^2 + \frac{1}{3}(x^* - x_j)^3\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) \nonumber \\
+&amp;-&amp; (x^*-x_j)f(x_j)\frac{d^2f}{dx^2}(x_j) - \frac{1}{2}(x^* - x_J)^3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta) \nonumber \\
+&amp;=&amp; 2f(x_j)\frac{df}{dx}(x_j) + (x^* - x_j)(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)) \nonumber \\
+&amp;+&amp; (x^* - x_J)^3(\frac{1}{3}\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - \frac{1}{2}\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)) \tag{3.61}
+\end{align}\]</span></p>
+<p>Now, dividing Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:61">(3.61)</a> with <span class="math inline">\((2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))\)</span>, we have,
+<span class="math display" id="eq:62">\[\begin{align}
+x^* - x_j &amp;=&amp; -\frac{2f(x_j)\frac{df}{dx}(x_j)}{2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j)} \nonumber \\ &amp;-&amp; (x^* - x_j)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))}\tag{3.62}
+\end{align}\]</span></p>
+<p>Now subtracting Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:56">(3.56)</a> from Eq. <a href="solving-one-dimensional-optimization-problems.html#eq:62">(3.62)</a>, we have,
+<span class="math display" id="eq:63">\[\begin{align}
+x^* - x_{j+1} = - (x^* - x_j)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \tag{3.63}
+\end{align}\]</span></p>
+<p>which can be written as,
+<span class="math display" id="eq:64">\[\begin{align}
+&amp; &amp;x_{j+1} - x^* = - (x_j - x^*)^3 \frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \nonumber \\
+&amp; &amp;|x_{j+1} - x^*| \leq -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} |(x_j - x^*)|^3 \tag{3.64}
+\end{align}\]</span></p>
+<p>Now, <span class="math inline">\(\frac{df}{dx}(x_j)\)</span> converges to <span class="math inline">\(\frac{df}{dx}(x^*)\)</span> and <span class="math inline">\(\frac{d^2f}{dx^2}(x_j)\)</span> converges to <span class="math inline">\(\frac{d^2f}{dx^2}(x^*)\)</span> due to continuity of <span class="math inline">\(f(x)\)</span>. <span class="math inline">\(\beta, \alpha\)</span>, lying between <span class="math inline">\(x_j\)</span> and <span class="math inline">\(x^*\)</span> converges to <span class="math inline">\(x^*\)</span> too, resulting in the convergence of <span class="math inline">\(\frac{d^2f}{dx^2}(\beta)\)</span> to <span class="math inline">\(\frac{d^2f}{dx^2}(x^*)\)</span> and <span class="math inline">\(\frac{d^3f}{dx^3}(\alpha)\)</span> to <span class="math inline">\(\frac{d^3f}{dx^3}(x^*)\)</span>. So, As <span class="math inline">\(j \to \infty\)</span>, we have</p>
+<span class="math display" id="eq:65">\[\begin{equation}
+    |x_{j+1} - x^*| \leq K |x_j - x^*|^3, \text{ if }K &gt; -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} \tag{3.65}
+\end{equation}\]</span>
+This completes our proof of <em>cubic convergence</em> for <em>Halley’s method</em>.
+</div>
+
+<p>The algorithm of the <em>Halley’s method</em> is given below:</p>
+<p><img src="img%208.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-47" class="example"><strong>Example 3.5  </strong></span>Let us consider the objective function,
+<span class="math display" id="eq:66">\[\begin{equation}
+    f(x) = x^3 -6x^2+11x-6 \tag{3.66}
+\end{equation}\]</span>
+We will use the  to find the root <span class="math inline">\(x^*\)</span> of the objective function, along with the function value <span class="math inline">\(f(x^*)\)</span> at this point. Let the initial experimental point of the iteration be <span class="math inline">\(x_0 = 3.7\)</span> and the tolerance be <span class="math inline">\(\epsilon = 10^{-6}\)</span>. We define the objective function, and its derivatives in the similar way in Python as we did for the <em>Newton’s method</em>
+</div>
+
+<div class="sourceCode" id="cb114"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb114-1"><a href="solving-one-dimensional-optimization-problems.html#cb114-1"></a><span class="kw">def</span> f(x): <span class="co"># Objective function</span></span>
+<span id="cb114-2"><a href="solving-one-dimensional-optimization-problems.html#cb114-2"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">6</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">11</span><span class="op">*</span>x <span class="op">-</span> <span class="dv">6</span></span>
+<span id="cb114-3"><a href="solving-one-dimensional-optimization-problems.html#cb114-3"></a></span>
+<span id="cb114-4"><a href="solving-one-dimensional-optimization-problems.html#cb114-4"></a>fprime <span class="op">=</span> grad(f) <span class="co"># First derivative of the objective function</span></span>
+<span id="cb114-5"><a href="solving-one-dimensional-optimization-problems.html#cb114-5"></a>fprime2 <span class="op">=</span> grad(fprime) <span class="co"># Second derivative of the objective function </span></span></code></pre></div>
+<p>Next, we use the <code>root_scalar()</code> function of the <code>scipy.optimize</code> module and set the attributes <code>x0=3.7</code>, <code>method = 'halley'</code>, <code>xtol=10**-6</code> and so on, according to our need.</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb115-1"><a href="solving-one-dimensional-optimization-problems.html#cb115-1"></a><span class="kw">def</span> FP(x): <span class="co"># Returns the objective function and its derivatives</span></span>
+<span id="cb115-2"><a href="solving-one-dimensional-optimization-problems.html#cb115-2"></a>    <span class="cf">return</span> f(x), fprime(x), fprime2(x)</span>
+<span id="cb115-3"><a href="solving-one-dimensional-optimization-problems.html#cb115-3"></a></span>
+<span id="cb115-4"><a href="solving-one-dimensional-optimization-problems.html#cb115-4"></a>sol <span class="op">=</span> optimize.root_scalar(FP, x0<span class="op">=</span><span class="fl">3.7</span>, fprime<span class="op">=</span><span class="va">True</span>, fprime2<span class="op">=</span><span class="va">True</span>, xtol<span class="op">=</span><span class="dv">10</span><span class="op">**-</span><span class="dv">6</span>, method<span class="op">=</span><span class="st">&#39;halley&#39;</span>)</span>
+<span id="cb115-5"><a href="solving-one-dimensional-optimization-problems.html#cb115-5"></a><span class="bu">print</span>(sol)</span></code></pre></div>
+<pre><code>##       converged: True
+##            flag: &#39;converged&#39;
+##  function_calls: 4
+##      iterations: 4
+##            root: 2.9999999999999996</code></pre>
+<p>where, we notice that the root is <span class="math inline">\(\sim 3\)</span>. The optimization data has been collected and is shown below:</p>
+<pre><code>## +----+---------+-------------+
+## |    |       x |        f(x) |
+## |----+---------+-------------|
+## |  0 | 3.7     | 3.213       |
+## |  1 | 3.11936 | 0.283171    |
+## |  2 | 3.00207 | 0.00415786  |
+## |  3 | 3       | 3.09493e-08 |
+## +----+---------+-------------+</code></pre>
+<p>The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb118-1"><a href="solving-one-dimensional-optimization-problems.html#cb118-1"></a>plt.plot(np.linspace(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>), f(np.linspace(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb119-1"><a href="solving-one-dimensional-optimization-problems.html#cb119-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb120-1"><a href="solving-one-dimensional-optimization-problems.html#cb120-1"></a>plt.axvline(x<span class="op">=</span>sol.root, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb121-1"><a href="solving-one-dimensional-optimization-problems.html#cb121-1"></a>plt.axhline(y<span class="op">=</span>f(sol.root), color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb122-1"><a href="solving-one-dimensional-optimization-problems.html#cb122-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb123-1"><a href="solving-one-dimensional-optimization-problems.html#cb123-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb124-1"><a href="solving-one-dimensional-optimization-problems.html#cb124-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = x^3-6x^2+11x-6$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-23.png" width="672" /></p>
+</div>
+<div id="secant-method" class="section level2">
+<h2><span class="header-section-number">3.9</span> Secant Method</h2>
+<p>The formulation of the <em>secant method</em> looks similar to that of <a href="solving-one-dimensional-optimization-problems.html#eq:38">(3.38)</a>.</p>
+<p><span class="math display" id="eq:67">\[\begin{equation}
+\frac{df}{dx}(x_j) + s\frac{d^2f}{dx^2}(x_j) = 0 \tag{3.67}
+\end{equation}\]</span></p>
+<p>Where, <span class="math inline">\(s\)</span> is the slope of the line connecting the points <span class="math inline">\((a, \frac{df}{dx}(a))\)</span> and <span class="math inline">\((b, \frac{df}{dx}(b))\)</span> on the <span class="math inline">\(x-\frac{df}{dx}\)</span> plane. <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are two different approximations to the root of the objective function.</p>
 <p><strong>This chapter is under development</strong></p>
 
 </div>

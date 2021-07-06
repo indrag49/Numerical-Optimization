@@ -128,3 +128,15 @@ eq:54
 eq:55
 eq:56
 eq:57
+eq:58
+eq:59
+eq:60
+eq:61
+eq:62
+eq:63
+eq:64
+eq:65
+exm:unnamed-chunk-47
+eq:66
+eq:67
+secant-method
