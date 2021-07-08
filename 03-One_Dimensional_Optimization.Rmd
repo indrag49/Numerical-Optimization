@@ -1317,5 +1317,4 @@ df = pd.DataFrame(data, columns = ['x', 'f(x)'])
 print(tabulate(df, headers='keys', tablefmt='psql'))
 ```
 
-
 **This chapter is under development**
