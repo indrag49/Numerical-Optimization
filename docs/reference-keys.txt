@@ -146,3 +146,8 @@ eq:70
 eq:71
 exm:unnamed-chunk-52
 eq:72
+eq:73
+eq:74
+bisection-method
+exm:unnamed-chunk-61
+eq:75

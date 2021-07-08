@@ -1166,4 +1166,156 @@ plt.ylabel('$\\frac{df}{dx}(x)$->')
 plt.show()
 ```
 
+The objective function and its first derivative can be defined in Python:
+
+```{python}
+def f(x): # Objective function
+    return x*au.cos(x**2 - 7*x) - 2*x
+    
+fprime = grad(f) # First derivative of the objective function
+```
+
+Now, the function that returns both the objective function and its first derivative at a particular point can be defined as:
+
+```{python}
+def FP(x):
+    return f(x), fprime(x)
+```
+
+We now write the solver code with the `root_scalar()` function where the parameters are set to be `method='secant'`, `x0=-1.5`, `x1=1.`, `xtol=10**-7` and so on. 
+
+```{python}
+sol = optimize.root_scalar(FP, x0=-1.5, x1=1., fprime=True, xtol=10**-7, method='secant')
+print(sol) # Print the solution results
+```
+
+The optimization data has been collected and is shown below:
+
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return x*au.cos(x**2 - 7*x) - 2*x
+
+def FP(x): # Returns the objective function and its derivatives
+    return F(x), fprime(x)
+
+sol = optimize.root_scalar(FP, x0=-1.5, x1=1., fprime=True, xtol=10**-7, method='secant')
+
+fL = []
+fL2 = []
+for i in L:
+    fL += [f(i), ]
+    fL2 += [fprime(i), ]
+data = {"x" : L,
+        "f(x)": fL,
+        "f'(x)": fL2}
+        
+
+df = pd.DataFrame(data, columns = ['x', 'f(x)', "f'(x)"])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-3, 3, 100), f(np.linspace(-3, 3, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=f(sol.root), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = x\cos(x^2 - 7x) - 2x$")
+```
+
+A similar kind of plot is shown for the $x-\frac{df}{dx}(x)$ plane:
+
+
+```{python, results=FALSE}
+l = np.linspace(-3, 3., 1000)
+G = grad(f)
+h=[]
+for i in l:
+    h+=[G(i),]
+h = np.array(h)
+plt.plot(l, h, 'b-')
+plt.plot(df['x'], df["f'(x)"], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=G(f(sol.root)), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('$\\frac{df}{dx}(x)$ ->')
+plt.title("Visualizing the root and the $\\frac{df}{dx}(x)$ value")
+```
+
+## Bisection Method
+
+The bisection method starts with the continuous objective function with an initial interval provided, given by $[x_l, x_r]$ such that the root lies in between them and the following condition is satisfied:
+
+\begin{equation}
+    f(x_l)f(x_r) < 0 (\#eq:73)
+\end{equation}
+
+The method works by iteratively bisecting the interval and selecting the subinterval where Eq. \@ref(eq:73) is satisfied for the newly chosen points. A new point $x_j \in [x_l, x_r]$ is chosen according to the following:
+\begin{equation}
+    x_j = \frac{x_l+x_r}{2} (\#eq:74)
+\end{equation}
+
+The algorithm of the *bisection method* is given below:
+
+![](img 10.png)
+
+The *bisection method* forms an integral part of the *Brent's method* for root finding, which we will be discussing in the next section.
+
+```{example}
+Let us consider an objective function, given by,
+\begin{equation}
+    f(x) = x^3 - 2x - 2 (\#eq:75)
+\end{equation}
+
+We will find the root of this objective function using *bisection method*, given the initial interval is $[-1, 2]$ and the tolerance is $\epsilon=10^{-7}$. Let us first define the objective function and its first derivative in Python:
+```
+
+```{python}
+def f(x):
+    return x**3 - 2*x - 2
+
+fprime = grad(f)
+```
+
+The solver code looks similar like the previous solver codes and is written as:
+
+```{python}
+def FP(x):
+    return f(x), fprime(x)
+
+sol = optimize.root_scalar(FP, bracket=[-1., 2.], fprime=True, xtol=10**-7, method='bisect')
+print(sol)
+```
+
+We see we have set our initial interval as asked, by setting the parameter \texttt{bracket=[-1., 2.]}. The root is $\sim 1.77$. The optimization data has been collected and is shown below:
+
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return x**3 - 2*x - 2
+
+def FP(x): # Returns the objective function and its derivatives
+    return F(x), fprime(x)
+
+sol = optimize.root_scalar(FP, bracket=[-1., 2.], fprime=True, xtol=10**-7, method='bisect')
+
+fL = []
+for i in L:
+    fL += [f(i), ]
+data = {"x" : L,
+        "f(x)": fL}
+        
+df = pd.DataFrame(data, columns = ['x', 'f(x)'])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+
 **This chapter is under development**
