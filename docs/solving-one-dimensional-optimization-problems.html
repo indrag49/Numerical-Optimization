@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-08" />
+<meta name="date" content="2021-07-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="introduction-to-unconstrained-optimization.html"/>
-
+<link rel="next" href="line-search-descent-methods.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -174,6 +174,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.8" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#halleys-method"><i class="fa fa-check"></i><b>3.8</b> Halley’s Method</a></li>
 <li class="chapter" data-level="3.9" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#secant-method"><i class="fa fa-check"></i><b>3.9</b> Secant Method</a></li>
 <li class="chapter" data-level="3.10" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#bisection-method"><i class="fa fa-check"></i><b>3.10</b> Bisection Method</a></li>
+<li class="chapter" data-level="3.11" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#brents-method"><i class="fa fa-check"></i><b>3.11</b> Brent’s Method</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html"><i class="fa fa-check"></i><b>4</b> Line Search Descent Methods</a><ul>
+<li class="chapter" data-level="4.1" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#introduction-to-line-search-descent-methods-for-unconstrained-minimization"><i class="fa fa-check"></i><b>4.1</b> Introduction to Line Search Descent Methods for Unconstrained Minimization</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -1337,7 +1341,7 @@ We will find the root of this objective function using <em>bisection method</em>
 ##  function_calls: 27
 ##      iterations: 25
 ##            root: 1.7692923843860626</code></pre>
-<p>We see we have set our initial interval as asked, by setting the parameter . The root is <span class="math inline">\(\sim 1.77\)</span>. The optimization data has been collected and is shown below:</p>
+<p>We have set our initial interval as asked, by setting the parameter <code>bracket=[-1., 2.]</code>. The root is <span class="math inline">\(\sim 1.77\)</span>. The optimization data has been collected and is shown below:</p>
 <pre><code>## +----+----------+--------------+
 ## |    |        x |         f(x) |
 ## |----+----------+--------------|
@@ -1369,7 +1373,99 @@ We will find the root of this objective function using <em>bisection method</em>
 ## | 25 |  1.76929 | -4.37998e-07 |
 ## | 26 |  1.76929 |  2.22825e-07 |
 ## +----+----------+--------------+</code></pre>
-<p><strong>This chapter is under development</strong></p>
+<p>The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb156-1"><a href="solving-one-dimensional-optimization-problems.html#cb156-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb157-1"><a href="solving-one-dimensional-optimization-problems.html#cb157-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb158-1"><a href="solving-one-dimensional-optimization-problems.html#cb158-1"></a>plt.axvline(x<span class="op">=</span>sol.root, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb159-1"><a href="solving-one-dimensional-optimization-problems.html#cb159-1"></a>plt.axhline(y<span class="op">=</span>f(sol.root), color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb160-1"><a href="solving-one-dimensional-optimization-problems.html#cb160-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb161-1"><a href="solving-one-dimensional-optimization-problems.html#cb161-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb162-1"><a href="solving-one-dimensional-optimization-problems.html#cb162-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = x^3 - 2x - 2$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-33.png" width="672" /></p>
+<p>Next we discuss the <em>Brent’s method</em> for root finding.</p>
+</div>
+<div id="brents-method" class="section level2">
+<h2><span class="header-section-number">3.11</span> Brent’s Method</h2>
+<p>Originally developed by van Wijngaarden, Dekker, and others, the root finding algorithm was later improved by Brent and is called <em>Brent’s method</em> or more originally, <em>Van Wijngaarden-Dekker-Brent method</em>. This algorithm takes into account the concepts from root bracketing, the <em>bisection method</em> and the <em>inverse quadratic polynomial interpolation method</em>. For the initial three points given by <span class="math inline">\(a, b, c \in \mathbb{R}\)</span>, and the nonlinear objective function given by <span class="math inline">\(f(x)\)</span>, we can write the interpolation formula [refer Press et al, numerical recipes] as,</p>
+<p><span class="math display" id="eq:76">\[\begin{align}
+    x &amp;=&amp; \frac{(y - f(a))(y - f(b))c}{(f(c) - f(a))(f(c) - f(b))} + \frac{(y - f(b))(y-f(c))a}{(f(a) - f(b))(f(a) - f(c))} \nonumber \\
+    &amp;+&amp; \frac{(y-f(c))(y-f(a))b}{(f(b) - f(c))(f(b) - f(a))} \tag{3.76}
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(y\)</span> is set to <span class="math inline">\(0\)</span>, the next root can be estimated. This can be written as,
+<span class="math display" id="eq:77">\[\begin{equation}
+    x = b + p/q \tag{3.77}
+\end{equation}\]</span></p>
+<p>where,
+<span class="math display" id="eq:78">\[\begin{equation}
+    p = s(t(r - t)(c - b) - (1-r)(b-a)) \tag{3.78}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:79">\[\begin{equation}
+    q=(t-1)(r-1)(s-1) \tag{3.79}
+\end{equation}\]</span>
+We have,
+<span class="math display" id="eq:80">\[\begin{equation}
+    r = \frac{f(b)}{f(c)} \tag{3.80}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:81">\[\begin{equation}
+    s = \frac{f(b)}{f(a)} \tag{3.81}
+\end{equation}\]</span>
+<span class="math display" id="eq:82">\[\begin{equation}
+    t = \frac{f(a)}{f(c)} \tag{3.82}
+\end{equation}\]</span></p>
+<p>In Eq.<a href="solving-one-dimensional-optimization-problems.html#eq:77">(3.77)</a>, <span class="math inline">\(b\)</span> is the present best estimate of the root and <span class="math inline">\(\frac{p}{q}\)</span> is an infinitesimal correction. The algorithm of the <em>Brent’s method</em> is given below:</p>
+<p><img src="img%2011.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-66" class="example"><strong>Example 3.8  </strong></span>Let an objective function be:
+<span class="math display" id="eq:83">\[\begin{equation}
+    f(x) = (x+3)(x-1)^2 \tag{3.83}
+\end{equation}\]</span>
+</div>
+
+<p>We use <em>Brent’s method</em> for root finding to find the root of the objective function, given that, the initial interval is <span class="math inline">\([-4, \frac{4}{3}]\)</span> and the tolerance is <span class="math inline">\(\epsilon = 10^{-7}\)</span>. At first we define the objective function in Python and then write the solver code where the parameter <code>method='brentq'</code> should be set for the <code>root_scalar()</code> function and then we print the result.</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb163-1"><a href="solving-one-dimensional-optimization-problems.html#cb163-1"></a><span class="kw">def</span> f(x):</span>
+<span id="cb163-2"><a href="solving-one-dimensional-optimization-problems.html#cb163-2"></a>    <span class="cf">return</span> (x<span class="op">+</span><span class="dv">3</span>)<span class="op">*</span>(x<span class="dv">-1</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb163-3"><a href="solving-one-dimensional-optimization-problems.html#cb163-3"></a></span>
+<span id="cb163-4"><a href="solving-one-dimensional-optimization-problems.html#cb163-4"></a>fprime <span class="op">=</span> grad(f)</span>
+<span id="cb163-5"><a href="solving-one-dimensional-optimization-problems.html#cb163-5"></a></span>
+<span id="cb163-6"><a href="solving-one-dimensional-optimization-problems.html#cb163-6"></a><span class="kw">def</span> FP(x):</span>
+<span id="cb163-7"><a href="solving-one-dimensional-optimization-problems.html#cb163-7"></a>    <span class="cf">return</span> f(x), fprime(x)</span>
+<span id="cb163-8"><a href="solving-one-dimensional-optimization-problems.html#cb163-8"></a>    </span>
+<span id="cb163-9"><a href="solving-one-dimensional-optimization-problems.html#cb163-9"></a>sol <span class="op">=</span> optimize.root_scalar(FP, bracket<span class="op">=</span>[<span class="op">-</span><span class="fl">4.</span>, <span class="dv">4</span><span class="op">/</span><span class="dv">3</span>], fprime<span class="op">=</span><span class="va">True</span>, xtol<span class="op">=</span><span class="dv">10</span><span class="op">**-</span><span class="dv">7</span>, method<span class="op">=</span><span class="st">&#39;brentq&#39;</span>)</span>
+<span id="cb163-10"><a href="solving-one-dimensional-optimization-problems.html#cb163-10"></a><span class="bu">print</span>(sol)</span></code></pre></div>
+<pre><code>##       converged: True
+##            flag: &#39;converged&#39;
+##  function_calls: 12
+##      iterations: 11
+##            root: -3.000000000000003</code></pre>
+<p>We see that the root is <span class="math inline">\(\sim -3\)</span>. The optimization data has been collected and is shown below:</p>
+<pre><code>## +----+----------+---------------+
+## |    |        x |          f(x) |
+## |----+----------+---------------|
+## |  0 | -4       | -25           |
+## |  1 |  1.33333 |   0.481481    |
+## |  2 |  1.23256 |   0.228911    |
+## |  3 |  1.14205 |   0.0835815   |
+## |  4 | -1.42897 |   9.26892     |
+## |  5 | -2.71449 |   3.93934     |
+## |  6 | -3.35724 |  -6.78247     |
+## |  7 | -2.95064 |   0.77032     |
+## |  8 | -3.00219 |  -0.0351505   |
+## |  9 | -2.99994 |   0.000882021 |
+## | 10 | -3       |   9.67046e-07 |
+## | 11 | -3       |  -4.9738e-14  |
+## +----+----------+---------------+</code></pre>
+<p>The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb166-1"><a href="solving-one-dimensional-optimization-problems.html#cb166-1"></a>plt.plot(np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">100</span>), f(np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">100</span>)), <span class="st">&#39;r-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb167-1"><a href="solving-one-dimensional-optimization-problems.html#cb167-1"></a>plt.plot(df[<span class="st">&#39;x&#39;</span>], df[<span class="st">&#39;f(x)&#39;</span>], <span class="st">&#39;ko-&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb168-1"><a href="solving-one-dimensional-optimization-problems.html#cb168-1"></a>plt.axvline(x<span class="op">=</span>sol.root, color<span class="op">=</span><span class="st">&#39;b&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb169-1"><a href="solving-one-dimensional-optimization-problems.html#cb169-1"></a>plt.axhline(y<span class="op">=</span>f(sol.root), color<span class="op">=</span><span class="st">&#39;g&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb170-1"><a href="solving-one-dimensional-optimization-problems.html#cb170-1"></a>plt.xlabel(<span class="st">&#39;x -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb171-1"><a href="solving-one-dimensional-optimization-problems.html#cb171-1"></a>plt.ylabel(<span class="st">&#39;f(x) -&gt;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb172-1"><a href="solving-one-dimensional-optimization-problems.html#cb172-1"></a>plt.title(<span class="st">&quot;optimization of $f(x) = x^3 - 2x - 2$&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-35.png" width="672" /></p>
+<p>The readers are encouraged to try out the remaining solvers that will not be discussed further, but are provided by the <code>root_scalar()</code> function. This includes <code>'brenth'</code>, <code>'ridder'</code> and <code>'toms748'</code>. These method might come handy for those who want to explore more. In the next chapter, we will be discussing <em>line search descent methods</em> for solving unconstrained minimization tasks involving multivariate nonlinear objective functions.</p>
 
 </div>
 </div>
@@ -1378,8 +1474,8 @@ We will find the root of this objective function using <em>bisection method</em>
           </div>
         </div>
       </div>
-<a href="introduction-to-unconstrained-optimization.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="introduction-to-unconstrained-optimization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="line-search-descent-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

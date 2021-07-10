@@ -110,6 +110,15 @@ eq:73
 eq:74
 exm:unnamed-chunk-105
 eq:75
+eq:76
+eq:77
+eq:78
+eq:79
+eq:80
+eq:81
+eq:82
+exm:unnamed-chunk-110
+eq:83
 what-is-numerical-optimization
 introduction-to-optimization
 a-solution
@@ -144,6 +153,9 @@ newtons-method
 halleys-method
 secant-method
 bisection-method
+brents-method
+line-search-descent-methods
+introduction-to-line-search-descent-methods-for-unconstrained-minimization
 eq:a
 thm:unnamed-chunk-2
 exm:unnamed-chunk-4
@@ -155,3 +167,4 @@ exm:unnamed-chunk-37
 exm:unnamed-chunk-47
 exm:unnamed-chunk-52
 exm:unnamed-chunk-61
+exm:unnamed-chunk-66

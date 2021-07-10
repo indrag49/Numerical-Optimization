@@ -1,0 +1,15 @@
+# Line Search Descent Methods
+
+This chapter starts with an outline of a simple **line-search descent algorithm**, before introducing the **Wolfe conditions** and how to use them to design an algorithm for selecting a step length at a chosen descent direction at each step of the line search algorithms. Then a first order line search descent algorithm called the **Steepest Descent Algorithm** and a second order line search descent algorithm, called the **Modified Newton Method** have been discussed. Examples, Python programs and proofs accompanying each section of the chapter have been provided, wherever required. Finally, before ending the chapter with **Marquardt method**, motivations to study **Conjugate Gradient Methods** and **Quasi-Newton Methods** have been explored, which will be introduced in detailed manner in the next and later chapters.
+
+---
+
+## Introduction to Line Search Descent Methods for Unconstrained Minimization
+
+In the *line search descent methods*, the optimization technique picks a direction $\mathbb{\delta_j}$ to begin with, for the $j^{th}$ step and carries out a search along this direction from the previous experimental point, to generate a new iterate. The iterative process looks like:
+\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}+\beta_{j}\mathbb{\delta}_j, \mathbb{x} \in \mathbb{R}^n (\#eq:1)
+\end{equation}
+
+
+**This chapter is under development**

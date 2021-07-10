@@ -1293,7 +1293,7 @@ sol = optimize.root_scalar(FP, bracket=[-1., 2.], fprime=True, xtol=10**-7, meth
 print(sol)
 ```
 
-We see we have set our initial interval as asked, by setting the parameter \texttt{bracket=[-1., 2.]}. The root is $\sim 1.77$. The optimization data has been collected and is shown below:
+We have set our initial interval as asked, by setting the parameter `bracket=[-1., 2.]`. The root is $\sim 1.77$. The optimization data has been collected and is shown below:
 
 ```{python, echo=FALSE}
 L = []
@@ -1317,4 +1317,115 @@ df = pd.DataFrame(data, columns = ['x', 'f(x)'])
 print(tabulate(df, headers='keys', tablefmt='psql'))
 ```
 
-**This chapter is under development**
+The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-2, 2, 100), f(np.linspace(-2, 2, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=f(sol.root), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = x^3 - 2x - 2$")
+```
+
+Next we discuss the *Brent's method* for root finding.
+
+## Brent's Method
+
+Originally developed by van Wijngaarden, Dekker, and others, the root finding algorithm was later improved by Brent and is called *Brent's method* or more originally, *Van Wijngaarden-Dekker-Brent method*. This algorithm takes into account the concepts from root bracketing, the *bisection method* and the *inverse quadratic polynomial interpolation method*. For the initial three points given by $a, b, c \in \mathbb{R}$, and the nonlinear objective function given by $f(x)$, we can write the interpolation formula [refer Press et al, numerical recipes] as,
+
+\begin{align}
+    x &=& \frac{(y - f(a))(y - f(b))c}{(f(c) - f(a))(f(c) - f(b))} + \frac{(y - f(b))(y-f(c))a}{(f(a) - f(b))(f(a) - f(c))} \nonumber \\
+    &+& \frac{(y-f(c))(y-f(a))b}{(f(b) - f(c))(f(b) - f(a))} (\#eq:76)
+\end{align}
+
+If $y$ is set to $0$, the next root can be estimated. This can be written as,
+\begin{equation}
+    x = b + p/q (\#eq:77)
+\end{equation}
+
+where,
+\begin{equation}
+    p = s(t(r - t)(c - b) - (1-r)(b-a)) (\#eq:78)
+\end{equation}
+and
+\begin{equation}
+    q=(t-1)(r-1)(s-1) (\#eq:79)
+\end{equation}
+We have,
+\begin{equation}
+    r = \frac{f(b)}{f(c)} (\#eq:80)
+\end{equation}
+
+\begin{equation}
+    s = \frac{f(b)}{f(a)} (\#eq:81)
+\end{equation}
+\begin{equation}
+    t = \frac{f(a)}{f(c)} (\#eq:82)
+\end{equation}
+
+In Eq.\@ref(eq:77), $b$ is the present best estimate of the root and $\frac{p}{q}$ is an infinitesimal correction. The algorithm of the *Brent's method* is given below:
+
+![](img 11.png)
+
+```{example}
+Let an objective function be:
+\begin{equation}
+    f(x) = (x+3)(x-1)^2 (\#eq:83)
+\end{equation}
+```
+
+We use *Brent's method* for root finding to find the root of the objective function, given that, the initial interval is $[-4, \frac{4}{3}]$ and the tolerance is $\epsilon = 10^{-7}$. At first we define the objective function in Python and then write the solver code where the parameter `method='brentq'` should be set for the `root_scalar()` function and then we print the result.
+
+```{python}
+def f(x):
+    return (x+3)*(x-1)**2
+
+fprime = grad(f)
+
+def FP(x):
+    return f(x), fprime(x)
+    
+sol = optimize.root_scalar(FP, bracket=[-4., 4/3], fprime=True, xtol=10**-7, method='brentq')
+print(sol)
+```
+
+We see that the root is $\sim -3$. The optimization data has been collected and is shown below:
+
+
+```{python, echo=FALSE}
+L = []
+def F(x): # objective function
+    L.append(x)
+    return (x+3)*(x-1)**2
+
+def FP(x): # Returns the objective function and its derivatives
+    return F(x), fprime(x)
+
+sol = optimize.root_scalar(FP, bracket=[-4., 4/3], fprime=True, xtol=10**-7, method='brentq')
+
+fL = []
+for i in L:
+    fL += [f(i), ]
+data = {"x" : L,
+        "f(x)": fL}
+        
+df = pd.DataFrame(data, columns = ['x', 'f(x)'])
+
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The plot of the optimization steps showing the convergence of the root, along with the root being denoted by the vertical broken blue line and its corresponding function value denoted by horizontal broken green line has been shown below:
+
+```{python, results=FALSE}
+plt.plot(np.linspace(-5, 2, 100), f(np.linspace(-5, 2, 100)), 'r-')
+plt.plot(df['x'], df['f(x)'], 'ko-')
+plt.axvline(x=sol.root, color='b', linestyle='--')
+plt.axhline(y=f(sol.root), color='g', linestyle='--')
+plt.xlabel('x ->')
+plt.ylabel('f(x) ->')
+plt.title("optimization of $f(x) = x^3 - 2x - 2$")
+```
+
+The readers are encouraged to try out the remaining solvers that will not be discussed further, but are provided by the `root_scalar()` function. This includes `'brenth'`, `'ridder'` and `'toms748'`. These method might come handy for those who want to explore more. In the next chapter, we will be discussing *line search descent methods* for solving unconstrained minimization tasks involving multivariate nonlinear objective functions.
