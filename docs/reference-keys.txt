@@ -119,6 +119,7 @@ eq:81
 eq:82
 exm:unnamed-chunk-110
 eq:83
+exm:unnamed-chunk-114
 what-is-numerical-optimization
 introduction-to-optimization
 a-solution
@@ -156,10 +157,15 @@ bisection-method
 brents-method
 line-search-descent-methods
 introduction-to-line-search-descent-methods-for-unconstrained-minimization
+selection-of-step-length
+the-wolfe-conditions
+an-algorithm-for-the-strong-wolfe-conditions
+first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm
 eq:a
 thm:unnamed-chunk-2
 exm:unnamed-chunk-4
 exm:unnamed-chunk-9
+eq:b
 exm:unnamed-chunk-6
 exm:unnamed-chunk-19
 def:unnamed-chunk-35
@@ -168,3 +174,5 @@ exm:unnamed-chunk-47
 exm:unnamed-chunk-52
 exm:unnamed-chunk-61
 exm:unnamed-chunk-66
+eq:c
+exm:unnamed-chunk-1

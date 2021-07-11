@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-10" />
+<meta name="date" content="2021-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,70 @@
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -114,6 +178,11 @@
 </ul></li>
 <li class="chapter" data-level="4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html"><i class="fa fa-check"></i><b>4</b> Line Search Descent Methods</a><ul>
 <li class="chapter" data-level="4.1" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#introduction-to-line-search-descent-methods-for-unconstrained-minimization"><i class="fa fa-check"></i><b>4.1</b> Introduction to Line Search Descent Methods for Unconstrained Minimization</a></li>
+<li class="chapter" data-level="4.2" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#selection-of-step-length"><i class="fa fa-check"></i><b>4.2</b> Selection of Step Length</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#the-wolfe-conditions"><i class="fa fa-check"></i><b>4.2.1</b> The Wolfe Conditions</a></li>
+<li class="chapter" data-level="4.2.2" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#an-algorithm-for-the-strong-wolfe-conditions"><i class="fa fa-check"></i><b>4.2.2</b> An Algorithm for the Strong Wolfe Conditions</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm"><i class="fa fa-check"></i><b>4.3</b> First Order Line Search Gradient Descent Method: The Steepest Descent Algorithm</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -144,6 +213,137 @@
 <span class="math display" id="eq:1">\[\begin{equation}
     \mathbb{x}_j = \mathbb{x}_{j-1}+\beta_{j}\mathbb{\delta}_j, \mathbb{x} \in \mathbb{R}^n \tag{4.1}
 \end{equation}\]</span></p>
+<p>Here, <span class="math inline">\(\beta_j\)</span> is a positive scalar number at the <span class="math inline">\(j^{th}\)</span> step , called the <em>step length</em>. The performance of a line search descent algorithm depends on the selection of both the <em>step length</em> <span class="math inline">\(\beta_j\)</span> and the descent direction <span class="math inline">\(\mathbb{\delta}_j\)</span>. The condition for selecting the direction <span class="math inline">\(\mathbb{\delta}_j\)</span>for the next iterate :</p>
+<p><span class="math display" id="eq:2">\[\begin{equation}
+\nabla^T f(\mathbb{x}_{j-1})\mathbb{\delta}_j &lt; 0 \tag{4.2}
+\end{equation}\]</span>
+i.e, the directional derivative in the direction <span class="math inline">\(\mathbb{\delta}_j\)</span> should be negative. The step length <span class="math inline">\(\beta_j\)</span> is computed by solving the one dimensional optimization problem formulated as:
+<span class="math display" id="eq:3">\[\begin{equation}
+    \underset{\beta_j &gt; 0}{\min} \tilde{f}(\beta_j) = \underset{\beta_j &gt; 0}{\min} f(\mathbb{x}_{j-1} + \beta_j \mathbb{\delta}_j) \tag{4.3}
+\end{equation}\]</span></p>
+<p>The general algorithm for a line search descent method is given below:</p>
+<p><img src="img%2012.png" /></p>
+</div>
+<div id="selection-of-step-length" class="section level2">
+<h2><span class="header-section-number">4.2</span> Selection of Step Length</h2>
+<p>While finding a suitable step length <span class="math inline">\(\beta_j\)</span> at the <span class="math inline">\(j^{th}\)</span> iteration, we should keep in mind that the choice should be such that there is an acceptable reduction in the objective function value. We work towards solving a minimization task formulated as:</p>
+<p><span class="math display" id="eq:4">\[\begin{equation}
+    \tilde{f}(\beta) = f(\mathbb{x}_{j-1} + \beta\mathbb{\delta}_j),\ \  \beta &gt; 0 \tag{4.4}
+\end{equation}\]</span></p>
+<p>The algorithm should be designed in such a way that too many computations of the objective function and its gradient should be avoided. This can be achieved by performing <em>inexact</em> line searches, to compute the local minimizer of <span class="math inline">\(\tilde{f}\)</span>. As we discussed earlier, there should be a condition for choosing <span class="math inline">\(\beta_j\)</span> at each iterate. The condition:</p>
+<p><span class="math display" id="eq:5">\[\begin{equation}
+    f(\mathbb{x}_j) &gt; f(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j) \tag{4.5}
+\end{equation}\]</span></p>
+<p>does not suffice alone. We need to have a sufficient decrease condition known as the .</p>
+<div id="the-wolfe-conditions" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> The Wolfe Conditions</h3>
+<p>The step length <span class="math inline">\(\beta_j\)</span>, chosen at each iteration, must result in a  in the objective function <span class="math inline">\(f(\mathbb{x})\)</span> given by:</p>
+<p><span class="math display" id="eq:6">\[\begin{equation}
+    f(\mathbb{x}_{j-1} +\beta_j\mathbb{\delta}_j) \leq f(\mathbb{x}_j) + \alpha_1 \beta_j\nabla^Tf(\mathbb{x}_j)\mathbb{\delta}_j,\ \ \ \ \alpha_1 \in (0, 1) \tag{4.6}
+\end{equation}\]</span></p>
+<p>This is also called the <em>Armijo condition</em>. Practically, the value of <span class="math inline">\(\alpha_1\)</span> should be very small, for example in the order of <span class="math inline">\(10^{-4}\)</span>. But the <em>Armijo condition</em> itself is not enough to guarantee a reasonable progress in the algorithm. To avoid unacceptably short step lengths, there is another condition given by:
+<span class="math display" id="eq:7">\[\begin{equation}
+    \nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j \geq \alpha_2\nabla^Tf(\mathbb{x}_{j-1})\mathbb{\delta}_j,\ \ \ \ \alpha_2 \in (\alpha_1, 1) \tag{4.7}
+\end{equation}\]</span></p>
+<p>This is also called the <em>curvature condition</em>. Practically <span class="math inline">\(\alpha_2\)</span> is chosen between <span class="math inline">\(0.1 - 0.9\)</span> depending on the algorithms we consider. Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a> and Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a> together form the <em>Wolfe conditions</em>. Further more, the <em>curvature condition</em> can be modified to steer away from cases where a step length might satisfy the <em>Wolfe conditions</em> without being close to the minimizer of <span class="math inline">\(\tilde{f}(\beta)\)</span>. The modified version of Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a> can be written as:
+<span class="math display" id="eq:8">\[\begin{equation}
+    |\nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j| \leq \alpha_2|\nabla^Tf(\mathbb{x}_{j-1})\mathbb{\delta}_j| \tag{4.8}
+\end{equation}\]</span>
+So, Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a> and Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a> together form the . For the  the term <span class="math inline">\(\nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j\)</span> is no longer ``too positive’’ unlike the case for the .</p>
+</div>
+<div id="an-algorithm-for-the-strong-wolfe-conditions" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> An Algorithm for the Strong Wolfe Conditions</h3>
+<p>Before moving on to the line search algorithm for the <em>strong wolfe conditions</em>, we discuss a straightforward algorithm called <em>zoom</em> which takes in two values <span class="math inline">\(\beta_l\)</span> and <span class="math inline">\(\beta_r\)</span> that bounds the interval <span class="math inline">\([\beta_l, \beta_r]\)</span> containing the step lengths that satisfy the <em>strong Wolfe conditions</em>. This algorithm has been originally introduced in the classic book by Nocedal and Wright. The purpose of this algorithm is to generate an iterate <span class="math inline">\(\beta_j \in [\beta_l, \beta_r]\)</span> at each step and replaces either <span class="math inline">\(\beta_l\)</span> or <span class="math inline">\(\beta_r\)</span> with <span class="math inline">\(\beta_j\)</span> in such a way that the following properties are maintained:</p>
+<ul>
+<li>The step length <span class="math inline">\(\beta_j\)</span> satisfying the  lies in the interval <span class="math inline">\([\beta_l, \beta_r]\)</span>,</li>
+<li><span class="math inline">\(\beta_l\)</span> is the step length which after a particular iteration gives the lowest function value besides satisfying the <em>Armijo conditions</em>,</li>
+<li><span class="math inline">\(\beta_r\)</span> is chosen such that the following condition is satisfied:
+<span class="math display" id="eq:9">\[\begin{equation}
+      (\beta_r -\beta_l)[\nabla^Tf(\mathbb{x}_{j-1} + \beta_l\mathbb{\delta}_j)\mathbb{\delta}_j] &lt; 0 \tag{4.9}
+\end{equation}\]</span></li>
+</ul>
+<p>The algorithm for <em>zoom</em> is given below:</p>
+<p><img src="img%2013.png" /></p>
+<p>Now, we describe the algorithm for finding an optimized step length <span class="math inline">\(\beta_j\)</span> at the <span class="math inline">\(j^{th}\)</span> iterate in a line search algorithm, solving the minimization task formulated by Eq. <a href="line-search-descent-methods.html#eq:3">(4.3)</a>. The <em>step-length selection algorithm</em> satisfying the <em>strong Wolfe conditions</em> is given below:</p>
+<p><img src="img%2014.png" /></p>
+<p>The first part of the above algorithm, starts with a trial estimate of the step length and keeps on increasing it at each step until it finds either an acceptable length or an interval bracketing the optimized step lengths. The <em>zoom()</em> function , given by <strong>Algorithm 11</strong>, is called in the second part which reduces the size of this interval until the optimized step length is reached.</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-1" class="example"><strong>Example 4.1  </strong></span>Let us consider the <em>Himmelblau’s function</em> as the objective function, given by,
+<span class="math display" id="eq:10">\[\begin{equation}
+    f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2 \tag{4.10}
+\end{equation}\]</span>
+</div>
+
+<p>Let the starting point be <span class="math inline">\(\mathbb{x}=\begin{bmatrix}-2.5 \\ 2.8 \end{bmatrix}\)</span>, the descent direction be <span class="math inline">\(\mathbb{\delta}=\begin{bmatrix}-2.5 \\ -1 \end{bmatrix}\)</span>, <span class="math inline">\(\alpha_1\)</span> and <span class="math inline">\(\alpha_2\)</span> be <span class="math inline">\(10^{-4}\)</span> and <span class="math inline">\(0.325\)</span> respectively, and the upper bound be <span class="math inline">\(\beta_{max}=0.6\)</span>. For this descent direction, we will compute the step length for generating the next iterate from the starting point using <strong>Algorithm 11</strong>. The <em>step-length selection algorithm</em> solves the optimization problem given by Eq. <a href="line-search-descent-methods.html#eq:4">(4.4)</a> for the parameters provided in this example. Let us first define the objective function and its gradient using Python.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="line-search-descent-methods.html#cb1-1"></a><span class="co"># First let us import all the necessary packages</span></span>
+<span id="cb1-2"><a href="line-search-descent-methods.html#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="line-search-descent-methods.html#cb1-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="line-search-descent-methods.html#cb1-4"></a><span class="im">import</span> autograd.numpy <span class="im">as</span> au</span>
+<span id="cb1-5"><a href="line-search-descent-methods.html#cb1-5"></a><span class="im">from</span> autograd <span class="im">import</span> grad, jacobian</span>
+<span id="cb1-6"><a href="line-search-descent-methods.html#cb1-6"></a><span class="im">import</span> scipy</span>
+<span id="cb1-7"><a href="line-search-descent-methods.html#cb1-7"></a></span>
+<span id="cb1-8"><a href="line-search-descent-methods.html#cb1-8"></a><span class="kw">def</span> himm(x): <span class="co"># Objective function</span></span>
+<span id="cb1-9"><a href="line-search-descent-methods.html#cb1-9"></a>    <span class="cf">return</span> (x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">11</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (x[<span class="dv">0</span>] <span class="op">+</span> x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">7</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb1-10"><a href="line-search-descent-methods.html#cb1-10"></a></span>
+<span id="cb1-11"><a href="line-search-descent-methods.html#cb1-11"></a>grad_himm <span class="op">=</span> grad(himm) <span class="co"># Gradient of the objective function</span></span></code></pre></div>
+<p>We will now plot the objective function.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="line-search-descent-methods.html#cb2-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">100</span>)</span>
+<span id="cb2-2"><a href="line-search-descent-methods.html#cb2-2"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">100</span>)</span>
+<span id="cb2-3"><a href="line-search-descent-methods.html#cb2-3"></a>z <span class="op">=</span> np.zeros(([<span class="bu">len</span>(x), <span class="bu">len</span>(y)]))</span>
+<span id="cb2-4"><a href="line-search-descent-methods.html#cb2-4"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x)):</span>
+<span id="cb2-5"><a href="line-search-descent-methods.html#cb2-5"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(y)):</span>
+<span id="cb2-6"><a href="line-search-descent-methods.html#cb2-6"></a>        z[j, i] <span class="op">=</span> himm([x[i], y[j]])</span>
+<span id="cb2-7"><a href="line-search-descent-methods.html#cb2-7"></a></span>
+<span id="cb2-8"><a href="line-search-descent-methods.html#cb2-8"></a>contours<span class="op">=</span>plt.contour(x, y, z, <span class="dv">100</span>, cmap<span class="op">=</span>plt.cm.gnuplot)</span>
+<span id="cb2-9"><a href="line-search-descent-methods.html#cb2-9"></a>plt.clabel(contours, inline<span class="op">=</span><span class="dv">1</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="line-search-descent-methods.html#cb3-1"></a>plt.show()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We will use the <code>line_search()</code> function from the <code>scipy.optimize</code> module which is a Python implementation of the <em>step-length selection algorithm</em>. The attributes for the <code>line_search()</code> function are:</p>
+<ul>
+<li><code>f</code>: This is the objective function, which is a callable datatype,</li>
+<li><code>myfprime</code>: This is the gradient of the objective function and is callable,</li>
+<li><code>xk</code>: This is the starting iterate, given by an <code>ndarray</code> datatype,</li>
+<li><code>pk</code>: This is the descent direction given by <span class="math inline">\(\mathbb{\delta}\)</span>, used for generating the next iterate point from a given starting point. This is also given by an <code>ndarray</code> datatype,</li>
+<li><code>c1</code>: This is the <span class="math inline">\(\alpha_1\)</span> value from the <em>Armijo condition</em> given by Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a>. This is an optional datatype and is a <code>float</code>,</li>
+<li><code>c2</code>: This is the <span class="math inline">\(\alpha_2\)</span> value from the <em>curvature condition</em> given by Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a>. This is an optional datatype and is a <code>float</code>,</li>
+<li><code>amax</code>: This is the upper bound set for the step lengths, given by <span class="math inline">\(\beta_{max}\)</span> in <em>step-length selection algorithm</em>. This is an optional datatype and is a <code>float</code>.</li>
+</ul>
+<p>There are other attributes that one can pass to the function, but they are less important but can provide with more flexibilities if provided. These are:</p>
+<ul>
+<li><code>gfk</code>: Gives the gradient value at the current iterate point, <span class="math inline">\(\mathbb{x}_j\)</span>. This is an optional parameter and is a <code>float</code>,</li>
+<li><code>old_fval</code>: This gives the function value at the current iterate point, <span class="math inline">\(\mathbb{x}_j\)</span>. The parameter is optional and is a <code>float</code>,</li>
+<li><code>old_old_fval</code>: This gives the function value at the point preceding the current iterate point,i.e, <span class="math inline">\(\mathbb{x}_{j-1}\)</span>. This is optional and is a <code>float</code>,</li>
+<li><code>args</code>: These are the additional arguments that might be passed to the objective function. This is optional and is a Python <code>tuple</code>,</li>
+<li><code>maxiter</code>: This is the maximum number of iterations that are needed to be performed by the optimization algorithm. This is optional too and is an <code>int</code> datatype, and</li>
+<li><code>extra_condition</code>: This is a callable function having the following form: <code>extra_condition(beta, current_iterate, function, gradient)</code>. The step length <code>beta</code> is accepted if only this function returns <code>True</code>, otherwise the algorithm continues with the new iterates. This callable function is only invoked for those iterates which satisfy the <em>strong Wolfe conditions</em>.</li>
+</ul>
+<p>The <code>scipy.optimize.line_search()</code> method returns the following:</p>
+<ul>
+<li>The optimized step length <span class="math inline">\(\beta\)</span> solving Eq. <a href="line-search-descent-methods.html#eq:3">(4.3)</a> for the next iterate from the current iterate. This will either be a <code>float</code> or a <code>None</code>,</li>
+<li>The number of function evaluations made. This is an <code>int</code>,</li>
+<li>The number of gradient evaluations made. This is an <code>int</code>,</li>
+<li>The function value given by Eq. <a href="line-search-descent-methods.html#eq:4">(4.4)</a> with the computed step length. This will be a <code>float</code> if the algorithm converges, otherwise this will be a <code>None</code>,</li>
+<li>The function value at the starting point, the algorithm starts with. This is a <code>float</code> too, and</li>
+<li>The local slope along the descent direction at the new value. This will be a <code>float</code> if the algorithm converges, otherwise, this will be a <code>None</code>.</li>
+</ul>
+<p>Now, for our example, we enter the values of the starting point, the descent direction, the constants <span class="math inline">\(\alpha_1\)</span> and <span class="math inline">\(\alpha_2\)</span> and the upper bound on the step lengths for the <code>scipy.optimize.line_search()</code> and print the results.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="line-search-descent-methods.html#cb4-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> line_search</span>
+<span id="cb4-2"><a href="line-search-descent-methods.html#cb4-2"></a></span>
+<span id="cb4-3"><a href="line-search-descent-methods.html#cb4-3"></a>start_point <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">2.5</span>, <span class="fl">2.8</span>])</span>
+<span id="cb4-4"><a href="line-search-descent-methods.html#cb4-4"></a>delta <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">2.5</span>, <span class="dv">-1</span>])</span>
+<span id="cb4-5"><a href="line-search-descent-methods.html#cb4-5"></a>alpha_1 <span class="op">=</span> <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span></span>
+<span id="cb4-6"><a href="line-search-descent-methods.html#cb4-6"></a>alpha_2 <span class="op">=</span> <span class="fl">0.325</span></span>
+<span id="cb4-7"><a href="line-search-descent-methods.html#cb4-7"></a>beta_max <span class="op">=</span> <span class="fl">0.6</span></span>
+<span id="cb4-8"><a href="line-search-descent-methods.html#cb4-8"></a></span>
+<span id="cb4-9"><a href="line-search-descent-methods.html#cb4-9"></a>res<span class="op">=</span>line_search(f <span class="op">=</span> himm, myfprime <span class="op">=</span> grad_himm, xk <span class="op">=</span> start_point, pk <span class="op">=</span> delta, c1 <span class="op">=</span> alpha_1, c2 <span class="op">=</span> alpha_2, amax <span class="op">=</span> beta_max)</span>
+<span id="cb4-10"><a href="line-search-descent-methods.html#cb4-10"></a>res</span></code></pre></div>
+<pre><code>## (0.04234665754870197, 4, 1, 6.112599989468139, 6.5581000000000005, array([ 11.13041873, -24.97823686]))</code></pre>
+<p>We see that the optimized step length is <span class="math inline">\(\sim 0.04\)</span>, the number of function evaluations made is <span class="math inline">\(4\)</span>, the number of gradient evaluations made is <span class="math inline">\(1\)</span>, the function value at the new step length is <span class="math inline">\(\tilde{f(\beta)}\sim 6.11\)</span>, the function value at the starting point is <span class="math inline">\(\sim 6.56\)</span> and the local slope along the descent direction is <span class="math inline">\(\sim \begin{bmatrix} 11.13 \\ -25 \end{bmatrix}\)</span>.</p>
+</div>
+</div>
+<div id="first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm" class="section level2">
+<h2><span class="header-section-number">4.3</span> First Order Line Search Gradient Descent Method: The Steepest Descent Algorithm</h2>
 <p><strong>This chapter is under development</strong></p>
 
 </div>
