@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-14" />
+<meta name="date" content="2021-07-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,6 +183,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.2" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#an-algorithm-for-the-strong-wolfe-conditions"><i class="fa fa-check"></i><b>4.2.2</b> An Algorithm for the Strong Wolfe Conditions</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm"><i class="fa fa-check"></i><b>4.3</b> First Order Line Search Gradient Descent Method: The Steepest Descent Algorithm</a></li>
+<li class="chapter" data-level="4.4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#conjugate-gradient-methods"><i class="fa fa-check"></i><b>4.4</b> Conjugate Gradient Methods</a></li>
+<li class="chapter" data-level="4.5" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#second-order-line-search-gradient-descent-method"><i class="fa fa-check"></i><b>4.5</b> Second Order Line Search Gradient Descent Method</a></li>
+<li class="chapter" data-level="4.6" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#marquardt-method"><i class="fa fa-check"></i><b>4.6</b> Marquardt Method</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -234,10 +237,10 @@ i.e, the directional derivative in the direction <span class="math inline">\(\ma
 <p><span class="math display" id="eq:5">\[\begin{equation}
     f(\mathbb{x}_j) &gt; f(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j) \tag{4.5}
 \end{equation}\]</span></p>
-<p>does not suffice alone. We need to have a sufficient decrease condition known as the .</p>
+<p>does not suffice alone. We need to have a sufficient decrease condition known as the <em>wolfe conditions</em>.</p>
 <div id="the-wolfe-conditions" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> The Wolfe Conditions</h3>
-<p>The step length <span class="math inline">\(\beta_j\)</span>, chosen at each iteration, must result in a  in the objective function <span class="math inline">\(f(\mathbb{x})\)</span> given by:</p>
+<p>The step length <span class="math inline">\(\beta_j\)</span>, chosen at each iteration, must result in a <em>sufficient decrease</em> in the objective function <span class="math inline">\(f(\mathbb{x})\)</span> given by:</p>
 <p><span class="math display" id="eq:6">\[\begin{equation}
     f(\mathbb{x}_{j-1} +\beta_j\mathbb{\delta}_j) \leq f(\mathbb{x}_j) + \alpha_1 \beta_j\nabla^Tf(\mathbb{x}_j)\mathbb{\delta}_j,\ \ \ \ \alpha_1 \in (0, 1) \tag{4.6}
 \end{equation}\]</span></p>
@@ -249,13 +252,13 @@ i.e, the directional derivative in the direction <span class="math inline">\(\ma
 <span class="math display" id="eq:8">\[\begin{equation}
     |\nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j| \leq \alpha_2|\nabla^Tf(\mathbb{x}_{j-1})\mathbb{\delta}_j| \tag{4.8}
 \end{equation}\]</span>
-So, Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a> and Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a> together form the . For the  the term <span class="math inline">\(\nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j\)</span> is no longer ``too positive’’ unlike the case for the .</p>
+So, Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a> and Eq. <a href="line-search-descent-methods.html#eq:7">(4.7)</a> together form the <em>strong Wolfe conditions</em>. For the <em>strong Wolfe conditions</em> the term <span class="math inline">\(\nabla^Tf(\mathbb{x}_{j-1} + \beta_j\mathbb{\delta}_j)\mathbb{\delta}_j\)</span> is no longer ``too positive’’ unlike the case for the <em>Wolfe conditions</em>.</p>
 </div>
 <div id="an-algorithm-for-the-strong-wolfe-conditions" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> An Algorithm for the Strong Wolfe Conditions</h3>
 <p>Before moving on to the line search algorithm for the <em>strong wolfe conditions</em>, we discuss a straightforward algorithm called <em>zoom</em> which takes in two values <span class="math inline">\(\beta_l\)</span> and <span class="math inline">\(\beta_r\)</span> that bounds the interval <span class="math inline">\([\beta_l, \beta_r]\)</span> containing the step lengths that satisfy the <em>strong Wolfe conditions</em>. This algorithm has been originally introduced in the classic book by Nocedal and Wright. The purpose of this algorithm is to generate an iterate <span class="math inline">\(\beta_j \in [\beta_l, \beta_r]\)</span> at each step and replaces either <span class="math inline">\(\beta_l\)</span> or <span class="math inline">\(\beta_r\)</span> with <span class="math inline">\(\beta_j\)</span> in such a way that the following properties are maintained:</p>
 <ul>
-<li>The step length <span class="math inline">\(\beta_j\)</span> satisfying the  lies in the interval <span class="math inline">\([\beta_l, \beta_r]\)</span>,</li>
+<li>The step length <span class="math inline">\(\beta_j\)</span> satisfying the <em>strong Wolfe conditions</em> lies in the interval <span class="math inline">\([\beta_l, \beta_r]\)</span>,</li>
 <li><span class="math inline">\(\beta_l\)</span> is the step length which after a particular iteration gives the lowest function value besides satisfying the <em>Armijo conditions</em>,</li>
 <li><span class="math inline">\(\beta_r\)</span> is chosen such that the following condition is satisfied:
 <span class="math display" id="eq:9">\[\begin{equation}
@@ -417,8 +420,322 @@ So, Eq. <a href="line-search-descent-methods.html#eq:6">(4.6)</a> and Eq. <a hre
 <div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="line-search-descent-methods.html#cb13-1"></a>steepest_descent(np.array([<span class="fl">1.1</span>, <span class="fl">2.2</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.212</span>)</span></code></pre></div>
 <pre><code>## (array([2.99995879, 2.00033681]), 1.7139960678005175e-06)</code></pre>
 <p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
-<p>We see that for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 3 \\ 2 \end{bmatrix}\)</span> for our objective function, where the function value is <span class="math inline">\(0\)</span>.</p>
-<p><strong>This chapter is under development</strong></p>
+<p>We see that for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 3 \\ 2 \end{bmatrix}\)</span> for our objective function, where the function value is <span class="math inline">\(0\)</span>. The optimization data has been collected and shown below:</p>
+<pre><code>## +----+---------+---------+--------------+------------+
+## |    |     x_1 |     x_2 |         f(X) |   ||grad|| |
+## |----+---------+---------+--------------+------------|
+## |  0 | 1.1     | 2.2     | 58.7317      | 43.1512    |
+## |  1 | 2.13886 | 2.91687 | 25.6095      | 42.178     |
+## |  2 | 2.67758 | 2.07438 |  3.08461     | 19.2027    |
+## |  3 | 2.90745 | 2.11918 |  0.341516    |  4.87819   |
+## |  4 | 3.00201 | 2.06207 |  0.0700952   |  2.64486   |
+## |  5 | 2.97935 | 2.0257  |  0.0164196   |  1.107     |
+## |  6 | 2.99852 | 2.01658 |  0.00430094  |  0.584801  |
+## |  7 | 2.99437 | 2.0065  |  0.00115975  |  0.306008  |
+## |  8 | 2.99948 | 2.00454 |  0.000314508 |  0.153945  |
+## |  9 | 2.99846 | 2.00174 |  8.54359e-05 |  0.0840138 |
+## | 10 | 2.99985 | 2.00124 |  2.32175e-05 |  0.0415497 |
+## | 11 | 2.99958 | 2.00047 |  6.31032e-06 |  0.022927  |
+## | 12 | 2.99996 | 2.00034 |  1.714e-06   |  0.0112511 |
+## +----+---------+---------+--------------+------------+</code></pre>
+<p>We can further experiment by changing the parameters, for example, the initial iterate and/or the constants for the <em>strong Wolfe conditions</em> and try to visualize the optimization steps and check for any errors that might arise.</p>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-12" class="theorem"><strong>Theorem 4.1  </strong></span>For a sequence of line search descent directions <span class="math inline">\(\mathbb{\delta}_i\)</span>, where, <span class="math inline">\(i = 1, \ldots, n\)</span>, the successive directions are orthogonal to each other.
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> Suppose, the line search at iterate <span class="math inline">\(\mathbb{x}_{j-1}\)</span> gives a descent direction <span class="math inline">\(\mathbb{\delta}_j\)</span>, which yields us the next iterate <span class="math inline">\(\mathbb{x}_j\)</span>. The descent direction <span class="math inline">\(\mathbb{\delta}_j\)</span> is an optimum value, if the following condition is satisfied:
+<span class="math display" id="eq:13">\[\begin{equation}
+
+    \nabla^Tf(\mathbb{x}_j)\mathbb{\delta}_j = 0 \tag{4.13}
+\end{equation}\]</span></p>
+<p>Also, from Eq. <a href="line-search-descent-methods.html#eq:12">(4.12)</a>, we have,
+<span class="math display" id="eq:14">\[\begin{equation}
+    \mathbb{\delta}_{j+1} = - \frac{\nabla f(\mathbb{x}_j)}{\|\nabla f(\mathbb{x}_j)\|} \tag{4.14}
+\end{equation}\]</span></p>
+<p>Now, multiplying Eq. <a href="line-search-descent-methods.html#eq:13">(4.13)</a> and Eq. <a href="line-search-descent-methods.html#eq:14">(4.14)</a>, we get,
+<span class="math display" id="eq:15">\[\begin{equation}
+    \mathbb{\delta_{j+1}}^T\mathbb{\delta_j} = 0 \tag{4.15}
+\end{equation}\]</span></p>
+Eq.<a href="line-search-descent-methods.html#eq:15">(4.15)</a> tells us that the successive search directions are orthogonal to each other. This completes our proof of <strong>Theorem 4.1</strong>.
+</div>
+
+<p>We will now look into the rate of convergence of the <em>steepest descent algorithm</em>.</p>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-14" class="theorem"><strong>Theorem 4.2  </strong></span>Given a nonlinear objective function <span class="math inline">\(f(\mathbb{x}), \mathbb{x} \in \mathbb{R}^n\)</span>, the steepest descent algorithm that computes its minimizer, exhibits a linear convergence in the function values for a constant <span class="math inline">\(\Delta &lt;1\)</span> such that the following condition for the experiments, is satisfied:
+<span class="math display">\[\begin{equation}
+    \frac{f(\mathbb{x}_j) - f(\mathbb{x}^*)}{f(\mathbb{x}_{j-1})-f(\mathbb{x}^*)} \leq \Delta \nonumber 
+\end{equation}\]</span>
+where, <span class="math inline">\(j\)</span> is sufficiently large and <span class="math inline">\(\mathbb{x}^*\)</span> denotes the minimizer
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> For the proof, let us consider the ideal case where the objective function is quadratic, i.e,
+<span class="math display" id="eq:16">\[\begin{equation}
+    f(\mathbb{x}) = \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{b}^T\mathbb{x} \tag{4.16}
+\end{equation}\]</span></p>
+<p>Here, <span class="math inline">\(\mathbb{A}\)</span> is a positive definite symmetric matrix. The optimum solution of <span class="math inline">\(f(\mathbb{x})\)</span> is computed as:
+<span class="math display" id="eq:17">\[\begin{equation}
+    -\mathbb{A}\mathbb{x}^*= \mathbb{b} \tag{4.17}
+\end{equation}\]</span></p>
+<p>This yields us,
+<span class="math display" id="eq:18">\[\begin{equation}
+    f(\mathbb{x}^*) = -\frac{1}{2}\mathbb{b}^T\mathbb{A}^{-1}\mathbb{b} \tag{4.18}
+\end{equation}\]</span></p>
+<p>Let the direction of steepest descent be,
+<span class="math display" id="eq:19">\[\begin{equation}
+    \mathbb{\delta} = -\nabla^Tf(\mathbb{x}) = -\mathbb{A}\mathbb{x} - \mathbb{b} \tag{4.19}
+\end{equation}\]</span></p>
+<p>letting <span class="math inline">\(\mathbb{x}\)</span> be the current iterate and <span class="math inline">\(\beta\)</span> be the step length, we have,
+<span class="math display" id="eq:21" id="eq:20">\[\begin{align}
+    f(\mathbb{x} + \beta \mathbb{\delta}) &amp;= \frac{1}{2}(\mathbb{x} + \beta \mathbb{\delta})^T\mathbb{A}(\mathbb{x} + \beta \mathbb{\delta}) + \mathbb{b}^T(\mathbb{x} + \beta \mathbb{\delta}) \tag{4.20}\\
+    &amp;= \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{\beta}\mathbb{\delta}^T\mathbb{A}\mathbb{x} + \frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}+\mathbb{b}^T\mathbb{x} + \beta\mathbb{b}^T\mathbb{\delta} \tag{4.21}
+\end{align}\]</span></p>
+<p>Now from Eq. <a href="line-search-descent-methods.html#eq:16">(4.16)</a>, we can write Eq. <a href="line-search-descent-methods.html#eq:21">(4.21)</a> as,
+<span class="math display" id="eq:22">\[\begin{align}
+    f(\mathbb{x} + \beta\mathbb{\delta}) &amp;= f(\mathbb{x}) + \frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}+ \beta\mathbb{\delta}^T\mathbb{A}\mathbb{x} + \beta\mathbb{b}^T\mathbb{\delta} \tag{4.22}
+\end{align}\]</span></p>
+<p>We see that using Eq. <a href="line-search-descent-methods.html#eq:19">(4.19)</a>, we can write,
+<span class="math display" id="eq:23">\[\begin{align}
+    \beta\mathbb{\delta}^T\mathbb{A}\mathbb{x} + \beta\mathbb{b}^T\mathbb{\delta} = \beta\mathbb{\delta}^T\mathbb{A}\mathbb{x} + \beta\mathbb{\delta}^T\mathbb{b}= - \beta\mathbb{\delta}^T\mathbb{\delta} \tag{4.23}
+\end{align}\]</span></p>
+<p>So using Eq. <a href="line-search-descent-methods.html#eq:23">(4.23)</a> in Eq. <a href="line-search-descent-methods.html#eq:22">(4.22)</a>, we will have,
+<span class="math display" id="eq:24">\[\begin{equation}
+    f(\mathbb{x} + \beta\mathbb{\delta})=f(\mathbb{x})-\beta\mathbb{\delta}^T\mathbb{\delta}+\frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} \tag{4.24}
+\end{equation}\]</span></p>
+<p>Now differentiating Eq. <a href="line-search-descent-methods.html#eq:24">(4.24)</a> with respect to <span class="math inline">\(\beta\)</span> and setting it equal to <span class="math inline">\(0\)</span>, we have,
+<span class="math display" id="eq:25">\[\begin{align}
+\frac{\partial f(\mathbb{x} + \beta\mathbb{\delta})}{\partial \beta} = -\mathbb{\delta}^T\mathbb{\delta} + \beta\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}=0 \tag{4.25}
+\end{align}\]</span>
+This gives,
+<span class="math display" id="eq:26">\[\begin{equation}
+    \beta = \frac{\mathbb{\delta}^T\mathbb{\delta}}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}} \tag{4.26}
+\end{equation}\]</span></p>
+<p>Let the next iterate the algorithm generates from <span class="math inline">\(\mathbb{x}\)</span> be <span class="math inline">\(\mathbb{x}&#39;\)</span>, given by,
+<span class="math display" id="eq:27">\[\begin{equation}
+    \mathbb{x}&#39; = \mathbb{x} + \frac{\mathbb{\delta}^T\mathbb{\delta}}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}}\mathbb{\delta} \tag{4.27}
+\end{equation}\]</span></p>
+<p>So,
+<span class="math display" id="eq:28">\[\begin{align}
+    f(\mathbb{x}&#39;) = f(\mathbb{x} + \beta\mathbb{\delta}) &amp;=&amp; f(\mathbb{x}) - \beta\mathbb{\delta}^T\mathbb{\delta}+\frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} \nonumber \\
+    &amp;=&amp; f(\mathbb{x}) - \beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} + \frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} \tag{4.28}
+\end{align}\]</span></p>
+<p>We get the above equation, using the fact from Eq. <a href="line-search-descent-methods.html#eq:26">(4.26)</a> that
+<span class="math display" id="eq:29">\[\begin{equation}
+    \mathbb{\delta}^T\mathbb{\delta} = \beta\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} \tag{4.29}
+\end{equation}\]</span>
+So, Eq. <a href="line-search-descent-methods.html#eq:28">(4.28)</a> reduces to,
+<span class="math display" id="eq:30">\[\begin{align}
+    f(\mathbb{x}&#39;) &amp;= f(\mathbb{x}) - \frac{1}{2}\beta^2\mathbb{\delta}^T\mathbb{A}\mathbb{\delta} \nonumber \\
+    &amp;= f(\mathbb{x}) - \frac{1}{2}\frac{(\mathbb{\delta}^T\mathbb{\delta})^2}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}} \tag{4.30}
+\end{align}\]</span></p>
+<p>Therefore, we have,
+<span class="math display" id="eq:31">\[\begin{align}
+    \frac{f(\mathbb{x}&#39;)-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} &amp;= \frac{f(\mathbb{x}) - \frac{1}{2}\frac{(\mathbb{\delta}^T\mathbb{\delta})^2}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}}-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} \tag{4.31}
+\end{align}\]</span></p>
+<p>Now, using Eq. <a href="line-search-descent-methods.html#eq:16">(4.16)</a> and Eq. <a href="line-search-descent-methods.html#eq:18">(4.18)</a>, we have,
+<span class="math display" id="eq:32">\[\begin{equation}
+    \frac{f(\mathbb{x}&#39;)-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} = 1 - \frac{\frac{1}{2}\frac{(\mathbb{\delta}^T\mathbb{\delta})^2}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}}}{\frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{b}^T\mathbb{x}+\frac{1}{2}\mathbb{b}^T\mathbb{A}^{-1}\mathbb{b}} \tag{4.32}
+\end{equation}\]</span></p>
+<p>As <span class="math inline">\(\mathbb{A}\)</span> is symmetric, <span class="math inline">\(\mathbb{A}^T = \mathbb{A}\)</span>. Also, from the property of dot product, we know that <span class="math inline">\(\mathbb{b}^T\mathbb{x} = \mathbb{x}^T\mathbb{b}\)</span>. We now use these properties to simplify the denominator of the second element of Eq. <a href="line-search-descent-methods.html#eq:32">(4.32)</a>.</p>
+<p><span class="math display" id="eq:33">\[\begin{align}
+    \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{b}^T\mathbb{x}+\frac{1}{2}\mathbb{b}^T\mathbb{A}^{-1}\mathbb{b} &amp;= \frac{1}{2}[\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{x}^T\mathbb{b} + \mathbb{b}^T\mathbb{x} + \mathbb{b}^T\mathbb{A}^{-1}\mathbb{b}] \nonumber \\
+    &amp;= \frac{1}{2}[(\mathbb{x}^T\mathbb{A}+\mathbb{b}^T)(\mathbb{x}+\mathbb{A}^{-1}\mathbb{b})] \nonumber \\
+    &amp;= \frac{1}{2}[(\mathbb{x}^T\mathbb{A}^T+\mathbb{b}^T)(\mathbb{x}+\mathbb{A}^{-1}\mathbb{b})] \nonumber \\
+    &amp;= \frac{1}{2}(\mathbb{A}\mathbb{x} + \mathbb{b})^T(\mathbb{x}+\mathbb{A}^{-1}\mathbb{b}) \nonumber \\
+    &amp;= \frac{1}{2}(\mathbb{A}\mathbb{x} + \mathbb{b})^T\mathbb{A}^{-1}(\mathbb{A}\mathbb{x} + \mathbb{b}) \tag{4.33}
+\end{align}\]</span></p>
+<p>Therefore, we can modify Eq. <a href="line-search-descent-methods.html#eq:32">(4.32)</a> as,
+<span class="math display" id="eq:34">\[\begin{equation}
+    \frac{f(\mathbb{x}&#39;)-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} = 1 - \frac{\frac{1}{2}\frac{(\mathbb{\delta}^T\mathbb{\delta})^2}{\mathbb{\delta}^T\mathbb{A}\mathbb{\delta}}}{\frac{1}{2}(\mathbb{A}\mathbb{x} + \mathbb{b})^T\mathbb{A}^{-1}(\mathbb{A}\mathbb{x} + \mathbb{b})} \tag{4.34}
+\end{equation}\]</span></p>
+<p>Now, using Eq.<a href="line-search-descent-methods.html#eq:19">(4.19)</a> we can write,
+<span class="math display" id="eq:35">\[\begin{eqnarray}
+    \frac{f(\mathbb{x}&#39;)-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} = 1 - \frac{(\mathbb{\delta}^T\mathbb{\delta})^2}{(\mathbb{\delta}^T\mathbb{A}\mathbb{\delta})(\mathbb{\delta}^T\mathbb{A}^{-1}\mathbb{\delta})} = 1 - \frac{1}{\zeta} \tag{4.35}
+\end{eqnarray}\]</span></p>
+<p>where,
+<span class="math display" id="eq:36">\[\begin{equation}
+    \zeta = \frac{(\mathbb{\delta}^T\mathbb{A}\mathbb{\delta})(\mathbb{\delta}^T\mathbb{A}^{-1}\mathbb{\delta})}{(\mathbb{\delta}^T\mathbb{\delta})^2} \tag{4.36}
+\end{equation}\]</span></p>
+<p>We want <span class="math inline">\(\zeta\)</span> to be small such that we get a fast linear convergence for the algorithm. To compute an upper bound on the value of <span class="math inline">\(\zeta\)</span>, we use the <em>Kantorovich Inequality</em>, [ref, lecture note by Robert M. Freund, The steepest descent algorithm for Unconstrained Optimization and a Bisection Line-search Method, MIT] (look into the lecture note for the derivation of the Kantorovich inequality], given by:
+<span class="math display" id="eq:37">\[\begin{equation}
+    \zeta \leq \frac{(\lambda_{max} + \lambda_{min})^2}{4\lambda_{max}\lambda_{min}} \tag{4.37}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\(\lambda_{max}\)</span> and <span class="math inline">\(\lambda_{min}\)</span> are the largest and the smallest eigenvalues of the matrix <span class="math inline">\(\mathbb{A}\)</span>. Using Eq. <a href="line-search-descent-methods.html#eq:37">(4.37)</a> in Eq. <a href="line-search-descent-methods.html#eq:35">(4.35)</a>, we have,</p>
+<p><span class="math display" id="eq:38">\[\begin{align}
+    \frac{f(\mathbb{x}&#39;)-f(\mathbb{x}^*)}{f(\mathbb{x}) - f(\mathbb{x}^*)} &amp;= 1 - \frac{1}{\zeta} \nonumber \\
+    &amp;\leq 1 - \frac{(\lambda_{max} + \lambda_{min})^2}{4\lambda_{max}\lambda_{min}} \nonumber \\
+    &amp;= \frac{(\lambda_{max} - \lambda_{min})^2}{(\lambda_{max} + \lambda_{min})^2}\nonumber \\ 
+    &amp;= \frac{(\frac{\lambda_{max}}{\lambda_{min}}-1)^2}{(\frac{\lambda_{max}}{\lambda_{min}}+1)^2} \nonumber \\
+    &amp;= \Delta \tag{4.38}
+\end{align}\]</span></p>
+<p><span class="math inline">\(\Delta\)</span>is called the <em>convergence constant</em>. The eigenvalues of <span class="math inline">\(A\)</span> follows the following chain of inequalities:
+<span class="math display" id="eq:39">\[\begin{equation}
+    \lambda_{max} = \lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n = \lambda_{min}&gt;0 \tag{4.39}
+\end{equation}\]</span></p>
+<p>From Eq. <a href="line-search-descent-methods.html#eq:39">(4.39)</a> we can say that <span class="math inline">\(\frac{\lambda_{max}}{\lambda_{min}}\)</span> is at least <span class="math inline">\(1\)</span>. There arises two conditions:</p>
+<ul>
+<li>If <span class="math inline">\(\frac{\lambda_{max}}{\lambda_{min}}\)</span> is small, then <span class="math inline">\(\Delta\)</span> will be much less than <span class="math inline">\(1\)</span>,</li>
+<li>If <span class="math inline">\(\frac{\lambda_{max}}{\lambda_{min}}\)</span> is large, then <span class="math inline">\(\Delta\)</span> will be only slightly less than 1.
+</div></li>
+</ul>
+</div>
+<div id="conjugate-gradient-methods" class="section level2">
+<h2><span class="header-section-number">4.4</span> Conjugate Gradient Methods</h2>
+<p>The performance of the <em>steepest descent algorithm</em> is often not up the mark, generating a zigzag path of steps decreasing in size. This leads to a slow convergence of the problem at hand when the decision variables are poorly scaled. The algorithm might not always efficiently converge within a finite number of steps. This inefficient convergence also happens when the algorithm works on a positive-definite quadratic objective functions for some starting points <span class="math inline">\(\mathbb{x}_0\)</span>. To overcome the mentioned inefficiencies, we will introduce another class of first order line search gradient descent algorithms called the <em>conjugate gradient algorithms</em>, which will always converge to the minimizer of the given objective function within finite number of iterations, irrespective of the scaling of the decision variables. The <em>conjugate gradient methods</em> form an important class of algorithms and we will dedicate our next chapter discussing this class of methods.</p>
+</div>
+<div id="second-order-line-search-gradient-descent-method" class="section level2">
+<h2><span class="header-section-number">4.5</span> Second Order Line Search Gradient Descent Method</h2>
+<p>In <strong>Section 4.3</strong> we have introduced the <em>first order line search gradient descent method</em>. We will now study methods which uses the Hessian of the objective function, <span class="math inline">\(\mathbb{H}f(\mathbb{x})\)</span>, to compute the line search. At each step, the search is given by,</p>
+<p><span class="math display" id="eq:40">\[\begin{equation}
+    \mathbb{\delta} = -[\mathbb{H}f]^{-1}(\mathbb{x})\nabla f(\mathbb{x}) \tag{4.40}
+\end{equation}\]</span></p>
+<p>The <em>Newton’s method</em> for a nonlinear objective function of a single variable has already been introduced in <strong>Section 3.7</strong>, as given by Eq. <a href="line-search-descent-methods.html#eq:40">(4.40)</a>. So, for a multivariate objective function, it modifies to
+<span class="math display" id="eq:41">\[\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1} - [\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}),\ j=1, 2, \ldots \tag{4.41}
+\end{equation}\]</span></p>
+<p>This is used for solving the problem <span class="math inline">\(\nabla f(\mathbb{x})=0\)</span> iteratively, given the starting iterate <span class="math inline">\(\mathbb{x}_0\)</span> is provided. As we have already discussed in the last chapter, the <em>Newton’s method</em> follows quadratic convergence. But convergence is not always guaranteed even from an iterate close to the minimizer, since the Hessian given by <span class="math inline">\(\mathbb{H}f(\mathbb{x})\)</span> may not always be positive definite. Now, to overcome this problem, the search given by Eq. <a href="line-search-descent-methods.html#eq:40">(4.40)</a> is instead used as a descent direction in our <em>line search descent direction</em>. At the <span class="math inline">\(j^{th}\)</span> step, the descent direction is thus given by,
+<span class="math display" id="eq:42">\[\begin{equation}
+    \mathbb{\delta}_j = -[\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) \tag{4.42}
+\end{equation}\]</span></p>
+<p>Finally, the step length <span class="math inline">\(\beta_j\)</span> is selected after solving the one dimensional optimization task given by Eq. <a href="line-search-descent-methods.html#eq:3">(4.3)</a>. This modified version is known as the <em>modified Newton’s method</em>. The algorithm describing the <em>modified Newton’s method</em> is given below:</p>
+<p><img src="img%2016.png" /></p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-16" class="example"><strong>Example 4.3  </strong></span>Let us consider Beale’s function as the objective function, having the form,
+<span class="math display" id="eq:43">\[\begin{equation}
+    f(x_1, x_2) = (1.5 - x_1(1-x_2))^2 + (2.25 - x_1(1-x_2^2))^2 + (2.625 - x_1(1-x_2^3))^2 \tag{4.43}
+\end{equation}\]</span></p>
+The function has one global minimizer, <span class="math inline">\(f(3, 0.5) = 0\)</span>. We will implement the <em>modified Newton algorithm</em> in Python and figure out the minimizer of the objective function for some input parameters. Let the starting iterate be <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}1.8 \\ 0.8 \end{bmatrix}\)</span> , the tolerances be <span class="math inline">\(\epsilon_1=\epsilon_2=\epsilon_3=10^{-5}\)</span> and the constants to be used in determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.25\)</span>. First we define Beale’s function, its gradient and its Hessian using Python’s <code>autograd</code> package.
+</div>
+
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="line-search-descent-methods.html#cb16-1"></a><span class="kw">def</span> func(x): <span class="co"># Objective function (Beale&#39;s function)</span></span>
+<span id="cb16-2"><a href="line-search-descent-methods.html#cb16-2"></a>    <span class="cf">return</span> (<span class="fl">1.5</span> <span class="op">-</span> x[<span class="dv">0</span>]<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>x[<span class="dv">1</span>]))<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="fl">2.25</span><span class="op">-</span>x[<span class="dv">0</span>]<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span>))<span class="op">**</span><span class="dv">2</span><span class="op">+</span>(<span class="fl">2.625</span><span class="op">-</span>x[<span class="dv">0</span>]<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">3</span>))<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb16-3"><a href="line-search-descent-methods.html#cb16-3"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span>
+<span id="cb16-4"><a href="line-search-descent-methods.html#cb16-4"></a>Hf <span class="op">=</span> jacobian(Df) <span class="co"># Hessian of the objective function</span></span></code></pre></div>
+<p>Now, we define the Python function <code>modified_newton()</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="line-search-descent-methods.html#cb17-1"></a><span class="kw">def</span> modified_newton(Xj, tol_1, tol_2, tol_3, alpha_1, alpha_2):</span>
+<span id="cb17-2"><a href="line-search-descent-methods.html#cb17-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb17-3"><a href="line-search-descent-methods.html#cb17-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb17-4"><a href="line-search-descent-methods.html#cb17-4"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb17-5"><a href="line-search-descent-methods.html#cb17-5"></a>        D <span class="op">=</span> Df(Xj)</span>
+<span id="cb17-6"><a href="line-search-descent-methods.html#cb17-6"></a>        inv_hess <span class="op">=</span> np.linalg.inv(Hf(Xj)) <span class="co"># Compute the inverse of the Hessian at the given iterate</span></span>
+<span id="cb17-7"><a href="line-search-descent-methods.html#cb17-7"></a>        delta <span class="op">=</span> <span class="op">-</span>inv_hess.dot(D) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb17-8"><a href="line-search-descent-methods.html#cb17-8"></a>        </span>
+<span id="cb17-9"><a href="line-search-descent-methods.html#cb17-9"></a>        </span>
+<span id="cb17-10"><a href="line-search-descent-methods.html#cb17-10"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb17-11"><a href="line-search-descent-methods.html#cb17-11"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb17-12"><a href="line-search-descent-methods.html#cb17-12"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb17-13"><a href="line-search-descent-methods.html#cb17-13"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb17-14"><a href="line-search-descent-methods.html#cb17-14"></a>        <span class="cf">if</span> NORM(X <span class="op">-</span> Xj) <span class="op">&lt;</span> tol_1 <span class="kw">and</span> NORM(Df(X)) <span class="op">&lt;</span> tol_2 <span class="kw">or</span> <span class="bu">abs</span>(func(X) <span class="op">-</span> func(Xj)) <span class="op">&lt;</span> tol_3:</span>
+<span id="cb17-15"><a href="line-search-descent-methods.html#cb17-15"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb17-16"><a href="line-search-descent-methods.html#cb17-16"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb17-17"><a href="line-search-descent-methods.html#cb17-17"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb17-18"><a href="line-search-descent-methods.html#cb17-18"></a>        <span class="cf">else</span>:</span>
+<span id="cb17-19"><a href="line-search-descent-methods.html#cb17-19"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb17-20"><a href="line-search-descent-methods.html#cb17-20"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb17-21"><a href="line-search-descent-methods.html#cb17-21"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>According to our example, we set our parameter values and pass them to the <code>modified_newton()</code> function:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="line-search-descent-methods.html#cb18-1"></a>modified_newton(np.array([<span class="fl">1.8</span>, <span class="fl">0.8</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.25</span>)</span></code></pre></div>
+<pre><code>## (array([3.00000125, 0.5000004 ]), 4.274176325112278e-13)</code></pre>
+<p>We notice that, for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}3 \\ 0.5\end{bmatrix}\)</span> and the function value at the minimizer is <span class="math inline">\(\sim 0\)</span>. The optimization data has been collected and shown below:</p>
+<pre><code>## +----+---------+----------+-------------+--------------+
+## |    |     x_1 |      x_2 |        f(X) |     ||grad|| |
+## |----+---------+----------+-------------+--------------|
+## |  0 | 1.8     | 0.8      | 6.91662     | 25.6193      |
+## |  1 | 3.54638 | 0.634246 | 0.0583991   |  2.48467     |
+## |  2 | 3.23522 | 0.545634 | 0.00855784  |  0.473631    |
+## |  3 | 2.9828  | 0.494168 | 0.000101282 |  0.0699236   |
+## |  4 | 3.00048 | 0.500196 | 1.6893e-07  |  0.00355465  |
+## |  5 | 3       | 0.5      | 4.27418e-13 |  4.09398e-06 |
+## +----+---------+----------+-------------+--------------+</code></pre>
+<p>We notice that in <em>Newton method</em> and the <em>modified Newton method</em>, there are requirements to compute the Hessian matrix <span class="math inline">\(\mathbb{H}f(\mathbb{x})\)</span> and also solve a <span class="math inline">\(n \times n\)</span> linear system of equations: <span class="math inline">\(\mathbb{H}f(\mathbb{x})(\mathbb{x}_j - \mathbb{x}_{j-1}) = -\nabla f(\mathbb{x})\)</span> at each iterate <span class="math inline">\(j\)</span>. These will lead to computationally expensive evaluations for large <span class="math inline">\(n\)</span>, the reason being that an order <span class="math inline">\(n^3\)</span> multiplication computations are required during numerically solving the system of equations. To avoid these computational difficulties methods called <em>quasi-Newton methods</em> have been developed which takes into account approximations of the inverse of the Hessian rather than the original inverse at each step. We will dedicate a separate chapter too in studying <em>quasi-Newton</em> methods.</p>
+</div>
+<div id="marquardt-method" class="section level2">
+<h2><span class="header-section-number">4.6</span> Marquardt Method</h2>
+<p>The <em>Marquardt method</em> is an amalgamation of the <em>steepest descent algorithm</em> and the <em>Newton method</em>. At each step <span class="math inline">\(j\)</span>, the <em>Marquardt method</em> modifies the diagonal elements of the Hessian matrix in the following way:
+<span class="math display" id="eq:44">\[\begin{equation}
+    [\mathbb{H}f(\mathbb{x}_j)]&#39; = [\mathbb{H}f(\mathbb{x}_j)] + \gamma\mathbb{I} \tag{4.44}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\(\gamma\)</span> is a sufficiently large positive constant that guarantees the positive definiteness of <span class="math inline">\([\mathbb{H}f(\mathbb{x}_j)]&#39;\)</span> when <span class="math inline">\([\mathbb{H}f(\mathbb{x}_j)]\)</span> is not positive definite, and <span class="math inline">\(\mathbb{I}\)</span> is the identity matrix. The descent direction in the algorithm is given by:
+<span class="math display" id="eq:45">\[\begin{equation}
+    \mathbb{\delta}_j = -[\mathbb{H}f(\mathbb{x}_j)]&#39;^{-1}\nabla f(\mathbb{x}_j) \tag{4.45}
+\end{equation}\]</span></p>
+<p>The algorithm describing <em>Marquardt method</em> is given below:</p>
+<p><img src="img%2017.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-21" class="example"><strong>Example 4.4  </strong></span>We will work on Himmelblau’s function once again and try to find one of the local minima using <em>Marquardt algorithm</em>. Let the starting iterate be, <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}-2 \\ -2.1 \end{bmatrix}\)</span>, the positive constant be <span class="math inline">\(\gamma = 10^3\)</span>, the tolerances be <span class="math inline">\(\epsilon_1=\epsilon_2 = \epsilon_3=10^{-5}\)</span>, and the constants to be used in determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.25\)</span>. The whole Python program along with the function <code>marquardt()</code> that implements the <em>Marquardt algorithm</em> is given below:
+</div>
+
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="line-search-descent-methods.html#cb21-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> line_search</span>
+<span id="cb21-2"><a href="line-search-descent-methods.html#cb21-2"></a>NORM <span class="op">=</span> np.linalg.norm <span class="co"># Function that gives norm of a vector</span></span>
+<span id="cb21-3"><a href="line-search-descent-methods.html#cb21-3"></a></span>
+<span id="cb21-4"><a href="line-search-descent-methods.html#cb21-4"></a><span class="kw">def</span> func(x): <span class="co"># Objective function (Himmelblau&#39;s function)</span></span>
+<span id="cb21-5"><a href="line-search-descent-methods.html#cb21-5"></a>    <span class="cf">return</span> (x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">11</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (x[<span class="dv">0</span>] <span class="op">+</span> x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">7</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb21-6"><a href="line-search-descent-methods.html#cb21-6"></a>    </span>
+<span id="cb21-7"><a href="line-search-descent-methods.html#cb21-7"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span>
+<span id="cb21-8"><a href="line-search-descent-methods.html#cb21-8"></a>Hf <span class="op">=</span> jacobian(Df) <span class="co"># Hessian of the objective function</span></span>
+<span id="cb21-9"><a href="line-search-descent-methods.html#cb21-9"></a></span>
+<span id="cb21-10"><a href="line-search-descent-methods.html#cb21-10"></a>x1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">100</span>)</span>
+<span id="cb21-11"><a href="line-search-descent-methods.html#cb21-11"></a>x2 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">100</span>)</span>
+<span id="cb21-12"><a href="line-search-descent-methods.html#cb21-12"></a>z <span class="op">=</span> np.zeros(([<span class="bu">len</span>(x1), <span class="bu">len</span>(x2)]))</span>
+<span id="cb21-13"><a href="line-search-descent-methods.html#cb21-13"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x1)):</span>
+<span id="cb21-14"><a href="line-search-descent-methods.html#cb21-14"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x2)):</span>
+<span id="cb21-15"><a href="line-search-descent-methods.html#cb21-15"></a>        z[j, i] <span class="op">=</span> func([x1[i], x2[j]])</span>
+<span id="cb21-16"><a href="line-search-descent-methods.html#cb21-16"></a></span>
+<span id="cb21-17"><a href="line-search-descent-methods.html#cb21-17"></a>contours<span class="op">=</span>plt.contour(x1, x2, z, <span class="dv">100</span>, cmap<span class="op">=</span>plt.cm.gnuplot)</span>
+<span id="cb21-18"><a href="line-search-descent-methods.html#cb21-18"></a>plt.clabel(contours, inline<span class="op">=</span><span class="dv">1</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="line-search-descent-methods.html#cb22-1"></a>plt.xlabel(<span class="st">&quot;$x_1$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="line-search-descent-methods.html#cb23-1"></a>plt.ylabel(<span class="st">&quot;$x_2$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="line-search-descent-methods.html#cb24-1"></a><span class="kw">def</span> marquadt(Xj, gamma, tol_1, tol_2, tol_3, alpha_1, alpha_2):</span>
+<span id="cb24-2"><a href="line-search-descent-methods.html#cb24-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb24-3"><a href="line-search-descent-methods.html#cb24-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb24-4"><a href="line-search-descent-methods.html#cb24-4"></a>    I <span class="op">=</span> np.eye(<span class="bu">len</span>(Xj)) <span class="co">#Set the identity matrix with equal dimensions as that of the Hessian matrix</span></span>
+<span id="cb24-5"><a href="line-search-descent-methods.html#cb24-5"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb24-6"><a href="line-search-descent-methods.html#cb24-6"></a>        D <span class="op">=</span> Df(Xj)</span>
+<span id="cb24-7"><a href="line-search-descent-methods.html#cb24-7"></a>        Hess_tilde <span class="op">=</span> Hf(Xj) <span class="op">+</span> gamma<span class="op">*</span>I <span class="co"># Diagonal elements of the Hessian modified</span></span>
+<span id="cb24-8"><a href="line-search-descent-methods.html#cb24-8"></a>        inv_hess <span class="op">=</span> np.linalg.inv(Hess_tilde) <span class="co"># Inverse of the modified Hessian</span></span>
+<span id="cb24-9"><a href="line-search-descent-methods.html#cb24-9"></a>        delta <span class="op">=</span> <span class="op">-</span>inv_hess.dot(D) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb24-10"><a href="line-search-descent-methods.html#cb24-10"></a>        </span>
+<span id="cb24-11"><a href="line-search-descent-methods.html#cb24-11"></a>        </span>
+<span id="cb24-12"><a href="line-search-descent-methods.html#cb24-12"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb24-13"><a href="line-search-descent-methods.html#cb24-13"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb24-14"><a href="line-search-descent-methods.html#cb24-14"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb24-15"><a href="line-search-descent-methods.html#cb24-15"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb24-16"><a href="line-search-descent-methods.html#cb24-16"></a>        <span class="cf">if</span> NORM(X <span class="op">-</span> Xj) <span class="op">&lt;</span> tol_1 <span class="kw">and</span> NORM(Df(X)) <span class="op">&lt;</span> tol_2 <span class="kw">or</span> <span class="bu">abs</span>(func(X) <span class="op">-</span> func(Xj)) <span class="op">&lt;</span> tol_3:</span>
+<span id="cb24-17"><a href="line-search-descent-methods.html#cb24-17"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb24-18"><a href="line-search-descent-methods.html#cb24-18"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb24-19"><a href="line-search-descent-methods.html#cb24-19"></a>            plt.plot(x1, x2, <span class="st">&quot;rx-&quot;</span>, ms<span class="op">=</span><span class="fl">5.5</span>) <span class="co"># Plot the final collected data showing the trajectory of optimization</span></span>
+<span id="cb24-20"><a href="line-search-descent-methods.html#cb24-20"></a>            plt.show()</span>
+<span id="cb24-21"><a href="line-search-descent-methods.html#cb24-21"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb24-22"><a href="line-search-descent-methods.html#cb24-22"></a>        <span class="cf">else</span>:</span>
+<span id="cb24-23"><a href="line-search-descent-methods.html#cb24-23"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb24-24"><a href="line-search-descent-methods.html#cb24-24"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb24-25"><a href="line-search-descent-methods.html#cb24-25"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>We set the parameter values according to what we have set in our example and pass them to the <code>marquardt()</code> function:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="line-search-descent-methods.html#cb25-1"></a>marquadt(np.array([<span class="op">-</span><span class="fl">2.</span>, <span class="fl">-2.1</span>]), <span class="dv">10</span><span class="op">**</span><span class="dv">3</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.25</span>)</span></code></pre></div>
+<pre><code>## (array([-3.7792679 , -3.28317977]), 9.852018841385639e-08)</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-5.png" width="672" /></p>
+<p>We see that, for our choice of parameters, the algorithm has correctly converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}-3.7793 \\ -3.2831 \end{bmatrix}\)</span>, where the function value is <span class="math inline">\(0\)</span>.</p>
+<p>The optimization data has been collected and shown below:</p>
+<pre><code>## +----+----------+----------+---------------+-------------+
+## |    |      x_1 |      x_2 |          f(X) |    ||grad|| |
+## |----+----------+----------+---------------+-------------|
+## |  0 | -2       | -2.1     | 103.878       | 66.7972     |
+## |  1 | -3.69991 | -2.65702 |  13.2518      | 39.5215     |
+## |  2 | -3.60177 | -3.24858 |   1.63007     | 18.3846     |
+## |  3 | -3.73439 | -3.23778 |   0.148408    |  4.69335    |
+## |  4 | -3.79094 | -3.2786  |   0.0103291   |  1.6592     |
+## |  5 | -3.78042 | -3.28371 |   6.68136e-05 |  0.114701   |
+## |  6 | -3.7796  | -3.28358 |   8.42206e-06 |  0.0346822  |
+## |  7 | -3.77927 | -3.28318 |   9.85202e-08 |  0.00479187 |
+## +----+----------+----------+---------------+-------------+</code></pre>
+<p>We now move on to the next chapter where we study <em>conjugate gradient methods</em> in more detail.</p>
 
 </div>
 </div>

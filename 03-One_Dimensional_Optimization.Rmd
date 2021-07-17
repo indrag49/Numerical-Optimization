@@ -979,7 +979,7 @@ The termination condition for convergence after a sufficient number of large ite
 where, $\epsilon$ is the tolerance set by the user for the optimization algorithm. The *Halley's method* has a fast convergence property called the *cubic convergence*.
 
 ```{definition}
-For a thrice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Halley's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to show \textit{cubic convergence} to $x^*$ if the following condition is satisfied:
+For a thrice differentiable objective function $f(x)$, assuming that its minimizer $x^*$ lies in the interval $(x_l, x_r)$, with $\frac{df}{dx}(x^*) \neq 0$ and $f(x^*) = 0$, for the Halley's iteration, if $x_j$ converges to $x^*$ for a large number of iterations, $j \to \infty$, $x_j$ is said to show *cubic convergence* to $x^*$ if the following condition is satisfied:
 \begin{align}
     |x_{j+1} - x^*| \leq K|x_j - x^*|^3, \text{ if } K > -\frac{2\frac{df}{dx}(x_j)\frac{d^3f}{dx^3}(\alpha) - 3\frac{d^2f}{dx^2}(x_j)\frac{d^2f}{dx^2}(\beta)}{6(2[\frac{df}{dx}(x_j)]^2 - f(x_j)\frac{d^2f}{dx^2}(x_j))} (\#eq:58)
 \end{align}
@@ -1038,7 +1038,7 @@ Let us consider the objective function,
 \begin{equation}
     f(x) = x^3 -6x^2+11x-6 (\#eq:66)
 \end{equation}
-We will use the \textit{Halley's method} to find the root $x^*$ of the objective function, along with the function value $f(x^*)$ at this point. Let the initial experimental point of the iteration be $x_0 = 3.7$ and the tolerance be $\epsilon = 10^{-6}$. We define the objective function, and its derivatives in the similar way in Python as we did for the *Newton's method*
+We will use the *Halley's method* to find the root $x^*$ of the objective function, along with the function value $f(x^*)$ at this point. Let the initial experimental point of the iteration be $x_0 = 3.7$ and the tolerance be $\epsilon = 10^{-6}$. We define the objective function, and its derivatives in the similar way in Python as we did for the *Newton's method*
 ```
 
 ```{python}
