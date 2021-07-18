@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-17" />
+<meta name="date" content="2021-07-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="solving-one-dimensional-optimization-problems.html"/>
-
+<link rel="next" href="conjugate-gradient-methods-1.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -186,6 +186,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#conjugate-gradient-methods"><i class="fa fa-check"></i><b>4.4</b> Conjugate Gradient Methods</a></li>
 <li class="chapter" data-level="4.5" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#second-order-line-search-gradient-descent-method"><i class="fa fa-check"></i><b>4.5</b> Second Order Line Search Gradient Descent Method</a></li>
 <li class="chapter" data-level="4.6" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#marquardt-method"><i class="fa fa-check"></i><b>4.6</b> Marquardt Method</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html"><i class="fa fa-check"></i><b>5</b> Conjugate Gradient Methods</a><ul>
+<li class="chapter" data-level="5.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#introduction-to-conjugate-gradient-methods"><i class="fa fa-check"></i><b>5.1</b> Introduction to Conjugate Gradient Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#linear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.2</b> Linear Conjugate Gradient Algorithm</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#mutual-conjugacy"><i class="fa fa-check"></i><b>5.2.1</b> Mutual Conjugacy</a></li>
+<li class="chapter" data-level="5.2.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#conjugate-direction-algorithm"><i class="fa fa-check"></i><b>5.2.2</b> Conjugate Direction Algorithm</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -744,8 +751,8 @@ The function has one global minimizer, <span class="math inline">\(f(3, 0.5) = 0
           </div>
         </div>
       </div>
-<a href="solving-one-dimensional-optimization-problems.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="solving-one-dimensional-optimization-problems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="conjugate-gradient-methods-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

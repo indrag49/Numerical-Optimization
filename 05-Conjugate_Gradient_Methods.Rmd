@@ -1,0 +1,142 @@
+# Conjugate Gradient Methods
+
+This chapter is dedicated to studying the *Conjugate Gradient Methods* in detail. The Linear and Non-linear versions of the CG methods have been discussed with five sub classes falling under the nonlinear CG method class. The five nonlinear CG methods that have been discussed are: *Flethcher-Reeves method*, *Polak-Ribiere method*, *Hestenes-Stiefel method*, *Dai-Yuan method* and *Hager-Zhang method*. Mathematical proofs have been provided wherever necessary. Python implementations of the algorithms have been included along with optimization examples. The chapter ends with introducing a specific Python function called the `scipy.optimize.minimize()` function that can be used to work with the *Polak-Ribiere* CG method.
+
+---
+
+## Introduction to Conjugate Gradient Methods
+
+The *conjugate gradient methods* are frequently used for solving large linear systems of equations and also for solving nonlinear optimization problems. This let us characterize the *conjugate gradient methods* into two classes:
+
+* **Linear Conjugate Gradient Method**: This is an iterative method to solve large linear systems where the coefficient matrices are positive definite. This can be treated as a replacement of the *Gaussian elimination method* in numerical analysis.
+* **nonlinear Conjugate Gradient method**: This is used for solving nonlinear optimization problems. We will study five methods under this class:
+  * *Fletcher-Reeves algorithm*,
+  * *Polak-Ribiere algorithm*,
+  * *Hestenes-Stiefel algorithm*,
+  * *Dai-Yuan algorithm*, and
+  * *Hager-Zhang algorithm*.
+  
+## Linear Conjugate Gradient Algorithm
+
+Suppose we want to find the minimizer of an objective function, having the quadratic form:
+\begin{equation}
+    f(\mathbb{x}) = \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} - \mathbb{b}^T\mathbb{x} (#eq:1)
+\end{equation}
+where, $\mathbb{A}$ is a $n \times n$ symmetric positive definite matrix.The problem can be formulated as:
+\begin{equation}
+    \underset{\mathbb{x}\in \mathbb{R}^n}{\min} f(\mathbb{x}) = \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} - \mathbb{b}^T\mathbb{x} (#eq:2)
+\end{equation}
+
+Eq. \@ref(eq:2) can be equivalently stated as the problem of solving the linear system of equations given by:
+\begin{equation}
+    \mathbb{A}\mathbb{x} = \mathbb{b} (#eq:3)
+\end{equation}
+
+We use the *linear conjugate gradient method* to solve Eq. \@ref(eq:3).
+
+
+The *residual* of a linear system of equations, given by Eq. \@ref(eq:3) is defined as:
+\begin{equation}
+    r(\mathbb{x}) = \mathbb{A}\mathbb{x} - \mathbb{b} (#eq:4)
+\end{equation}
+
+
+```{theorem}
+The gradient of the objective function given by Eq. \@ref(eq:1) is equal to the residual of the linear system given by Eq. \@ref(eq:4).
+```
+
+```{proof}
+From Eq. \@ref(eq:1), we see that the gradient of the objective function is:
+\begin{equation}
+    \nabla f(\mathbb{x}) = \mathbb{A}\mathbb{x} - \mathbb{b} = r(\mathbb{x}) (#eq:5)
+\end{equation}
+This proves the theorem.
+```
+
+### Mutual Conjugacy
+
+
+For a given symmetric positive definite matrix $\mathbb{A}$, two vectors $\mathbb{v}, \mathbb{w} \neq \mathbb{0} \in \mathbb{R}^n$ are defined to be *mutually conjugate* if the following condition is satisfied:
+\begin{equation}
+    \mathbb{v}^T\mathbb{A}\mathbb{w} = 0 (#eq:6)
+\end{equation}
+
+```{theorem}
+A set of *mutually conjugate* vectors $\mathbb{v}_j, j=1, 2, \ldots$ with respect to a positive definite symmetric matrix $\mathbb{A}$, forms a basis in $\mathbb{R}^n$, i.e., the set is linearly independent.
+```
+
+```{proof}
+Above theorem equivalently states that, for $\mathbb{x} \in \mathbb{R}^n$, the following condition is satisfied:
+\begin{equation}
+    \mathbb{x} = \sum_{j=1}^n\lambda_j\mathbb{v}_j (#eq:7)
+\end{equation}
+where,
+\begin{equation}
+    \lambda_j = \frac{\mathbb{v}_j^T\mathbb{A}\mathbb{x}}{\mathbb{v}_j^T\mathbb{A}\mathbb{v}_j} (#eq:8)
+\end{equation}
+ Let us consider the linear combination,
+\begin{equation}
+    \sum_{j=1}^n c_j\mathbb{v}_j = \mathbb{0} (#eq:9)
+\end{equation}
+ Multiplying the above equation with the matrix $\mathbb{A}$, we have,
+ \begin{equation}
+    \sum_{j=1}^n c_j \mathbb{A}\mathbb{v}_j=\mathbb{0} (#eq:10)
+\end{equation}
+Since the vectors $\mathbb{v}_j$ are mutually conjugate with respect to the matrix $\mathbb{A}$, from Eq. \@ref(eq:6), we can write that,
+\begin{equation}
+    c_j\mathbb{v}_j^T\mathbb{A}\mathbb{v}_j = 0 (#eq:11)
+\end{equation}
+ 
+From the facts that $\mathbb{A}$ is positive definite and that $\mathbb{v}_j$ never equals $\mathbb{0}$, from Eq. \@ref(eq:11) we can state that, $c_j=0$ for $j=1, 2, \ldots, n$. This proves the fact that the set of vectors $\mathbb{v}_j$ is linearly independent and may be used as a basis. Therefore, there exists a unique set $\lambda_j, j=1, 2, \ldots, n$ for any $\mathbb{x} \in \mathbb{R}^n$, such that Eq. \@ref(eq:7) is satisfied. The positive definiteness of $\mathbb{A}$ leads to the fact that,
+\begin{equation}
+    \mathbb{v}_j^T\mathbb{A}\mathbb{x} = \lambda_j\mathbb{v}_j^T\mathbb{A}\mathbb{x} (#eq:12)
+\end{equation}
+Finally, from Eq. \@ref(eq:12) we can write that,
+\begin{equation}
+    \lambda_j = \frac{\mathbb{v}_j^T\mathbb{A}\mathbb{x}}{\mathbb{v}_j^T\mathbb{A}\mathbb{v}_j} (#eq:13)
+\end{equation}
+The proves the theorem.
+```
+
+### Conjugate Direction Algorithm
+
+For our optimization task, where we aim to minimize the objective function $f(\mathbb{x})$, where $\mathbb{x} \in \mathbb{R}^n$, let $\mathbb{x}_0$ be the starting iterate and the conjugate directions be set as ${\mathbb{\delta}_j}, j=1, 2, \ldots, n-1$. The successive iterates are generated by following:
+
+\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}+\beta_j\mathbb{\delta}_j (#eq:14)
+\end{equation}
+
+This $\beta_j$ is the minimizer of the function $f(\mathbb{x}_{j-1}+\beta\delta_j)$. We will now find the explicit form of $\beta_j$. From Eq. \@ref(eq:1) we can write that,
+
+\begin{align}
+f(x_{j-1}+\beta \mathbb{\delta}_j) &= \frac{1}{2}[(\mathbb{x}_{j-1}+\beta\mathbb{\delta}_j)^T\mathbb{A}(\mathbb{x}_{j-1}+\beta\mathbb{\delta}_j)] - \mathbb{b}^T(\mathbb{x}_{j-1}+\beta\mathbb{\delta}_j) \nonumber \\
+&= \frac{1}{2}[\mathbb{x}_{j-1}^T\mathbb{A}\mathbb{x}_{j-1}+2\beta\mathbb{x}_{j-1}^T\mathbb{A}\mathbb{\delta}_j + \beta^2\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j] - \mathbb{b}^T(\mathbb{x}_{j-1}+\beta\mathbb{\delta}_j) (#eq:15)
+\end{align}
+
+Now, differentiating Eq. \@ref(eq:15) with respect to $\beta$ and setting it to $0$, we get,
+\begin{align}
+& \frac{\partial f(\mathbb{x}_{j-1}+\beta\mathbb{\delta}_j)}{\partial \beta} = 0 (#eq:16) \\
+&\implies \mathbb{x}_{j-1}^T\mathbb{A}\mathbb{x}_{j-1} + \beta\mathbb{\delta}_j\mathbb{A}\mathbb{\delta}_j - \mathbb{b}^T\mathbb{\delta}_j = 0 \nonumber \\
+&\implies (\mathbb{x}_{j-1}^T\mathbb{A} - \mathbb{b}^T)\mathbb{\delta}_j + \beta\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j = 0 (#eq:17)
+\end{align}
+
+Now, from Eq. \@ref(eq:4) we can write,
+\begin{equation}
+    \mathbb{r}_j^T=(\mathbb{A}\mathbb{x}_{j-1}-\mathbb{b})^T = \mathbb{x}_{j-1}^T\mathbb{A} - \mathbb{b}^T (#eq:18)
+\end{equation}
+where, we have used the fact that $\mathbb{A}^T=\mathbb{A}$. So, from Eq. \@ref(eq:17) we can write,
+\begin{equation}
+    \mathbb{r}_j^T\mathbb{\delta}_j+\beta\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j = 0 (#eq:19)
+\end{equation}
+
+This finally fetches us,
+\begin{equation}
+    \beta_j = -\frac{\mathbb{r}_j^T\mathbb{\delta}_j}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j} (#eq:20)
+\end{equation}
+Eq. \@ref(eq:20) is equivalent to the step-length formulation given by Eq. \@ref(eq:26).
+
+```{theorem}
+The convergence of the conjugate direction algorithm, given by Eq. \@ref(eq:14) and Eq. \@ref(eq:20), to its solution, takes place in at most $n$ steps, where $\mathbb{x}_0\in \mathbb{R}^n$ is the given initial iterate.
+```
+
+**This Chapter is under construction**

@@ -125,6 +125,9 @@ thm:unnamed-chunk-125
 thm:unnamed-chunk-127
 exm:unnamed-chunk-129
 exm:unnamed-chunk-134
+thm:unnamed-chunk-138
+thm:unnamed-chunk-140
+thm:unnamed-chunk-142
 what-is-numerical-optimization
 introduction-to-optimization
 a-solution
@@ -169,6 +172,11 @@ first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm
 conjugate-gradient-methods
 second-order-line-search-gradient-descent-method
 marquardt-method
+conjugate-gradient-methods-1
+introduction-to-conjugate-gradient-methods
+linear-conjugate-gradient-algorithm
+mutual-conjugacy
+conjugate-direction-algorithm
 eq:a
 thm:unnamed-chunk-2
 exm:unnamed-chunk-4
@@ -182,10 +190,12 @@ exm:unnamed-chunk-47
 exm:unnamed-chunk-52
 exm:unnamed-chunk-61
 exm:unnamed-chunk-66
-eq:c
 exm:unnamed-chunk-1
 exm:unnamed-chunk-5
 thm:unnamed-chunk-12
 thm:unnamed-chunk-14
 exm:unnamed-chunk-16
 exm:unnamed-chunk-21
+thm:unnamed-chunk-1
+thm:unnamed-chunk-3
+thm:unnamed-chunk-5
