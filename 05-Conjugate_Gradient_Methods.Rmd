@@ -139,4 +139,279 @@ Eq. \@ref(eq:20) is equivalent to the step-length formulation given by Eq. \@ref
 The convergence of the conjugate direction algorithm, given by Eq. \@ref(eq:14) and Eq. \@ref(eq:20), to its solution, takes place in at most $n$ steps, where $\mathbb{x}_0\in \mathbb{R}^n$ is the given initial iterate.
 ```
 
+```{proof}
+The conjugate directions $\mathbb{\delta}$ are linearly independent, and thus for any scalar values $\lambda_i$, we can write,
+\begin{align}
+    \mathbb{x}^* &= \mathbb{x}_0 + \lambda_1\mathbb{\delta}_1 + \ldots + \lambda_{n-1}\mathbb{\delta}_{n-1} \nonumber \\
+    \mathbb{x}^* - \mathbb{x}_0 &=  \lambda_1\mathbb{\delta}_1 + \ldots + \lambda_{n-1}\mathbb{\delta}_{n-1} (#eq:21)
+\end{align}
+
+Now, multiplying Eq. \@ref(eq:21) non-commutatively by the preceding factor $\mathbb{\delta}_j^T\mathbb{A}$, and using the mutual conjugacy from Eq. \@ref(eq:6), we will have,
+
+\begin{equation}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^*-\mathbb{x}_0) = \lambda_j\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j^T (#eq:22)
+\end{equation}
+which ultimately gives us,
+\begin{equation}
+    \lambda_j = \frac{\mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^*-\mathbb{x}_0)}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j^T} (#eq:23)
+\end{equation}
+
+Now again, using Eq. \@ref(eq:14) we can generate the $j^{th}$ iterate, given by,
+\begin{equation}
+    \mathbb{x}_j = x_0 + \beta_1\mathbb{\delta}_1 + \beta_2\mathbb{\delta}_2 + \ldots + \beta_{j-1}\mathbb{\delta}_{j-1} (#eq:24)
+\end{equation}
+
+Now subtracting Eq. \@ref(eq:24) from the solution $\mathbb{x}^*$, we get,
+\begin{equation}
+    \mathbb{x}^* - \mathbb{x}_j = \mathbb{x}^* - \mathbb{x}_0 - \beta_1\mathbb{\delta}_1 - \ldots - \beta_{j-1}\mathbb{\delta}_{j-1} (#eq:25)
+\end{equation}
+fetching us,
+\begin{equation}
+    \mathbb{x}^* - \mathbb{x}_0 = \mathbb{x}^* - \mathbb{x}_j + \beta_1\mathbb{\delta}_1 - \ldots + \beta_{j-1}\mathbb{\delta}_{j-1} (#eq:26)
+\end{equation}
+Now, again multiplying Eq. \@ref(eq:26) non-commutatively by the preceding factor $\mathbb{\delta}_j^T\mathbb{A}$, and using the mutual conjugacy from Eq. \@ref(eq:6), we will have,
+\begin{equation}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_0) = \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_j) (#eq:27)
+\end{equation}
+ 
+Using the fact that $\mathbb{A}\mathbb{x}^*=\mathbb{b}$ and also Eq. \@ref(eq:18), we can modify Eq. \@ref(eq:27) in the following way:
+\begin{align}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_0) &= \mathbb{\delta}_j^T(\mathbb{b} - \mathbb{x}_j) \nonumber \\ &= -\mathbb{\delta}_j^T\mathbb{r}_j \nonumber \\ &= -\mathbb{r}_j^T\mathbb{\delta}_j (#eq:28)
+\end{align}
+ 
+So, Eq. \@ref(eq:23) becomes,
+\begin{equation}
+    \lambda_j = -\frac{\mathbb{r}_j^T\mathbb{\delta}_j}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j} (#eq:29)
+\end{equation}
+ 
+which is similar to Eq. \@ref(eq:20). So it can be concluded that,
+\begin{equation}
+    \lambda_j = \beta_j (#eq:30)
+\end{equation}
+This completes the proof of the theorem.
+```
+
+```{theorem}
+The residual at the $j^{th}$ iterate can be generated from the residual at the preceding iterate by the following iteration formula:
+\begin{equation}
+    \mathbb{r}_{j} = \mathbb{r}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j (#eq:31)
+\end{equation}
+```
+
+```{proof}
+Substituting Eq. \@ref(eq:14) in Eq. \@ref(eq:4), we get,
+\begin{align}
+    \mathbb{r}_j &= \mathbb{A}(\mathbb(x)_{j-1} + \beta_j\mathbb{\delta}_j) - \mathbb{b} \nonumber \\
+    &= \mathbb{A}\mathbb{x}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j - b \nonumber \\
+    &= (\mathbb{A}\mathbb{x}_{j-1} - b) + \beta_j\mathbb{A}\mathbb{\delta}_j \nonumber \\
+    &= \mathbb{r}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j (#eq:32)
+\end{align}
+This completes the proof.
+```
+
+### Preliminary Algorithm
+
+In the linear conjugate gradient method, the direction $\mathbb{\delta}_j$ ix a linear combination of the preceding direction $\mathbb{\delta}_{j-1}$ and the negative of the residual $-\mathbb{r}_j$. So we can write,
+\begin{equation}
+    \mathbb{\delta}_j = \chi_j \mathbb{\delta}_{j-1} - \mathbb{r}_j (#eq:33)
+\end{equation}
+
+Now, to evaluate $\chi_j$, we multiply Eq. \@ref(eq:33) non-commutatively with the preceding factor $\mathbb{\delta}_{j-1}^T\mathbb{A}$ and use the mutual conjugacy condition that $\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_j=0$. \begin{equation}
+    \mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_j = \chi_j\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1} - \mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{r}_j = 0 (#eq:34)
+\end{equation}  
+
+So, we see that,
+\begin{align}
+    \chi_j &= \frac{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{r}_j}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &= \frac{(\mathbb{A}\mathbb{r}_j)^T\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &= \frac{\mathbb{r}_j^T\mathbb{A}^T\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &= \frac{\mathbb{r}_j^T\mathbb{A}\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} (#eq:35)
+\end{align}
+
+The *linear conjugate gradient algorithm* is given below:
+
+![](img 18.png)
+
+```{example}
+Let us consider an objective function given by:
+\begin{equation}
+    f(x_1, x_2) = \frac{x_1^2}{2} + x_1x_2 + x_2^2-2x_2 (#eq:36)
+\end{equation}
+ 
+Finding the minimizer of this objective function is equivalent to finding the solution to the equation given by $\mathbb{A}\mathbb{x} = \mathbb{b}$, where $\mathbb{A} = \begin{bmatrix} \frac{1}{2} & \frac{1}{2} \\ \frac{1}{2} & 1\end{bmatrix}$, $\mathbb{x} = \begin{bmatrix}x_1 \\ x_2\end{bmatrix}$ and $\mathbb{b} = \begin{bmatrix}0 \\2\end{bmatrix}$. So, we use the *linear conjugate gradient algorithm* to solve
+\begin{equation}
+    \begin{bmatrix} \frac{1}{2} & \frac{1}{2} \\ \frac{1}{2} & 1\end{bmatrix} \begin{bmatrix}x_1 \\ x_2\end{bmatrix} = \begin{bmatrix}0 \\2\end{bmatrix} (#eq:37)
+\end{equation}
+ 
+where, we will consider the starting iterate to be $\begin{bmatrix}-2.3 \\ 2.2 \end{bmatrix}$ tolerance $\epsilon =10^{-5}$. As usual, let us first define the objective function in Python.
+```
+
+```{python, echo=FALSE}
+import matplotlib.pyplot as plt
+import numpy as np
+import autograd.numpy as au
+from autograd import grad, jacobian
+import scipy
+```
+
+```{python}
+def f(x): # Define the objective function
+    return x[0]**2/2 + x[0]*x[1] + x[1]**2 - 2*x[1]
+```
+
+Next we define the matrix $\mathbb{A}$ and the vector $\mathbb{b}$ in Python.
+
+```{python}
+A = np.array(([1/2, 1/2], [1/2, 1]), dtype=float)
+b = np.array([0., 2.])
+```
+
+We can make it sure that $\mathbb{A}$ is actually a symmetric positive definite matrix.
+
+```{python}
+eigs = np.linalg.eigvals(A)
+print("The eigenvalues of A:", eigs)
+
+if (np.all(eigs>0)):
+    print("A is positive definite")
+elif (np.all(eigs>=0)):
+    print("A is positive semi-definite")
+else:
+    print("A is negative definite")
+```
+
+We see that $\mathbb{A}$ is indeed positive definite. To check whether it is symmetric, we can check whether $\mathbb{A}^T$ equals $\mathbb{A}$.
+
+```{python}
+if (A.T==A).all()==True: print("A is symmetric")
+```
+
+So $\mathbb{A}$ is symmetric too. Now we write the Python function `linear_CG()` that implements the *linear conjugate gradient algorithm*
+
+```{python}
+def linear_CG(x, A, b, epsilon):
+    res = A.dot(x) - b # Initialize the residual
+    delta = -res # Initialize the descent direction
+    
+    while True:
+        
+        if np.linalg.norm(res) <= epsilon:
+            return x, f(x) # Return the minimizer x* and the function value f(x*)
+        
+        D = A.dot(delta)
+        beta = -(res.dot(delta))/(delta.dot(D)) # Line (11) in the algorithm
+        x = x + beta*delta # Generate the new iterate
+
+        res = A.dot(x) - b # generate the new residual
+        chi = res.dot(D)/(delta.dot(D)) # Line (14) in the algorithm 
+        delta = chi*delta -  res # Generate the new descent direction
+```
+
+Finally, we pass the parameters that we consider for this example to the function `linear_CG()`.
+
+```{python}
+linear_CG(np.array([2.3, -2.2]), A, b, 10**-5)
+```
+
+We see that the solution is $\mathbb{x^*} \sim \begin{bmatrix}-4 \\ 4 \end{bmatrix}$ and the function value at this point is $0$. We can verify the result is correct by following the trivial solution of Eq. \@ref(eq:37):
+
+\begin{align}
+    \begin{bmatrix}x_1 \\ x_2\end{bmatrix} &= \begin{bmatrix} \frac{1}{2} & \frac{1}{2} \\ \frac{1}{2} & 1\end{bmatrix}^{-1} \begin{bmatrix}0 \\2\end{bmatrix} \nonumber \\
+    &= \begin{bmatrix}-4 \\ 4\end{bmatrix} (#eq:38)
+\end{align}
+
+We can even write a Python code to check the above case:
+
+```{python}
+np.linalg.inv(A).dot(b)
+```
+
+We see that our Python implementation of the *linear conjugate gradient algorithm* works perfectly. We will now discuss *nonlinear conjugate gradient algorithms* in the next section
+
+## Nonlinear Conjugate Gradient Algorithm
+
+We can modify our *conjugate gradient method* to optimize convex nonlinear objective functions. The first method that we study under this class is the *Fletcher-Reeves* method.
+
+### Feltcher-Reeves Algorithm
+
+The first application of the *Conjugate Gradient Method* on nonlinear objective functions was introduced by Fletcher and Reeves. The directions $\mathbb{\delta}_j$ given by Fletcher and Reeves are mutually conjugate with respect to the symmetric positive definite matrix $\mathbb{A}$ in Eq. \@ref(eq:1), where the residual is given by Eq. \@ref(eq:5). The descent direction is given by,
+
+\begin{equation}
+    \mathbb{\delta}_{j+1} =
+    \begin{cases}
+    -\nabla f(\mathbb{x}_j),\ \ j=0 \\
+    -\nabla f(\mathbb{x}_j) + \chi_j\mathbb{\delta}_j,\ \ j=1, 2, \ldots, n-1 (#eq:39)
+    \end{cases}
+\end{equation}
+
+In the above equation,
+\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}+\beta_j\mathbb{\delta}_j (#eq:40)
+\end{equation}
+
+where $\beta_j$ is the $j^{th}$ step length. $\chi_j$ in Eq. \@ref(eq:39) is given by,
+\begin{equation}
+    \chi_j = \frac{\|\nabla f(\mathbb{x}_j)\|^2}{\|\nabla f(\mathbb{x}_{j-1})\|^2} (#eq:41)
+\end{equation}
+
+The *Fletcher-Reeves Algorithm* is given below:
+
+![](img 19.png)
+
+```{example}
+Let us consider an objective function having the form,
+\begin{equation}
+    f(x_1, x_2) = x_1^4 - 2x_1^2x_2+x_1^2 + x_2^2-2x_1+1 (#eq:42)
+\end{equation}
+The function has a local minimizer at $f(1, 1) = 0$. We will implement the *Fletcher-Reeves algorithm* in Python to figure out the minimizer. Let the starting iterate be given by $\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}$, the tolerance be $\epsilon = 10^{-5}$ and the constants to be used for determining the step length using the \textit{strong Wolfe conditions} be $\alpha_1=10^{-4}$ and $\alpha_2=0.38$. Let us first define the objective function and its gradient in Python.
+```
+
+```{python}
+def func(x): # Objective function
+    return x[0]**4 - 2*x[0]**2*x[1] + x[0]**2 + x[1]**2 - 2*x[0] + 1
+
+Df = grad(func) # Gradient of the objective function
+```
+
+Next we define the function `Fletcher_Reeves()` in Python:
+
+```{python}
+from scipy.optimize import line_search
+NORM = np.linalg.norm
+
+def Fletcher_Reeves(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D # Initialize the descent direction
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta #Newly updated experimental point
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            return X, func(X) # Return the results
+        else:
+            Xj = X
+            d = D # Gradient at the preceding experimental point
+            D = Df(Xj) # Gradient at the current experimental point
+            chi = NORM(D)**2/NORM(d)**2 # Line (16) of the Fletcher-Reeves algorithm
+            delta = -D + chi*delta # Newly updated descent direction
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+According to our example we set our parameter values and pass them to the `Fletcher_Reeves()` function:
+
+```{python}
+Fletcher_Reeves(np.array([2., -1.8]), 10**-5, 10**-4, 0.38)
+```
+
+We notice that, for our choice of parameters, the algorithm has converged to the minimizer $\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ with $f(\mathbb{x}^*) \sim 0$.
+
+
 **This Chapter is under construction**

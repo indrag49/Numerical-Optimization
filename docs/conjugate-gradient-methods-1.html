@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-18" />
+<meta name="date" content="2021-07-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,6 +55,70 @@
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -128,6 +192,10 @@
 <li class="chapter" data-level="5.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#linear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.2</b> Linear Conjugate Gradient Algorithm</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#mutual-conjugacy"><i class="fa fa-check"></i><b>5.2.1</b> Mutual Conjugacy</a></li>
 <li class="chapter" data-level="5.2.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#conjugate-direction-algorithm"><i class="fa fa-check"></i><b>5.2.2</b> Conjugate Direction Algorithm</a></li>
+<li class="chapter" data-level="5.2.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#preliminary-algorithm"><i class="fa fa-check"></i><b>5.2.3</b> Preliminary Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#nonlinear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.3</b> Nonlinear Conjugate Gradient Algorithm</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#feltcher-reeves-algorithm"><i class="fa fa-check"></i><b>5.3.1</b> Feltcher-Reeves Algorithm</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -275,12 +343,228 @@ where, we have used the fact that <span class="math inline">\(\mathbb{A}^T=\math
 <span class="math display" id="eq:20">\[\begin{equation}
     \beta_j = -\frac{\mathbb{r}_j^T\mathbb{\delta}_j}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j} \tag{5.20}
 \end{equation}\]</span>
-Eq. <a href="conjugate-gradient-methods-1.html#eq:20">(5.20)</a> is equivalent to the step-length formulation given by Eq. <a href="#eq:26">(<strong>??</strong>)</a>.</p>
+Eq. <a href="conjugate-gradient-methods-1.html#eq:20">(5.20)</a> is equivalent to the step-length formulation given by Eq. <a href="conjugate-gradient-methods-1.html#eq:26">(5.26)</a>.</p>
 
 <div class="theorem">
 <span id="thm:unnamed-chunk-5" class="theorem"><strong>Theorem 5.3  </strong></span>The convergence of the conjugate direction algorithm, given by Eq. <a href="conjugate-gradient-methods-1.html#eq:14">(5.14)</a> and Eq. <a href="conjugate-gradient-methods-1.html#eq:20">(5.20)</a>, to its solution, takes place in at most <span class="math inline">\(n\)</span> steps, where <span class="math inline">\(\mathbb{x}_0\in \mathbb{R}^n\)</span> is the given initial iterate.
 </div>
 
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> The conjugate directions <span class="math inline">\(\mathbb{\delta}\)</span> are linearly independent, and thus for any scalar values <span class="math inline">\(\lambda_i\)</span>, we can write,
+<span class="math display" id="eq:21">\[\begin{align}
+    \mathbb{x}^* &amp;= \mathbb{x}_0 + \lambda_1\mathbb{\delta}_1 + \ldots + \lambda_{n-1}\mathbb{\delta}_{n-1} \nonumber \\
+    \mathbb{x}^* - \mathbb{x}_0 &amp;=  \lambda_1\mathbb{\delta}_1 + \ldots + \lambda_{n-1}\mathbb{\delta}_{n-1} \tag{5.21}
+\end{align}\]</span></p>
+<p>Now, multiplying Eq. <a href="conjugate-gradient-methods-1.html#eq:21">(5.21)</a> non-commutatively by the preceding factor <span class="math inline">\(\mathbb{\delta}_j^T\mathbb{A}\)</span>, and using the mutual conjugacy from Eq. <a href="conjugate-gradient-methods-1.html#eq:6">(5.6)</a>, we will have,</p>
+<p><span class="math display" id="eq:22">\[\begin{equation}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^*-\mathbb{x}_0) = \lambda_j\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j^T \tag{5.22}
+\end{equation}\]</span>
+which ultimately gives us,
+<span class="math display" id="eq:23">\[\begin{equation}
+    \lambda_j = \frac{\mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^*-\mathbb{x}_0)}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j^T} \tag{5.23}
+\end{equation}\]</span></p>
+<p>Now again, using Eq. <a href="conjugate-gradient-methods-1.html#eq:14">(5.14)</a> we can generate the <span class="math inline">\(j^{th}\)</span> iterate, given by,
+<span class="math display" id="eq:24">\[\begin{equation}
+    \mathbb{x}_j = x_0 + \beta_1\mathbb{\delta}_1 + \beta_2\mathbb{\delta}_2 + \ldots + \beta_{j-1}\mathbb{\delta}_{j-1} \tag{5.24}
+\end{equation}\]</span></p>
+<p>Now subtracting Eq. <a href="conjugate-gradient-methods-1.html#eq:24">(5.24)</a> from the solution <span class="math inline">\(\mathbb{x}^*\)</span>, we get,
+<span class="math display" id="eq:25">\[\begin{equation}
+    \mathbb{x}^* - \mathbb{x}_j = \mathbb{x}^* - \mathbb{x}_0 - \beta_1\mathbb{\delta}_1 - \ldots - \beta_{j-1}\mathbb{\delta}_{j-1} \tag{5.25}
+\end{equation}\]</span>
+fetching us,
+<span class="math display" id="eq:26">\[\begin{equation}
+    \mathbb{x}^* - \mathbb{x}_0 = \mathbb{x}^* - \mathbb{x}_j + \beta_1\mathbb{\delta}_1 - \ldots + \beta_{j-1}\mathbb{\delta}_{j-1} \tag{5.26}
+\end{equation}\]</span>
+Now, again multiplying Eq. <a href="conjugate-gradient-methods-1.html#eq:26">(5.26)</a> non-commutatively by the preceding factor <span class="math inline">\(\mathbb{\delta}_j^T\mathbb{A}\)</span>, and using the mutual conjugacy from Eq. <a href="conjugate-gradient-methods-1.html#eq:6">(5.6)</a>, we will have,
+<span class="math display" id="eq:27">\[\begin{equation}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_0) = \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_j) \tag{5.27}
+\end{equation}\]</span></p>
+<p>Using the fact that <span class="math inline">\(\mathbb{A}\mathbb{x}^*=\mathbb{b}\)</span> and also Eq. <a href="conjugate-gradient-methods-1.html#eq:18">(5.18)</a>, we can modify Eq. <a href="conjugate-gradient-methods-1.html#eq:27">(5.27)</a> in the following way:
+<span class="math display" id="eq:28">\[\begin{align}
+    \mathbb{\delta}_j^T\mathbb{A}(\mathbb{x}^* - \mathbb{x}_0) &amp;= \mathbb{\delta}_j^T(\mathbb{b} - \mathbb{x}_j) \nonumber \\ &amp;= -\mathbb{\delta}_j^T\mathbb{r}_j \nonumber \\ &amp;= -\mathbb{r}_j^T\mathbb{\delta}_j \tag{5.28}
+\end{align}\]</span></p>
+<p>So, Eq. <a href="conjugate-gradient-methods-1.html#eq:23">(5.23)</a> becomes,
+<span class="math display" id="eq:29">\[\begin{equation}
+    \lambda_j = -\frac{\mathbb{r}_j^T\mathbb{\delta}_j}{\mathbb{\delta}_j^T\mathbb{A}\mathbb{\delta}_j} \tag{5.29}
+\end{equation}\]</span></p>
+which is similar to Eq. <a href="conjugate-gradient-methods-1.html#eq:20">(5.20)</a>. So it can be concluded that,
+<span class="math display" id="eq:30">\[\begin{equation}
+    \lambda_j = \beta_j \tag{5.30}
+\end{equation}\]</span>
+This completes the proof of the theorem.
+</div>
+
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-7" class="theorem"><strong>Theorem 5.4  </strong></span>The residual at the <span class="math inline">\(j^{th}\)</span> iterate can be generated from the residual at the preceding iterate by the following iteration formula:
+<span class="math display" id="eq:31">\[\begin{equation}
+    \mathbb{r}_{j} = \mathbb{r}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j \tag{5.31}
+\end{equation}\]</span>
+</div>
+
+
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> Substituting Eq. <a href="conjugate-gradient-methods-1.html#eq:14">(5.14)</a> in Eq. <a href="conjugate-gradient-methods-1.html#eq:4">(5.4)</a>, we get,
+<span class="math display" id="eq:32">\[\begin{align}
+    \mathbb{r}_j &amp;= \mathbb{A}(\mathbb(x)_{j-1} + \beta_j\mathbb{\delta}_j) - \mathbb{b} \nonumber \\
+    &amp;= \mathbb{A}\mathbb{x}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j - b \nonumber \\
+    &amp;= (\mathbb{A}\mathbb{x}_{j-1} - b) + \beta_j\mathbb{A}\mathbb{\delta}_j \nonumber \\
+    &amp;= \mathbb{r}_{j-1} + \beta_j\mathbb{A}\mathbb{\delta}_j \tag{5.32}
+\end{align}\]</span>
+This completes the proof.
+</div>
+
+</div>
+<div id="preliminary-algorithm" class="section level3">
+<h3><span class="header-section-number">5.2.3</span> Preliminary Algorithm</h3>
+<p>In the linear conjugate gradient method, the direction <span class="math inline">\(\mathbb{\delta}_j\)</span> ix a linear combination of the preceding direction <span class="math inline">\(\mathbb{\delta}_{j-1}\)</span> and the negative of the residual <span class="math inline">\(-\mathbb{r}_j\)</span>. So we can write,
+<span class="math display" id="eq:33">\[\begin{equation}
+    \mathbb{\delta}_j = \chi_j \mathbb{\delta}_{j-1} - \mathbb{r}_j \tag{5.33}
+\end{equation}\]</span></p>
+<p>Now, to evaluate <span class="math inline">\(\chi_j\)</span>, we multiply Eq. <a href="conjugate-gradient-methods-1.html#eq:33">(5.33)</a> non-commutatively with the preceding factor <span class="math inline">\(\mathbb{\delta}_{j-1}^T\mathbb{A}\)</span> and use the mutual conjugacy condition that <span class="math inline">\(\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_j=0\)</span>. <span class="math display" id="eq:34">\[\begin{equation}
+    \mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_j = \chi_j\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1} - \mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{r}_j = 0 \tag{5.34}
+\end{equation}\]</span></p>
+<p>So, we see that,
+<span class="math display" id="eq:35">\[\begin{align}
+    \chi_j &amp;= \frac{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{r}_j}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &amp;= \frac{(\mathbb{A}\mathbb{r}_j)^T\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &amp;= \frac{\mathbb{r}_j^T\mathbb{A}^T\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \nonumber \\
+    &amp;= \frac{\mathbb{r}_j^T\mathbb{A}\mathbb{\delta}_{j-1}}{\mathbb{\delta}_{j-1}^T\mathbb{A}\mathbb{\delta}_{j-1}} \tag{5.35}
+\end{align}\]</span></p>
+<p>The <em>linear conjugate gradient algorithm</em> is given below:</p>
+<p><img src="img%2018.png" /></p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-9" class="example"><strong>Example 5.1  </strong></span>Let us consider an objective function given by:
+<span class="math display" id="eq:36">\[\begin{equation}
+    f(x_1, x_2) = \frac{x_1^2}{2} + x_1x_2 + x_2^2-2x_2 \tag{5.36}
+\end{equation}\]</span></p>
+<p>Finding the minimizer of this objective function is equivalent to finding the solution to the equation given by <span class="math inline">\(\mathbb{A}\mathbb{x} = \mathbb{b}\)</span>, where <span class="math inline">\(\mathbb{A} = \begin{bmatrix} \frac{1}{2} &amp; \frac{1}{2} \\ \frac{1}{2} &amp; 1\end{bmatrix}\)</span>, <span class="math inline">\(\mathbb{x} = \begin{bmatrix}x_1 \\ x_2\end{bmatrix}\)</span> and <span class="math inline">\(\mathbb{b} = \begin{bmatrix}0 \\2\end{bmatrix}\)</span>. So, we use the <em>linear conjugate gradient algorithm</em> to solve
+<span class="math display" id="eq:37">\[\begin{equation}
+    \begin{bmatrix} \frac{1}{2} &amp; \frac{1}{2} \\ \frac{1}{2} &amp; 1\end{bmatrix} \begin{bmatrix}x_1 \\ x_2\end{bmatrix} = \begin{bmatrix}0 \\2\end{bmatrix} \tag{5.37}
+\end{equation}\]</span></p>
+where, we will consider the starting iterate to be <span class="math inline">\(\begin{bmatrix}-2.3 \\ 2.2 \end{bmatrix}\)</span> tolerance <span class="math inline">\(\epsilon =10^{-5}\)</span>. As usual, let us first define the objective function in Python.
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="conjugate-gradient-methods-1.html#cb1-1"></a><span class="kw">def</span> f(x): <span class="co"># Define the objective function</span></span>
+<span id="cb1-2"><a href="conjugate-gradient-methods-1.html#cb1-2"></a>    <span class="cf">return</span> x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span> <span class="op">+</span> x[<span class="dv">0</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span> x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">1</span>]</span></code></pre></div>
+<p>Next we define the matrix <span class="math inline">\(\mathbb{A}\)</span> and the vector <span class="math inline">\(\mathbb{b}\)</span> in Python.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="conjugate-gradient-methods-1.html#cb2-1"></a>A <span class="op">=</span> np.array(([<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>], [<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">1</span>]), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb2-2"><a href="conjugate-gradient-methods-1.html#cb2-2"></a>b <span class="op">=</span> np.array([<span class="fl">0.</span>, <span class="fl">2.</span>])</span></code></pre></div>
+<p>We can make it sure that <span class="math inline">\(\mathbb{A}\)</span> is actually a symmetric positive definite matrix.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="conjugate-gradient-methods-1.html#cb3-1"></a>eigs <span class="op">=</span> np.linalg.eigvals(A)</span>
+<span id="cb3-2"><a href="conjugate-gradient-methods-1.html#cb3-2"></a><span class="bu">print</span>(<span class="st">&quot;The eigenvalues of A:&quot;</span>, eigs)</span></code></pre></div>
+<pre><code>## The eigenvalues of A: [0.19098301 1.30901699]</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="conjugate-gradient-methods-1.html#cb5-1"></a><span class="cf">if</span> (np.<span class="bu">all</span>(eigs<span class="op">&gt;</span><span class="dv">0</span>)):</span>
+<span id="cb5-2"><a href="conjugate-gradient-methods-1.html#cb5-2"></a>    <span class="bu">print</span>(<span class="st">&quot;A is positive definite&quot;</span>)</span>
+<span id="cb5-3"><a href="conjugate-gradient-methods-1.html#cb5-3"></a><span class="cf">elif</span> (np.<span class="bu">all</span>(eigs<span class="op">&gt;=</span><span class="dv">0</span>)):</span>
+<span id="cb5-4"><a href="conjugate-gradient-methods-1.html#cb5-4"></a>    <span class="bu">print</span>(<span class="st">&quot;A is positive semi-definite&quot;</span>)</span>
+<span id="cb5-5"><a href="conjugate-gradient-methods-1.html#cb5-5"></a><span class="cf">else</span>:</span>
+<span id="cb5-6"><a href="conjugate-gradient-methods-1.html#cb5-6"></a>    <span class="bu">print</span>(<span class="st">&quot;A is negative definite&quot;</span>)</span></code></pre></div>
+<pre><code>## A is positive definite</code></pre>
+<p>We see that <span class="math inline">\(\mathbb{A}\)</span> is indeed positive definite. To check whether it is symmetric, we can check whether <span class="math inline">\(\mathbb{A}^T\)</span> equals <span class="math inline">\(\mathbb{A}\)</span>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="conjugate-gradient-methods-1.html#cb7-1"></a><span class="cf">if</span> (A.T<span class="op">==</span>A).<span class="bu">all</span>()<span class="op">==</span><span class="va">True</span>: <span class="bu">print</span>(<span class="st">&quot;A is symmetric&quot;</span>)</span></code></pre></div>
+<pre><code>## A is symmetric</code></pre>
+<p>So <span class="math inline">\(\mathbb{A}\)</span> is symmetric too. Now we write the Python function <code>linear_CG()</code> that implements the <em>linear conjugate gradient algorithm</em></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="conjugate-gradient-methods-1.html#cb9-1"></a><span class="kw">def</span> linear_CG(x, A, b, epsilon):</span>
+<span id="cb9-2"><a href="conjugate-gradient-methods-1.html#cb9-2"></a>    res <span class="op">=</span> A.dot(x) <span class="op">-</span> b <span class="co"># Initialize the residual</span></span>
+<span id="cb9-3"><a href="conjugate-gradient-methods-1.html#cb9-3"></a>    delta <span class="op">=</span> <span class="op">-</span>res <span class="co"># Initialize the descent direction</span></span>
+<span id="cb9-4"><a href="conjugate-gradient-methods-1.html#cb9-4"></a>    </span>
+<span id="cb9-5"><a href="conjugate-gradient-methods-1.html#cb9-5"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb9-6"><a href="conjugate-gradient-methods-1.html#cb9-6"></a>        </span>
+<span id="cb9-7"><a href="conjugate-gradient-methods-1.html#cb9-7"></a>        <span class="cf">if</span> np.linalg.norm(res) <span class="op">&lt;=</span> epsilon:</span>
+<span id="cb9-8"><a href="conjugate-gradient-methods-1.html#cb9-8"></a>            <span class="cf">return</span> x, f(x) <span class="co"># Return the minimizer x* and the function value f(x*)</span></span>
+<span id="cb9-9"><a href="conjugate-gradient-methods-1.html#cb9-9"></a>        </span>
+<span id="cb9-10"><a href="conjugate-gradient-methods-1.html#cb9-10"></a>        D <span class="op">=</span> A.dot(delta)</span>
+<span id="cb9-11"><a href="conjugate-gradient-methods-1.html#cb9-11"></a>        beta <span class="op">=</span> <span class="op">-</span>(res.dot(delta))<span class="op">/</span>(delta.dot(D)) <span class="co"># Line (11) in the algorithm</span></span>
+<span id="cb9-12"><a href="conjugate-gradient-methods-1.html#cb9-12"></a>        x <span class="op">=</span> x <span class="op">+</span> beta<span class="op">*</span>delta <span class="co"># Generate the new iterate</span></span>
+<span id="cb9-13"><a href="conjugate-gradient-methods-1.html#cb9-13"></a></span>
+<span id="cb9-14"><a href="conjugate-gradient-methods-1.html#cb9-14"></a>        res <span class="op">=</span> A.dot(x) <span class="op">-</span> b <span class="co"># generate the new residual</span></span>
+<span id="cb9-15"><a href="conjugate-gradient-methods-1.html#cb9-15"></a>        chi <span class="op">=</span> res.dot(D)<span class="op">/</span>(delta.dot(D)) <span class="co"># Line (14) in the algorithm </span></span>
+<span id="cb9-16"><a href="conjugate-gradient-methods-1.html#cb9-16"></a>        delta <span class="op">=</span> chi<span class="op">*</span>delta <span class="op">-</span>  res <span class="co"># Generate the new descent direction</span></span></code></pre></div>
+<p>Finally, we pass the parameters that we consider for this example to the function <code>linear_CG()</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="conjugate-gradient-methods-1.html#cb10-1"></a>linear_CG(np.array([<span class="fl">2.3</span>, <span class="fl">-2.2</span>]), A, b, <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## (array([-4.,  4.]), 0.0)</code></pre>
+<p>We see that the solution is <span class="math inline">\(\mathbb{x^*} \sim \begin{bmatrix}-4 \\ 4 \end{bmatrix}\)</span> and the function value at this point is <span class="math inline">\(0\)</span>. We can verify the result is correct by following the trivial solution of Eq. <a href="conjugate-gradient-methods-1.html#eq:37">(5.37)</a>:</p>
+<p><span class="math display" id="eq:38">\[\begin{align}
+    \begin{bmatrix}x_1 \\ x_2\end{bmatrix} &amp;= \begin{bmatrix} \frac{1}{2} &amp; \frac{1}{2} \\ \frac{1}{2} &amp; 1\end{bmatrix}^{-1} \begin{bmatrix}0 \\2\end{bmatrix} \nonumber \\
+    &amp;= \begin{bmatrix}-4 \\ 4\end{bmatrix} \tag{5.38}
+\end{align}\]</span></p>
+<p>We can even write a Python code to check the above case:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="conjugate-gradient-methods-1.html#cb12-1"></a>np.linalg.inv(A).dot(b)</span></code></pre></div>
+<pre><code>## array([-4.,  4.])</code></pre>
+<p>We see that our Python implementation of the <em>linear conjugate gradient algorithm</em> works perfectly. We will now discuss <em>nonlinear conjugate gradient algorithms</em> in the next section</p>
+</div>
+</div>
+<div id="nonlinear-conjugate-gradient-algorithm" class="section level2">
+<h2><span class="header-section-number">5.3</span> Nonlinear Conjugate Gradient Algorithm</h2>
+<p>We can modify our <em>conjugate gradient method</em> to optimize convex nonlinear objective functions. The first method that we study under this class is the <em>Fletcher-Reeves</em> method.</p>
+<div id="feltcher-reeves-algorithm" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Feltcher-Reeves Algorithm</h3>
+<p>The first application of the <em>Conjugate Gradient Method</em> on nonlinear objective functions was introduced by Fletcher and Reeves. The directions <span class="math inline">\(\mathbb{\delta}_j\)</span> given by Fletcher and Reeves are mutually conjugate with respect to the symmetric positive definite matrix <span class="math inline">\(\mathbb{A}\)</span> in Eq. <a href="conjugate-gradient-methods-1.html#eq:1">(5.1)</a>, where the residual is given by Eq. <a href="conjugate-gradient-methods-1.html#eq:5">(5.5)</a>. The descent direction is given by,</p>
+<p><span class="math display" id="eq:39">\[\begin{equation}
+    \mathbb{\delta}_{j+1} =
+    \begin{cases}
+    -\nabla f(\mathbb{x}_j),\ \ j=0 \\
+    -\nabla f(\mathbb{x}_j) + \chi_j\mathbb{\delta}_j,\ \ j=1, 2, \ldots, n-1 \tag{5.39}
+    \end{cases}
+\end{equation}\]</span></p>
+<p>In the above equation,
+<span class="math display" id="eq:40">\[\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}+\beta_j\mathbb{\delta}_j \tag{5.40}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\beta_j\)</span> is the <span class="math inline">\(j^{th}\)</span> step length. <span class="math inline">\(\chi_j\)</span> in Eq. <a href="conjugate-gradient-methods-1.html#eq:39">(5.39)</a> is given by,
+<span class="math display" id="eq:41">\[\begin{equation}
+    \chi_j = \frac{\|\nabla f(\mathbb{x}_j)\|^2}{\|\nabla f(\mathbb{x}_{j-1})\|^2} \tag{5.41}
+\end{equation}\]</span></p>
+<p>The <em>Fletcher-Reeves Algorithm</em> is given below:</p>
+<p><img src="img%2019.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-18" class="example"><strong>Example 5.2  </strong></span>Let us consider an objective function having the form,
+<span class="math display" id="eq:42">\[\begin{equation}
+    f(x_1, x_2) = x_1^4 - 2x_1^2x_2+x_1^2 + x_2^2-2x_1+1 \tag{5.42}
+\end{equation}\]</span>
+The function has a local minimizer at <span class="math inline">\(f(1, 1) = 0\)</span>. We will implement the <em>Fletcher-Reeves algorithm</em> in Python to figure out the minimizer. Let the starting iterate be given by <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span> and the constants to be used for determining the step length using the  be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.38\)</span>. Let us first define the objective function and its gradient in Python.
+</div>
+
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="conjugate-gradient-methods-1.html#cb14-1"></a><span class="kw">def</span> func(x): <span class="co"># Objective function</span></span>
+<span id="cb14-2"><a href="conjugate-gradient-methods-1.html#cb14-2"></a>    <span class="cf">return</span> x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span><span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span> x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> x[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb14-3"><a href="conjugate-gradient-methods-1.html#cb14-3"></a></span>
+<span id="cb14-4"><a href="conjugate-gradient-methods-1.html#cb14-4"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span></code></pre></div>
+<p>Next we define the function <code>Fletcher_Reeves()</code> in Python:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="conjugate-gradient-methods-1.html#cb15-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> line_search</span>
+<span id="cb15-2"><a href="conjugate-gradient-methods-1.html#cb15-2"></a>NORM <span class="op">=</span> np.linalg.norm</span>
+<span id="cb15-3"><a href="conjugate-gradient-methods-1.html#cb15-3"></a></span>
+<span id="cb15-4"><a href="conjugate-gradient-methods-1.html#cb15-4"></a><span class="kw">def</span> Fletcher_Reeves(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb15-5"><a href="conjugate-gradient-methods-1.html#cb15-5"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb15-6"><a href="conjugate-gradient-methods-1.html#cb15-6"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb15-7"><a href="conjugate-gradient-methods-1.html#cb15-7"></a>    D <span class="op">=</span> Df(Xj)</span>
+<span id="cb15-8"><a href="conjugate-gradient-methods-1.html#cb15-8"></a>    delta <span class="op">=</span> <span class="op">-</span>D <span class="co"># Initialize the descent direction</span></span>
+<span id="cb15-9"><a href="conjugate-gradient-methods-1.html#cb15-9"></a>    </span>
+<span id="cb15-10"><a href="conjugate-gradient-methods-1.html#cb15-10"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb15-11"><a href="conjugate-gradient-methods-1.html#cb15-11"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb15-12"><a href="conjugate-gradient-methods-1.html#cb15-12"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb15-13"><a href="conjugate-gradient-methods-1.html#cb15-13"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb15-14"><a href="conjugate-gradient-methods-1.html#cb15-14"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta <span class="co">#Newly updated experimental point</span></span>
+<span id="cb15-15"><a href="conjugate-gradient-methods-1.html#cb15-15"></a>        </span>
+<span id="cb15-16"><a href="conjugate-gradient-methods-1.html#cb15-16"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb15-17"><a href="conjugate-gradient-methods-1.html#cb15-17"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb15-18"><a href="conjugate-gradient-methods-1.html#cb15-18"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb15-19"><a href="conjugate-gradient-methods-1.html#cb15-19"></a>            <span class="cf">return</span> X, func(X) <span class="co"># Return the results</span></span>
+<span id="cb15-20"><a href="conjugate-gradient-methods-1.html#cb15-20"></a>        <span class="cf">else</span>:</span>
+<span id="cb15-21"><a href="conjugate-gradient-methods-1.html#cb15-21"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb15-22"><a href="conjugate-gradient-methods-1.html#cb15-22"></a>            d <span class="op">=</span> D <span class="co"># Gradient at the preceding experimental point</span></span>
+<span id="cb15-23"><a href="conjugate-gradient-methods-1.html#cb15-23"></a>            D <span class="op">=</span> Df(Xj) <span class="co"># Gradient at the current experimental point</span></span>
+<span id="cb15-24"><a href="conjugate-gradient-methods-1.html#cb15-24"></a>            chi <span class="op">=</span> NORM(D)<span class="op">**</span><span class="dv">2</span><span class="op">/</span>NORM(d)<span class="op">**</span><span class="dv">2</span> <span class="co"># Line (16) of the Fletcher-Reeves algorithm</span></span>
+<span id="cb15-25"><a href="conjugate-gradient-methods-1.html#cb15-25"></a>            delta <span class="op">=</span> <span class="op">-</span>D <span class="op">+</span> chi<span class="op">*</span>delta <span class="co"># Newly updated descent direction</span></span>
+<span id="cb15-26"><a href="conjugate-gradient-methods-1.html#cb15-26"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb15-27"><a href="conjugate-gradient-methods-1.html#cb15-27"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>According to our example we set our parameter values and pass them to the <code>Fletcher_Reeves()</code> function:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="conjugate-gradient-methods-1.html#cb16-1"></a>Fletcher_Reeves(np.array([<span class="fl">2.</span>, <span class="fl">-1.8</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.38</span>)</span></code></pre></div>
+<pre><code>## (array([0.99999267, 0.99998207]), 6.445799449750211e-11)</code></pre>
+<p>We notice that, for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</span> with <span class="math inline">\(f(\mathbb{x}^*) \sim 0\)</span>.</p>
 <p><strong>This Chapter is under construction</strong></p>
 
 </div>
