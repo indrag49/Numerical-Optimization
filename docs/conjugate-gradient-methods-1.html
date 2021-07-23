@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-21" />
+<meta name="date" content="2021-07-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#nonlinear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.3</b> Nonlinear Conjugate Gradient Algorithm</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#feltcher-reeves-algorithm"><i class="fa fa-check"></i><b>5.3.1</b> Feltcher-Reeves Algorithm</a></li>
+<li class="chapter" data-level="5.3.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#polak-ribiere-algorithm"><i class="fa fa-check"></i><b>5.3.2</b> Polak-Ribiere Algorithm</a></li>
+<li class="chapter" data-level="5.3.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#hestenes-stiefel-algorithm"><i class="fa fa-check"></i><b>5.3.3</b> Hestenes-Stiefel Algorithm</a></li>
+<li class="chapter" data-level="5.3.4" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#dai-yuan-algorithm"><i class="fa fa-check"></i><b>5.3.4</b> Dai-Yuan Algorithm</a></li>
+<li class="chapter" data-level="5.3.5" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#hager-zhang-algorithm"><i class="fa fa-check"></i><b>5.3.5</b> Hager-Zhang Algorithm</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#the-scipy.optimize.minimize-function"><i class="fa fa-check"></i><b>5.4</b> The <code>scipy.optimize.minimize()</code> Function</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -526,7 +531,7 @@ where, we will consider the starting iterate to be <span class="math inline">\(\
 <span class="math display" id="eq:42">\[\begin{equation}
     f(x_1, x_2) = x_1^4 - 2x_1^2x_2+x_1^2 + x_2^2-2x_1+1 \tag{5.42}
 \end{equation}\]</span>
-The function has a local minimizer at <span class="math inline">\(f(1, 1) = 0\)</span>. We will implement the <em>Fletcher-Reeves algorithm</em> in Python to figure out the minimizer. Let the starting iterate be given by <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span> and the constants to be used for determining the step length using the  be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.38\)</span>. Let us first define the objective function and its gradient in Python.
+The function has a local minimizer at <span class="math inline">\(f(1, 1) = 0\)</span>. We will implement the <em>Fletcher-Reeves algorithm</em> in Python to figure out the minimizer. Let the starting iterate be given by <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span> and the constants to be used for determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.38\)</span>. Let us first define the objective function and its gradient in Python.
 </div>
 
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="conjugate-gradient-methods-1.html#cb14-1"></a><span class="kw">def</span> func(x): <span class="co"># Objective function</span></span>
@@ -564,10 +569,389 @@ The function has a local minimizer at <span class="math inline">\(f(1, 1) = 0\)<
 <p>According to our example we set our parameter values and pass them to the <code>Fletcher_Reeves()</code> function:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="conjugate-gradient-methods-1.html#cb16-1"></a>Fletcher_Reeves(np.array([<span class="fl">2.</span>, <span class="fl">-1.8</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.38</span>)</span></code></pre></div>
 <pre><code>## (array([0.99999267, 0.99998207]), 6.445799449750211e-11)</code></pre>
-<p>We notice that, for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</span> with <span class="math inline">\(f(\mathbb{x}^*) \sim 0\)</span>.</p>
-<p><strong>This Chapter is under construction</strong></p>
-
+<p>We notice that, for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</span> with <span class="math inline">\(f(\mathbb{x}^*) \sim 0\)</span>. The figure showing the optimization trajectory is shown below:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>The optimization data for the same is given below:</p>
+<pre><code>## +----+-----------+------------+--------------+--------------+
+## |    |       x_1 |        x_2 |         f(X) |     ||grad|| |
+## |----+-----------+------------+--------------+--------------|
+## |  0 |  2        | -1.8       | 34.64        | 49.7707      |
+## |  1 | -0.98032  | -1.08571   |  8.1108      | 12.6662      |
+## |  2 |  1.08966  |  0.0472277 |  1.30794     |  5.6311      |
+## |  3 |  0.642619 |  0.473047  |  0.131332    |  0.877485    |
+## |  4 |  0.766371 |  0.46651   |  0.0691785   |  0.260336    |
+## |  5 |  0.932517 |  0.704482  |  0.0318138   |  0.583346    |
+## |  6 |  1.0149   |  1.06008   |  0.00112543  |  0.110081    |
+## |  7 |  1.02357  |  1.0596    |  0.000697231 |  0.0238509   |
+## |  8 |  1.02489  |  1.05473   |  0.000638128 |  0.0331525   |
+## |  9 |  1.00544  |  0.999549  |  0.000158528 |  0.0609372   |
+## | 10 |  0.996075 |  0.987011  |  4.19723e-05 |  0.016347    |
+## | 11 |  0.994792 |  0.986923  |  3.43476e-05 |  0.00538401  |
+## | 12 |  0.994466 |  0.987575  |  3.25511e-05 |  0.00620548  |
+## | 13 |  0.9956   |  0.992867  |  2.20695e-05 |  0.015708    |
+## | 14 |  0.999909 |  1.00171   |  3.59093e-06 |  0.008628    |
+## | 15 |  1.00088  |  1.00254   |  1.3779e-06  |  0.00206337  |
+## | 16 |  1.00102  |  1.00249   |  1.24228e-06 |  0.000925229 |
+## | 17 |  1.00106  |  1.00226   |  1.14704e-06 |  0.00161353  |
+## | 18 |  1.00056  |  1.00065   |  5.3011e-07  |  0.00313135  |
+## | 19 |  0.999916 |  0.99956   |  8.14653e-08 |  0.00107299  |
+## | 20 |  0.999816 |  0.999511  |  4.85294e-08 |  0.000269684 |
+## | 21 |  0.999798 |  0.999526  |  4.57054e-08 |  0.000185146 |
+## | 22 |  0.999803 |  0.999615  |  3.90603e-08 |  0.000435884 |
+## | 23 |  0.99995  |  0.999991  |  1.08357e-08 |  0.000499645 |
+## | 24 |  1.00003  |  1.00009   |  2.25348e-09 |  0.000130632 |
+## | 25 |  1.00004  |  1.00009   |  1.75917e-09 |  3.97529e-05 |
+## | 26 |  1.00004  |  1.00009   |  1.66947e-09 |  4.22905e-05 |
+## | 27 |  1.00003  |  1.00006   |  1.1931e-09  |  0.000108964 |
+## | 28 |  1        |  0.999989  |  2.11734e-10 |  6.79786e-05 |
+## | 29 |  0.999994 |  0.999982  |  7.24881e-11 |  1.61034e-05 |
+## | 30 |  0.999993 |  0.999982  |  6.4458e-11  |  6.72611e-06 |
+## +----+-----------+------------+--------------+--------------+</code></pre>
+<p>The algorithm reduces to the <em>linear conjugate gradient algorithm</em> if the objective function is chosen to be strongly convex quadratic. We notice that in the algorithm, we just need to compute the objective function and its gradient at each iterate and no Hessian computation is required. Next we discuss the <em>Polak-Ribiere algorithm</em>.</p>
 </div>
+<div id="polak-ribiere-algorithm" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> Polak-Ribiere Algorithm</h3>
+<p>One of the variants of the <em>Fletcher-Reeves algorithm</em> is the <em>Polak-Ribiere algorithm</em>, where, the <span class="math inline">\(\chi_j\)</span> in Eq. <a href="conjugate-gradient-methods-1.html#eq:39">(5.39)</a> is given by:
+<span class="math display" id="eq:43">\[\begin{equation}
+    \chi_j = \frac{[\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]^T\nabla f(\mathbb{x}_j)}{\|\nabla f(\mathbb{x}_{j-1})\|^2} \tag{5.43}
+\end{equation}\]</span></p>
+<p>One important characteristic to notice here is that, the <em>strong Wolfe conditions</em> do not guarantee the direction <span class="math inline">\(\mathbb{\delta}_j\)</span> will always be a descent direction in the <em>Polak-RIbiere algorithm</em>. Then, <span class="math inline">\(\chi\)</span> needs to modified in the following way:
+<span class="math display" id="eq:44">\[\begin{equation}
+    \chi_j = \max\{0, \chi_j\} \tag{5.44}
+\end{equation}\]</span></p>
+<p>This ensures that the <em>strong wolfe conditions</em> guarantee a descent direction . The <em>Polak-Ribiere algorithm</em> reduces back to the <em>Fletcher-Reeves algorithm</em> if the objective function is strongly convex quadratic, and the line search is exact. The <em>Polak-Ribiere Algorithm</em> is given below:</p>
+<p><img src="img%2020.png" /></p>
+<p>The <em>polak-Ribiere algorithm</em> is most often considered as more coherent than the <em>Fletcher-Reeves algorithm</em>.</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-24" class="example"><strong>Example 5.3  </strong></span>Let us again consider an objective function given in Eq. <a href="conjugate-gradient-methods-1.html#eq:42">(5.42)</a>. We will implement the <em>Polak-Ribiere algorithm</em> in Python to figure out the minimizer. Let the starting iterate be given by <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}-1.7 \\ -3.2 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-6}\)</span> and the constants to be used for determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.2\)</span>. We define the function <code>Polak_Ribiere()</code> in Python:
+</div>
+
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="conjugate-gradient-methods-1.html#cb19-1"></a><span class="kw">def</span> Polak_Ribiere(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb19-2"><a href="conjugate-gradient-methods-1.html#cb19-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb19-3"><a href="conjugate-gradient-methods-1.html#cb19-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb19-4"><a href="conjugate-gradient-methods-1.html#cb19-4"></a>    D <span class="op">=</span> Df(Xj)</span>
+<span id="cb19-5"><a href="conjugate-gradient-methods-1.html#cb19-5"></a>    delta <span class="op">=</span> <span class="op">-</span>D <span class="co"># Initialize the descent direction</span></span>
+<span id="cb19-6"><a href="conjugate-gradient-methods-1.html#cb19-6"></a>    </span>
+<span id="cb19-7"><a href="conjugate-gradient-methods-1.html#cb19-7"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb19-8"><a href="conjugate-gradient-methods-1.html#cb19-8"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb19-9"><a href="conjugate-gradient-methods-1.html#cb19-9"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb19-10"><a href="conjugate-gradient-methods-1.html#cb19-10"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb19-11"><a href="conjugate-gradient-methods-1.html#cb19-11"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta <span class="co"># Newly updated experimental point </span></span>
+<span id="cb19-12"><a href="conjugate-gradient-methods-1.html#cb19-12"></a>        </span>
+<span id="cb19-13"><a href="conjugate-gradient-methods-1.html#cb19-13"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb19-14"><a href="conjugate-gradient-methods-1.html#cb19-14"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb19-15"><a href="conjugate-gradient-methods-1.html#cb19-15"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb19-16"><a href="conjugate-gradient-methods-1.html#cb19-16"></a>            <span class="cf">return</span> X, func(X) <span class="co"># Return the results</span></span>
+<span id="cb19-17"><a href="conjugate-gradient-methods-1.html#cb19-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb19-18"><a href="conjugate-gradient-methods-1.html#cb19-18"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb19-19"><a href="conjugate-gradient-methods-1.html#cb19-19"></a>            d <span class="op">=</span> D <span class="co"># Gradient of the preceding experimental point</span></span>
+<span id="cb19-20"><a href="conjugate-gradient-methods-1.html#cb19-20"></a>            D <span class="op">=</span> Df(Xj) <span class="co"># Gradient of the current experimental point</span></span>
+<span id="cb19-21"><a href="conjugate-gradient-methods-1.html#cb19-21"></a>            chi <span class="op">=</span> (D<span class="op">-</span>d).dot(D)<span class="op">/</span>NORM(d)<span class="op">**</span><span class="dv">2</span> </span>
+<span id="cb19-22"><a href="conjugate-gradient-methods-1.html#cb19-22"></a>            chi <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, chi) <span class="co"># Line (16) of the Polak-Ribiere Algorithm</span></span>
+<span id="cb19-23"><a href="conjugate-gradient-methods-1.html#cb19-23"></a>            delta <span class="op">=</span> <span class="op">-</span>D <span class="op">+</span> chi<span class="op">*</span>delta <span class="co"># Newly updated direction</span></span>
+<span id="cb19-24"><a href="conjugate-gradient-methods-1.html#cb19-24"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb19-25"><a href="conjugate-gradient-methods-1.html#cb19-25"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>According to our example we set our parameter values and pass them to the <code>Polak_Ribiere()</code> function:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="conjugate-gradient-methods-1.html#cb20-1"></a>Polak_Ribiere(np.array([<span class="op">-</span><span class="fl">1.7</span>, <span class="fl">-3.2</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">6</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.2</span>)</span></code></pre></div>
+<pre><code>## (array([1., 1.]), 0.0)</code></pre>
+<p>We notice that, for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}\)</span> with <span class="math inline">\(f(\mathbb{x}^*) \sim 0\)</span>. The Figure showing the optimization trajectory is shown below:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p>The optimization data for the same is given in the table below:</p>
+<pre><code>## +----+-----------+------------+--------------+--------------+
+## |    |       x_1 |        x_2 |         f(X) |     ||grad|| |
+## |----+-----------+------------+--------------+--------------|
+## |  0 | -1.7      | -3.2       | 44.3781      | 48.3706      |
+## |  1 |  0.444052 | -2.64214   |  8.37083     |  6.90669     |
+## |  2 |  0.160431 |  0.0845414 |  0.708334    |  1.7209      |
+## |  3 |  0.813837 |  0.626715  |  0.0359251   |  0.266095    |
+## |  4 |  0.851657 |  0.637222  |  0.0297668   |  0.176227    |
+## |  5 |  0.985178 |  1.02861   |  0.00358778  |  0.283221    |
+## |  6 |  1.01609  |  1.06259   |  0.00116756  |  0.1086      |
+## |  7 |  1.0238   |  1.05744   |  0.000652461 |  0.0208901   |
+## |  8 |  0.99978  |  1.00021   |  4.68434e-07 |  0.00329728  |
+## |  9 |  1.00002  |  1.00004   |  2.62911e-10 |  1.34768e-05 |
+## | 10 |  1        |  1         |  2.00728e-13 |  2.16127e-06 |
+## | 11 |  1        |  1         |  0           |  1.79832e-10 |
+## +----+-----------+------------+--------------+--------------+</code></pre>
+<p>Next we study the <em>Hestenes-Stiefel algorithm</em>.</p>
+</div>
+<div id="hestenes-stiefel-algorithm" class="section level3">
+<h3><span class="header-section-number">5.3.3</span> Hestenes-Stiefel Algorithm</h3>
+<p>In this variant, Eq. <a href="conjugate-gradient-methods-1.html#eq:39">(5.39)</a> changes to:
+<span class="math display" id="eq:45">\[\begin{equation}
+    \chi_j = \frac{\nabla f(\mathbb{x}_j)^T[\nabla(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]}{\mathbb{\delta}_j^T[\nabla(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]} \tag{5.45}
+\end{equation}\]</span></p>
+<p>The <em>Hestenes-Stiefel algorithm</em> is given below:</p>
+<p><img src="img%2021.png" /></p>
+<p>The Python implementation is given by the Python function <code>Hestenes_Stiefel()</code>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="conjugate-gradient-methods-1.html#cb23-1"></a><span class="kw">def</span> Hestenes_Stiefel(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb23-2"><a href="conjugate-gradient-methods-1.html#cb23-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb23-3"><a href="conjugate-gradient-methods-1.html#cb23-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb23-4"><a href="conjugate-gradient-methods-1.html#cb23-4"></a>    D <span class="op">=</span> Df(Xj)</span>
+<span id="cb23-5"><a href="conjugate-gradient-methods-1.html#cb23-5"></a>    delta <span class="op">=</span> <span class="op">-</span>D</span>
+<span id="cb23-6"><a href="conjugate-gradient-methods-1.html#cb23-6"></a>    </span>
+<span id="cb23-7"><a href="conjugate-gradient-methods-1.html#cb23-7"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb23-8"><a href="conjugate-gradient-methods-1.html#cb23-8"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb23-9"><a href="conjugate-gradient-methods-1.html#cb23-9"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb23-10"><a href="conjugate-gradient-methods-1.html#cb23-10"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb23-11"><a href="conjugate-gradient-methods-1.html#cb23-11"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb23-12"><a href="conjugate-gradient-methods-1.html#cb23-12"></a>        </span>
+<span id="cb23-13"><a href="conjugate-gradient-methods-1.html#cb23-13"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb23-14"><a href="conjugate-gradient-methods-1.html#cb23-14"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb23-15"><a href="conjugate-gradient-methods-1.html#cb23-15"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb23-16"><a href="conjugate-gradient-methods-1.html#cb23-16"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb23-17"><a href="conjugate-gradient-methods-1.html#cb23-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb23-18"><a href="conjugate-gradient-methods-1.html#cb23-18"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb23-19"><a href="conjugate-gradient-methods-1.html#cb23-19"></a>            d <span class="op">=</span> D</span>
+<span id="cb23-20"><a href="conjugate-gradient-methods-1.html#cb23-20"></a>            D <span class="op">=</span> Df(Xj)</span>
+<span id="cb23-21"><a href="conjugate-gradient-methods-1.html#cb23-21"></a>            chi <span class="op">=</span> D.dot(D <span class="op">-</span> d)<span class="op">/</span>delta.dot(D <span class="op">-</span> d) <span class="co"># See line (16)</span></span>
+<span id="cb23-22"><a href="conjugate-gradient-methods-1.html#cb23-22"></a>            delta <span class="op">=</span> <span class="op">-</span>D <span class="op">+</span> chi<span class="op">*</span>delta</span>
+<span id="cb23-23"><a href="conjugate-gradient-methods-1.html#cb23-23"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb23-24"><a href="conjugate-gradient-methods-1.html#cb23-24"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>The Python function can be used by the user to optimize and study any objective function provided reasonable parameters are passed to it. The variant that we look into next, is called the <em>Dai-Yuan algorithm</em>.</p>
+</div>
+<div id="dai-yuan-algorithm" class="section level3">
+<h3><span class="header-section-number">5.3.4</span> Dai-Yuan Algorithm</h3>
+<p>In this variant, Eq. <a href="conjugate-gradient-methods-1.html#eq:39">(5.39)</a> changes to:
+<span class="math display" id="eq:46">\[\begin{equation}
+    \chi_j = \frac{\|\nabla f(\mathbb{x}_j)\|^2}{\mathbb{\delta}_j^T[\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]} \tag{5.46}
+\end{equation}\]</span></p>
+<p>The <em>Dai-Yuan algorithm</em> [ref, Dai-Yuan, A nonlinear conjugate gradient method with a strong global convergence property] is given below:</p>
+<p><img src="img%2022.png" /></p>
+<p>Python implementation is given by the Python function <code>Dai_Yuan()</code>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="conjugate-gradient-methods-1.html#cb24-1"></a><span class="kw">def</span> Dai_Yuan(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb24-2"><a href="conjugate-gradient-methods-1.html#cb24-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb24-3"><a href="conjugate-gradient-methods-1.html#cb24-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb24-4"><a href="conjugate-gradient-methods-1.html#cb24-4"></a>    D <span class="op">=</span> Df(Xj)</span>
+<span id="cb24-5"><a href="conjugate-gradient-methods-1.html#cb24-5"></a>    delta <span class="op">=</span> <span class="op">-</span>D</span>
+<span id="cb24-6"><a href="conjugate-gradient-methods-1.html#cb24-6"></a>    </span>
+<span id="cb24-7"><a href="conjugate-gradient-methods-1.html#cb24-7"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb24-8"><a href="conjugate-gradient-methods-1.html#cb24-8"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb24-9"><a href="conjugate-gradient-methods-1.html#cb24-9"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb24-10"><a href="conjugate-gradient-methods-1.html#cb24-10"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb24-11"><a href="conjugate-gradient-methods-1.html#cb24-11"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb24-12"><a href="conjugate-gradient-methods-1.html#cb24-12"></a>        </span>
+<span id="cb24-13"><a href="conjugate-gradient-methods-1.html#cb24-13"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb24-14"><a href="conjugate-gradient-methods-1.html#cb24-14"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb24-15"><a href="conjugate-gradient-methods-1.html#cb24-15"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb24-16"><a href="conjugate-gradient-methods-1.html#cb24-16"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb24-17"><a href="conjugate-gradient-methods-1.html#cb24-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb24-18"><a href="conjugate-gradient-methods-1.html#cb24-18"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb24-19"><a href="conjugate-gradient-methods-1.html#cb24-19"></a>            d <span class="op">=</span> D</span>
+<span id="cb24-20"><a href="conjugate-gradient-methods-1.html#cb24-20"></a>            D <span class="op">=</span> Df(Xj)</span>
+<span id="cb24-21"><a href="conjugate-gradient-methods-1.html#cb24-21"></a>            chi <span class="op">=</span> NORM(D)<span class="op">**</span><span class="dv">2</span><span class="op">/</span>delta.dot(D <span class="op">-</span> d) <span class="co"># See line (16)</span></span>
+<span id="cb24-22"><a href="conjugate-gradient-methods-1.html#cb24-22"></a>            delta <span class="op">=</span> <span class="op">-</span>D <span class="op">+</span> chi<span class="op">*</span>delta</span>
+<span id="cb24-23"><a href="conjugate-gradient-methods-1.html#cb24-23"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb24-24"><a href="conjugate-gradient-methods-1.html#cb24-24"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>The last variant that we will discuss is the <em>Hager-Zhang algorithm</em>.</p>
+</div>
+<div id="hager-zhang-algorithm" class="section level3">
+<h3><span class="header-section-number">5.3.5</span> Hager-Zhang Algorithm</h3>
+<p>In this variant, Eq. <a href="conjugate-gradient-methods-1.html#eq:39">(5.39)</a> changes to:
+<span class="math display" id="eq:47">\[\begin{equation}
+    \chi_j = \mathbb{M}_j^T\mathbb{N}_j \tag{5.47}
+\end{equation}\]</span></p>
+<p>where,</p>
+<p><span class="math display" id="eq:48">\[\begin{equation}
+    \mathbb{M}_j = \mathbb{Q}_j - 2\delta_j\frac{\|\mathbb{Q}_j\|^2}{\mathbb{\delta}_j^T\mathbb{Q}_j} \tag{5.48}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:49">\[\begin{equation}
+    \mathbb{N}_j = \frac{\nabla f(\mathbb{x}_j)}{\mathbb{\delta}_j^T\mathbb{Q}_j} \tag{5.49}
+\end{equation}\]</span>
+In the equations above, <span class="math inline">\(\mathbb{Q}_j\)</span> is actually given by
+<span class="math display" id="eq:50">\[\begin{equation}
+    \mathbb{Q}_j = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) \tag{5.50}
+\end{equation}\]</span></p>
+<p>The <em>Hager-Zhang algorithm</em> is given below:</p>
+<p><img src="img%2023.png" /></p>
+<p>The Python implementation is given by the Python function <code>Hager_Zhang()</code>:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="conjugate-gradient-methods-1.html#cb25-1"></a><span class="kw">def</span> Hager_Zhang(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb25-2"><a href="conjugate-gradient-methods-1.html#cb25-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb25-3"><a href="conjugate-gradient-methods-1.html#cb25-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb25-4"><a href="conjugate-gradient-methods-1.html#cb25-4"></a>    D <span class="op">=</span> Df(Xj)</span>
+<span id="cb25-5"><a href="conjugate-gradient-methods-1.html#cb25-5"></a>    delta <span class="op">=</span> <span class="op">-</span>D</span>
+<span id="cb25-6"><a href="conjugate-gradient-methods-1.html#cb25-6"></a>    </span>
+<span id="cb25-7"><a href="conjugate-gradient-methods-1.html#cb25-7"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb25-8"><a href="conjugate-gradient-methods-1.html#cb25-8"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb25-9"><a href="conjugate-gradient-methods-1.html#cb25-9"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb25-10"><a href="conjugate-gradient-methods-1.html#cb25-10"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb25-11"><a href="conjugate-gradient-methods-1.html#cb25-11"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb25-12"><a href="conjugate-gradient-methods-1.html#cb25-12"></a>        </span>
+<span id="cb25-13"><a href="conjugate-gradient-methods-1.html#cb25-13"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb25-14"><a href="conjugate-gradient-methods-1.html#cb25-14"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb25-15"><a href="conjugate-gradient-methods-1.html#cb25-15"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb25-16"><a href="conjugate-gradient-methods-1.html#cb25-16"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb25-17"><a href="conjugate-gradient-methods-1.html#cb25-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb25-18"><a href="conjugate-gradient-methods-1.html#cb25-18"></a>            Xj <span class="op">=</span> X</span>
+<span id="cb25-19"><a href="conjugate-gradient-methods-1.html#cb25-19"></a>            d <span class="op">=</span> D</span>
+<span id="cb25-20"><a href="conjugate-gradient-methods-1.html#cb25-20"></a>            D <span class="op">=</span> Df(Xj)</span>
+<span id="cb25-21"><a href="conjugate-gradient-methods-1.html#cb25-21"></a>            Q <span class="op">=</span> D <span class="op">-</span> d</span>
+<span id="cb25-22"><a href="conjugate-gradient-methods-1.html#cb25-22"></a>            M <span class="op">=</span> Q <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>delta<span class="op">*</span>NORM(Q)<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(delta.dot(Q))</span>
+<span id="cb25-23"><a href="conjugate-gradient-methods-1.html#cb25-23"></a>            N <span class="op">=</span> D<span class="op">/</span>(delta.dot(Q))</span>
+<span id="cb25-24"><a href="conjugate-gradient-methods-1.html#cb25-24"></a>            chi <span class="op">=</span> M.dot(N) <span class="co"># See line (19)</span></span>
+<span id="cb25-25"><a href="conjugate-gradient-methods-1.html#cb25-25"></a>            delta <span class="op">=</span> <span class="op">-</span>D <span class="op">+</span> chi<span class="op">*</span>delta</span>
+<span id="cb25-26"><a href="conjugate-gradient-methods-1.html#cb25-26"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb25-27"><a href="conjugate-gradient-methods-1.html#cb25-27"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>To use the Python function for optimizing any objective function, define an objective function <code>func()</code> and its gradient <code>Df()</code> first, in the same way that we have been doing till now.</p>
+<p>Although <em>Polak-Ribiere algorithm</em> most often is more efficient than <em>Fletcher-Reeves</em> algorithm, it is not always the case, because more vector storage might be required for the former. The variants by Hager and Zhang are computationally more advanced and the line search methodologies are highly precise unlike the <em>Fletcher-Reeves algorithm</em> where the line search technique is inefficient. We will now introduce the <code>minimize()</code> function of the <code>scipy.optimize</code> module which provides us with multiple optimizers belonging to the <em>Conjugate Gradient class</em>, the <em>Quasi Newton class</em>, the <em>Trust Region class</em>, the <em>Zero Order Derivative class</em> and so on.</p>
+</div>
+</div>
+<div id="the-scipy.optimize.minimize-function" class="section level2">
+<h2><span class="header-section-number">5.4</span> The <code>scipy.optimize.minimize()</code> Function</h2>
+<p>The <code>minimize()</code> function in the <code>scipy.optimize</code> module is used for minimization of objective functions having one or multiple variables. The parameters to be passed to this function are listed below:</p>
+<ul>
+<li><code>fun</code>: This is the objective function that is of <code>callable</code> Python data type,</li>
+<li><code>x0</code>: This is the starting iterate and is of <code>ndarray</code> datatype,</li>
+<li><code>method</code>: Although optional this is one of the most important parameters. This specifies the optimizer that needs to be used. This is either a <code>str</code> or is <code>callable</code>. Methods provided are as follows:
+<ul>
+<li><code>'CG'</code>: This is the <code>Polak-Ribiere algorithm</code> under the nonlinear conjugate gradient methods,</li>
+<li><code>'BFGS'</code>: This is the algorithm by Broyden,Fletcher, Goldferb and Shanno under the <em>Quasi Newton class</em> of algorithms and will be discussed in the next chapter,</li>
+<li><code>'dogleg'</code>: This is the <em>dogleg method</em> under the <em>trust-region class</em> of algorithms,</li>
+<li><code>'trust-ncg'</code>: This is the <em>Newton Conjugate Gradient method</em> under the <em>trust-region class</em> of algorithms,</li>
+<li><code>'trust-krylov'</code>: This is the <em>Newton Genralised Lanczos method</em> under the <em>trust-region class</em> of algorithms,</li>
+<li><code>'trust-exact'</code>: This is a <em>trust region method</em> to exactly compute the solution of unconstrained quadratic problems,</li>
+<li><code>'Newton-CG'</code>: This is the <em>line search Newton-CG method</em> also known as the <em>truncated Newton method</em>,</li>
+<li><code>'Nelder-Mead'</code>: This is the <em>downhill simplex method of Nelder and mead</em> under the <em>zero-order derivative class</em> of algorithms,</li>
+<li><code>'Powell'</code>: This is <em>derivative free conjugate direction method of Powell</em> under the <em>zero-order derivative class</em> of algorithms,</li>
+<li><code>'TNC'</code>: This is again the <em>truncated Newton algorithm</em> but is used to optimize objective functions with variables subject to bounds,</li>
+<li><code>'L-BFGS-B'</code>: This is an extension of the <em>limited-memory BFGS algorithm</em> used for optimizing objective functions with variables subject to bounds,</li>
+<li><code>'COBYLA'</code>: This is the <em>Constrained Optimization by Linear Approximation (COBYLA) method</em> falling under the <em>constratined optimization</em> category of algorithms,</li>
+<li><code>'SLSQP'</code>: This is the <em>Sequential Least Squares Programming method</em> used for minimizing objective functions of multiple variables taking into consideration any combinations of bounds on the variables, any equality or inequality constrains imposed on them,</li>
+<li><code>'trust-constr'</code>: This is the <em>trust-region method</em> for solving constrained optimization tasks, and</li>
+<li>Any custom optimization method with <code>callable</code> datatype can be passed too.</li>
+</ul></li>
+<li><code>jac</code>: This is an optional parameter and denotes the gradient of the objective function, to be passed to the <code>minimize()</code> function and should either be of <code>callable</code> or <code>bool</code> datatype,</li>
+<li><code>hess</code>: This is optional too and denotes the Hessian matrix of the objective function, to be passed and should either be of <code>callable</code> or <code>bool</code> datatype,</li>
+<li><code>hessp</code>: This denotes the Hessian matrix of the objective function multiplied by an arbitrary vector <span class="math inline">\(\mathbb{p}\)</span> used for methods <code>'Newton-CG'</code>, <code>'trust-ncg'</code>, <code>'trust-krylov'</code>, and <code>'trust-constr'</code>. This is an optional parameter and is a <code>callable</code> datatype,</li>
+<li><code>bounds</code>: This denotes the bounds that are imposed on the methods dedicated to <em>bound-constrained minimization</em> techniques like <code>L-BFGS-B</code>, <code>TNC</code>, etc. This is an optional parameter and can be an instance of <code>Bounds</code> class provided by <code>scipy.optimize</code> module or a sequence of pairs i.e, <code>(min, max)</code> for each element of the iterate <span class="math inline">\(\mathbb{x}\)</span> or can be <code>None</code> too, indicating no bounds on the variables,</li>
+<li><code>constraints</code>: This is an optional parameter and represents the constraints required in solving constrained optimization tasks. It is either a Python dictionary or a list of dictionaries and can be used to denote both linear and non-linear constraints. Detailed discussion about these are out of scope of the present book,</li>
+<li><code>tol</code>: This optional parameter represents the termination tolerance value and is of <code>float</code> datatype. It is better to provide a solver-specific tolerance value to the <code>options</code> filed that we will discuss next,</li>
+<li><code>options</code>: This is an optional parameter and is a dictionary of options that a specific optimizer provides,</li>
+<li><code>args</code>: This is an optional parameter and is a tuple of extra arguments that might be passed to the objective function, its gradient or the Hessian matrix, and</li>
+<li><code>callback</code>: This is an optional parameter too and is called after each iteration in the optimization task. This is of <code>callable</code> data type.</li>
+</ul>
+<p>The <code>minimize()</code> function returns the optimization result as a <code>OptimizeResult</code> object similar to the <code>minimize_scalar()</code> function mentioned before.</p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-32" class="example"><strong>Example 5.4  </strong></span>Till now we have been considering objective functions of two variables. For this example, let us work with an objective function of four variables, called <em>Wood’s function</em>. It is defined as:
+<span class="math display" id="eq:51">\[\begin{align}
+    f(x_1, x_2, x_3, x_4) &amp;= 100(x_2-x_1^2)^2+(1-x_1)^2+90(x_4-x_3^2)^2 \nonumber \\
+    &amp;+(1-x_3)^2+10(x_2+x_4-2)^2+0.1(x_2-x_4)^2 \tag{5.51}
+\end{align}\]</span>
+</div>
+
+<p>The minimizer of the objective function is at <span class="math inline">\(\mathbb{x}^* = \begin{bmatrix} 1 \\ 1 \\ 1\\ 1 \end{bmatrix}\)</span>. We will use the <code>minimize()</code> function with the <code>method</code> parameter set to <code>'CG'</code> indicating that we will be finding the minimizer of the objective function using the <em>Polak-Ribiere conjugate gradient</em> optimization method. Let the initial point for starting the optimization be <span class="math inline">\(\mathbb{x}_0 = \begin{bmatrix}-3 \\ -1 \\ -3 \\ -1 \end{bmatrix}\)</span> and the tolerance be <span class="math inline">\(10^-6\)</span>. Before starting we list down the important solver options that are provided by the <code>'CG'</code> method:</p>
+<ul>
+<li><code>disp</code>: This is of <code>bool</code> datatype and should be set to <code>True</code> to print out the relevant convergence messages,</li>
+<li><code>gtol</code>: This is a <code>float</code> and denotes the gradient tolerance</li>
+<li><code>return_all</code>: This is optional and is a <code>bool</code>. Should be set to <code>True</code> to print out the best solution at each of the optimization steps,</li>
+<li><code>maxiter</code>: This is an <code>int</code> and specifies the maximum number of iterations the optimizer needs to perform, and so on.</li>
+</ul>
+<p>Let us first define the objective function in Python and its gradient using the <code>autograd</code> package:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="conjugate-gradient-methods-1.html#cb26-1"></a><span class="kw">def</span> func(x): <span class="co"># Objective function</span></span>
+<span id="cb26-2"><a href="conjugate-gradient-methods-1.html#cb26-2"></a>    <span class="cf">return</span> <span class="dv">100</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> x[<span class="dv">0</span>])<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">90</span><span class="op">*</span>(x[<span class="dv">3</span>]<span class="op">-</span> x[<span class="dv">2</span>]<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> x[<span class="dv">2</span>])<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">10</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">+</span> x[<span class="dv">3</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span>  <span class="op">+</span> <span class="fl">0.1</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> x[<span class="dv">3</span>])<span class="op">**</span><span class="dv">2</span>   </span>
+<span id="cb26-3"><a href="conjugate-gradient-methods-1.html#cb26-3"></a></span>
+<span id="cb26-4"><a href="conjugate-gradient-methods-1.html#cb26-4"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span></code></pre></div>
+<p>Now use the minimize function and pass the relevant parameters as have been asked in the example to run the optimization:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="conjugate-gradient-methods-1.html#cb27-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb27-2"><a href="conjugate-gradient-methods-1.html#cb27-2"></a>res<span class="op">=</span>minimize(fun<span class="op">=</span>func, x0<span class="op">=</span>np.array([<span class="op">-</span><span class="fl">3.</span>, <span class="fl">-1.</span>, <span class="fl">-3.</span>, <span class="fl">-1.</span>]), jac<span class="op">=</span>Df, method<span class="op">=</span><span class="st">&#39;CG&#39;</span>, options<span class="op">=</span>{<span class="st">&#39;gtol&#39;</span>:<span class="dv">10</span><span class="op">**-</span><span class="dv">6</span>, <span class="st">&#39;disp&#39;</span>:<span class="va">True</span>, <span class="st">&#39;return_all&#39;</span>:<span class="va">True</span>})</span></code></pre></div>
+<pre><code>## Optimization terminated successfully.
+##          Current function value: 0.000000
+##          Iterations: 83
+##          Function evaluations: 174
+##          Gradient evaluations: 174</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="conjugate-gradient-methods-1.html#cb29-1"></a>res.x, res.fun, res.jac</span></code></pre></div>
+<pre><code>## (array([0.99999975, 0.9999995 , 1.00000025, 1.00000051]), 2.3130964272341054e-13, array([-8.87448405e-08, -2.73118175e-07, -4.59792845e-07,  8.22518607e-07]))</code></pre>
+<p>We notice that the solver was successful in computing the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}1 \\ 1\\ 1\\ 1\end{bmatrix}\)</span> and <span class="math inline">\(f(\mathbb{x}^*) \sim 0\)</span>. If the user wants to print out the optimization data, just write:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="conjugate-gradient-methods-1.html#cb31-1"></a><span class="cf">for</span> i <span class="kw">in</span> res.allvecs: <span class="bu">print</span>(i)</span></code></pre></div>
+<pre><code>## [-3. -1. -3. -1.]
+## [ 0.69823355 -0.35939992  0.32865658 -0.42099608]
+## [0.31284575 0.5271373  0.52364445 0.19201798]
+## [0.44279154 0.49499859 0.51144723 0.49981977]
+## [0.65900174 0.3557516  0.6538751  0.52025596]
+## [0.69008685 0.37741521 0.73311253 0.53578922]
+## [0.63611928 0.49146367 0.76722078 0.59795104]
+## [0.78014415 0.64604868 0.83944752 0.83214895]
+## [0.85811872 0.7117484  0.93740013 0.90101943]
+## [0.84695401 0.74185145 0.95950132 0.9131568 ]
+## [0.90658664 0.87090049 1.00839357 1.0500565 ]
+## [0.95334332 0.90822136 1.04308098 1.09541832]
+## [0.95319811 0.90831054 1.04566101 1.09403639]
+## [0.95318265 0.90837072 1.04585393 1.0937749 ]
+## [0.95506232 0.91269031 1.03960088 1.08116439]
+## [0.95584603 0.91324684 1.03906205 1.07984446]
+## [0.98922593 0.97470583 1.00991282 1.01906174]
+## [1.00321177 1.00606161 0.99518799 0.98982839]
+## [1.00303298 1.00623765 0.99496438 0.99004434]
+## [1.00363962 1.00692966 0.99530288 0.99107936]
+## [1.00392335 1.00786236 0.99601194 0.99204146]
+## [1.00390545 1.00785937 0.99603177 0.99205253]
+## [1.00358133 1.00706373 0.99675995 0.99334117]
+## [1.00314081 1.00628436 0.99736284 0.99470617]
+## [1.00073784 1.00158721 0.99900666 0.99811784]
+## [1.00063327 1.00127025 0.99915469 0.99832087]
+## [1.00061046 1.00126233 0.99923812 0.99842796]
+## [1.00061242 1.00122513 0.99942148 0.99883755]
+## [1.00060526 1.00121531 0.99941678 0.99884005]
+## [1.00057324 1.00114729 0.99941825 0.99883969]
+## [1.00057171 1.00114681 0.99942174 0.99884002]
+## [1.00052303 1.00101916 0.99952956 0.9990431 ]
+## [1.00045019 1.00089767 0.99962881 0.99925245]
+## [1.00040309 1.00083516 0.9996023  0.99921333]
+## [1.00038522 1.00078306 0.99958937 0.99918369]
+## [1.00038974 1.00078076 0.99959209 0.99918382]
+## [1.00038857 1.00078129 0.99960581 0.99920361]
+## [1.00039    1.00077928 0.99961238 0.99922919]
+## [1.00038833 1.0007753  0.99962976 0.9992647 ]
+## [1.00038625 1.00077369 0.99963556 0.99926767]
+## [1.00034119 1.00066861 0.9996576  0.99930601]
+## [1.00028035 1.00056988 0.99967331 0.99935076]
+## [1.00027922 1.00056755 0.99967387 0.9993519 ]
+## [1.00028372 1.0005669  0.99967698 0.99935355]
+## [1.00029274 1.00058838 0.99970046 0.99939426]
+## [1.00029422 1.00058928 0.99969944 0.99939998]
+## [1.00029485 1.00058966 0.99970775 0.9994181 ]
+## [1.00029387 1.00058911 0.99971178 0.99942071]
+## [1.00028223 1.00056393 0.99973676 0.99946219]
+## [1.00026215 1.00052414 0.99976265 0.99953009]
+## [1.00020838 1.00041741 0.99984171 0.99968521]
+## [1.00020314 1.00040189 0.99985123 0.99969334]
+## [1.0000998  1.00020943 0.99988952 0.99977851]
+## [1.00009559 1.00019182 0.99989265 0.99978588]
+## [1.00009527 1.00019009 0.99989869 0.99979311]
+## [1.0000922  1.00018583 0.99991283 0.99982461]
+## [1.00009259 1.00018492 0.99991309 0.99982588]
+## [1.00007447 1.00014686 0.99992339 0.99984287]
+## [1.00006482 1.00013071 0.99992603 0.999852  ]
+## [1.00006395 1.0001269  0.99992741 0.99985671]
+## [1.00003546 1.00006939 0.99997221 0.999943  ]
+## [1.00003374 1.00006769 0.99997299 0.99994565]
+## [1.00002781 1.00005447 0.99997447 0.99995153]
+## [1.00002077 1.00004129 0.99997796 0.99995632]
+## [1.00002061 1.00004138 0.99997818 0.99995631]
+## [1.00002088 1.00004144 0.99997914 0.99995775]
+## [1.00002082 1.00004162 0.99997981 0.99995945]
+## [1.00002069 1.00004154 0.99997975 0.99995952]
+## [1.0000187  1.00003718 0.99998018 0.99996071]
+## [1.00001797 1.0000361  0.99998054 0.99996102]
+## [1.00000594 1.00001185 0.99999233 0.99998467]
+## [1.00000571 1.00001185 0.99999255 0.99998523]
+## [1.0000056  1.00001159 0.99999438 0.99998891]
+## [1.00000575 1.00001149 0.9999945  0.99998898]
+## [1.00000567 1.00001139 0.99999455 0.99998897]
+## [1.00000504 1.00001014 0.99999457 0.99998917]
+## [1.00000501 1.00001001 0.99999462 0.99998922]
+## [1.00000404 1.00000839 0.99999551 0.99999091]
+## [1.00000111 1.00000202 0.99999863 0.99999742]
+## [0.99999964 0.99999926 1.00000014 1.00000031]
+## [0.99999963 0.99999928 1.00000016 1.00000032]
+## [0.99999973 0.99999945 1.00000025 1.00000047]
+## [0.99999974 0.99999947 1.00000025 1.0000005 ]
+## [0.99999975 0.9999995  1.00000025 1.00000051]</code></pre>
+<p>This completes our discussion of the <em>conjugate gradient methods</em> for optimization. In the next chapter we will study the <em>quasi Newton methods</em> elaborately.</p>
+
 </div>
 </div>
             </section>

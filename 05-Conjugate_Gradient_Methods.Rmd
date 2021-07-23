@@ -363,7 +363,7 @@ Let us consider an objective function having the form,
 \begin{equation}
     f(x_1, x_2) = x_1^4 - 2x_1^2x_2+x_1^2 + x_2^2-2x_1+1 (#eq:42)
 \end{equation}
-The function has a local minimizer at $f(1, 1) = 0$. We will implement the *Fletcher-Reeves algorithm* in Python to figure out the minimizer. Let the starting iterate be given by $\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}$, the tolerance be $\epsilon = 10^{-5}$ and the constants to be used for determining the step length using the \textit{strong Wolfe conditions} be $\alpha_1=10^{-4}$ and $\alpha_2=0.38$. Let us first define the objective function and its gradient in Python.
+The function has a local minimizer at $f(1, 1) = 0$. We will implement the *Fletcher-Reeves algorithm* in Python to figure out the minimizer. Let the starting iterate be given by $\mathbb{x}_j = \begin{bmatrix}2 \\ -1.8 \end{bmatrix}$, the tolerance be $\epsilon = 10^{-5}$ and the constants to be used for determining the step length using the *strong Wolfe conditions* be $\alpha_1=10^{-4}$ and $\alpha_2=0.38$. Let us first define the objective function and its gradient in Python.
 ```
 
 ```{python}
@@ -411,7 +411,420 @@ According to our example we set our parameter values and pass them to the `Fletc
 Fletcher_Reeves(np.array([2., -1.8]), 10**-5, 10**-4, 0.38)
 ```
 
-We notice that, for our choice of parameters, the algorithm has converged to the minimizer $\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ with $f(\mathbb{x}^*) \sim 0$.
+We notice that, for our choice of parameters, the algorithm has converged to the minimizer $\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ with $f(\mathbb{x}^*) \sim 0$. The figure showing the optimization trajectory is shown below:
+
+```{python, echo=FALSE, results=FALSE}
+import pandas as pd
+from tabulate import tabulate
+
+def func(x): # Objective function
+    #return (x[0]**2 + x[1] - 11)**2 + (x[0] + x[1]**2 - 7)**2
+    return x[0]**4 - 2*x[0]**2*x[1] + x[0]**2 + x[1]**2 - 2*x[0] + 1
+
+Df = grad(func) # Gradient of the objective function
 
 
-**This Chapter is under construction**
+x1 = np.linspace(-4, 4, 50)
+x2 = np.linspace(-4, 4, 50)
+z = np.zeros(([len(x1), len(x2)]))
+for i in range(0, len(x1)):
+    for j in range(0, len(x2)):
+        z[j, i] = func([x1[i], x2[j]])
+
+contours=plt.contour(x1, x2, z, 100, cmap=plt.cm.gnuplot)
+plt.clabel(contours, inline=1, fontsize=10)
+plt.xlabel("$x_1$ ->")
+plt.ylabel("$x_2$ ->")
+
+
+def Fletcher_Reeves(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D
+    F = [func(Xj)]
+    DF = [NORM(Df(Xj))]
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            F += [func(X)]
+            DF += [NORM(Df(X))]
+            plt.plot(x1, x2, "rx-", ms=5.5) # Plot the final collected data showing the trajectory of optimization
+            plt.show()
+            data = {'x_1': x1,
+            'x_2': x2,
+            'f(X)': F,
+            '||grad||': DF}
+            return data
+        else:
+            Xj = X
+            d = D
+            D = Df(Xj)
+            chi = NORM(D)**2/NORM(d)**2
+            delta = -D + chi*delta
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+            F += [func(Xj)]
+            DF += [NORM(Df(Xj))]
+
+#data=Fletcher_Reeves(np.array([2., -1.8]), 10**-6, 10**-4, 0.2)
+data = Fletcher_Reeves(np.array([2., -1.8]), 10**-5, 10**-4, 0.38)
+```
+
+The optimization data for the same is given below:
+
+```{python, echo=FALSE}
+df = pd.DataFrame(data, columns = ['x_1', 'x_2', 'f(X)', '||grad||'])
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+The algorithm reduces to the *linear conjugate gradient algorithm* if the objective function is chosen to be strongly convex quadratic. We notice that in the algorithm, we just need to compute the objective function and its gradient at each iterate and no Hessian computation is required. Next we discuss the *Polak-Ribiere algorithm*.
+
+### Polak-Ribiere Algorithm
+
+One of the variants of the *Fletcher-Reeves algorithm* is the *Polak-Ribiere algorithm*, where, the $\chi_j$ in Eq. \@ref(eq:39) is given by:
+\begin{equation}
+    \chi_j = \frac{[\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]^T\nabla f(\mathbb{x}_j)}{\|\nabla f(\mathbb{x}_{j-1})\|^2} (#eq:43)
+\end{equation}
+
+One important characteristic to notice here is that, the *strong Wolfe conditions* do not guarantee the direction $\mathbb{\delta}_j$ will always be a descent direction in the *Polak-RIbiere algorithm*. Then, $\chi$ needs to modified in the following way:
+\begin{equation}
+    \chi_j = \max\{0, \chi_j\} (#eq:44)
+\end{equation}
+
+This ensures that the *strong wolfe conditions* guarantee a descent direction . The *Polak-Ribiere algorithm* reduces back to the *Fletcher-Reeves algorithm* if the objective function is strongly convex quadratic, and the line search is exact. The *Polak-Ribiere Algorithm* is given below:
+
+![](img 20.png)
+
+The *polak-Ribiere algorithm* is most often considered as more coherent than the *Fletcher-Reeves algorithm*.
+
+```{example}
+Let us again consider an objective function given in Eq. \@ref(eq:42).  We will implement the *Polak-Ribiere algorithm* in Python to figure out the minimizer. Let the starting iterate be given by $\mathbb{x}_j = \begin{bmatrix}-1.7 \\ -3.2 \end{bmatrix}$, the tolerance be $\epsilon = 10^{-6}$ and the constants to be used for determining the step length using the *strong Wolfe conditions* be $\alpha_1=10^{-4}$ and $\alpha_2=0.2$. We define the function `Polak_Ribiere()` in Python:
+```
+
+```{python}
+def Polak_Ribiere(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D # Initialize the descent direction
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta # Newly updated experimental point 
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            return X, func(X) # Return the results
+        else:
+            Xj = X
+            d = D # Gradient of the preceding experimental point
+            D = Df(Xj) # Gradient of the current experimental point
+            chi = (D-d).dot(D)/NORM(d)**2 
+            chi = max(0, chi) # Line (16) of the Polak-Ribiere Algorithm
+            delta = -D + chi*delta # Newly updated direction
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+According to our example we set our parameter values and pass them to the `Polak_Ribiere()` function:
+
+```{python}
+Polak_Ribiere(np.array([-1.7, -3.2]), 10**-6, 10**-4, 0.2)
+```
+
+We notice that, for our choice of parameters, the algorithm has converged to the minimizer $\mathbb{x}^* \sim \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ with $f(\mathbb{x}^*) \sim 0$. The Figure showing the optimization trajectory is shown below:
+
+```{python, echo=FALSE, results=FALSE}
+x1 = np.linspace(-4, 4, 50)
+x2 = np.linspace(-4, 4, 50)
+z = np.zeros(([len(x1), len(x2)]))
+for i in range(0, len(x1)):
+    for j in range(0, len(x2)):
+        z[j, i] = func([x1[i], x2[j]])
+
+contours=plt.contour(x1, x2, z, 100, cmap=plt.cm.gnuplot)
+plt.clabel(contours, inline=1, fontsize=10)
+plt.xlabel("$x_1$ ->")
+plt.ylabel("$x_2$ ->")
+
+
+def Polak_Ribiere(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D
+    F = [func(Xj)]
+    DF = [NORM(Df(Xj))]
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            F += [func(X)]
+            DF += [NORM(Df(X))]
+            plt.plot(x1, x2, "rx-", ms=5.5) # Plot the final collected data showing the trajectory of optimization
+            plt.show()
+            data = {'x_1': x1,
+            'x_2': x2,
+            'f(X)': F,
+            '||grad||': DF}
+            return data
+        else:
+            Xj = X
+            d = D
+            D = Df(Xj)
+            chi = (D-d).dot(D)/NORM(d)**2
+            chi = max(0, chi)
+            delta = -D + chi*delta
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+            F += [func(Xj)]
+            DF += [NORM(Df(Xj))]
+
+data=Polak_Ribiere(np.array([-1.7, -3.2]), 10**-6, 10**-4, 0.2)
+```
+
+The optimization data for the same is given in the table below:
+
+```{python, echo=FALSE}
+df = pd.DataFrame(data, columns = ['x_1', 'x_2', 'f(X)', '||grad||'])
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+Next we study the *Hestenes-Stiefel algorithm*.
+
+### Hestenes-Stiefel Algorithm
+
+In this variant, Eq. \@ref(eq:39) changes to:
+\begin{equation}
+    \chi_j = \frac{\nabla f(\mathbb{x}_j)^T[\nabla(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]}{\mathbb{\delta}_j^T[\nabla(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]} (#eq:45)
+\end{equation}
+
+The *Hestenes-Stiefel algorithm* is given below:
+
+![](img 21.png)
+
+
+The Python implementation is given by the Python function `Hestenes_Stiefel()`.
+
+```{python}
+def Hestenes_Stiefel(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            return X, func(X)
+        else:
+            Xj = X
+            d = D
+            D = Df(Xj)
+            chi = D.dot(D - d)/delta.dot(D - d) # See line (16)
+            delta = -D + chi*delta
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+The Python function can be used by the user to optimize and study any objective function provided reasonable parameters are passed to it. The variant that we look into next, is called the *Dai-Yuan algorithm*.
+
+### Dai-Yuan Algorithm
+
+In this variant, Eq. \@ref(eq:39) changes to:
+\begin{equation}
+    \chi_j = \frac{\|\nabla f(\mathbb{x}_j)\|^2}{\mathbb{\delta}_j^T[\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})]} (#eq:46)
+\end{equation}
+
+The *Dai-Yuan algorithm* [ref, Dai-Yuan, A nonlinear conjugate gradient method with a strong global convergence property] is given below:
+
+![](img 22.png)
+
+Python implementation is given by the Python function `Dai_Yuan()`:
+
+```{python}
+def Dai_Yuan(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            return X, func(X)
+        else:
+            Xj = X
+            d = D
+            D = Df(Xj)
+            chi = NORM(D)**2/delta.dot(D - d) # See line (16)
+            delta = -D + chi*delta
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+The last variant that we will discuss is the *Hager-Zhang algorithm*.
+
+### Hager-Zhang Algorithm
+
+In this variant, Eq. \@ref(eq:39) changes to:
+\begin{equation}
+    \chi_j = \mathbb{M}_j^T\mathbb{N}_j (#eq:47)
+\end{equation}
+
+where,
+
+\begin{equation}
+    \mathbb{M}_j = \mathbb{Q}_j - 2\delta_j\frac{\|\mathbb{Q}_j\|^2}{\mathbb{\delta}_j^T\mathbb{Q}_j} (#eq:48)
+\end{equation}
+and
+\begin{equation}
+    \mathbb{N}_j = \frac{\nabla f(\mathbb{x}_j)}{\mathbb{\delta}_j^T\mathbb{Q}_j} (#eq:49)
+\end{equation}
+In the equations above, $\mathbb{Q}_j$ is actually given by 
+\begin{equation}
+    \mathbb{Q}_j = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) (#eq:50)
+\end{equation}
+
+The *Hager-Zhang algorithm* is given below:
+
+![](img 23.png)
+
+The Python implementation is given by the Python function `Hager_Zhang()`:
+
+```{python}
+def Hager_Zhang(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    D = Df(Xj)
+    delta = -D
+    
+    while True:
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            return X, func(X)
+        else:
+            Xj = X
+            d = D
+            D = Df(Xj)
+            Q = D - d
+            M = Q - 2*delta*NORM(Q)**2/(delta.dot(Q))
+            N = D/(delta.dot(Q))
+            chi = M.dot(N) # See line (19)
+            delta = -D + chi*delta
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+To use the Python function for optimizing any objective function, define an objective function `func()` and its gradient `Df()` first, in the same way that we have been doing till now.
+
+Although *Polak-Ribiere algorithm* most often is more efficient than *Fletcher-Reeves* algorithm, it is not always the case, because more vector storage might be required for the former. The variants by Hager and Zhang are computationally more advanced and the line search methodologies are highly precise unlike the *Fletcher-Reeves algorithm* where the line search technique is inefficient. We will now introduce the `minimize()` function of the `scipy.optimize` module which provides us with multiple optimizers belonging to the *Conjugate Gradient class*, the *Quasi Newton class*, the *Trust Region class*, the *Zero Order Derivative class* and so on.
+
+## The `scipy.optimize.minimize()` Function
+
+The `minimize()` function in the `scipy.optimize` module is used for minimization of objective functions having one or multiple variables. The parameters to be passed to this function are listed below:
+
+* `fun`: This is the objective function that is of `callable` Python data type,
+* `x0`: This is the starting iterate and is of `ndarray` datatype,
+* `method`: Although optional this is one of the most important parameters. This specifies the optimizer that needs to be used. This is either a `str` or is `callable`. Methods provided are as follows:
+  * `'CG'`: This is the `Polak-Ribiere algorithm` under the nonlinear conjugate gradient methods,
+  * `'BFGS'`: This is the algorithm by Broyden,Fletcher, Goldferb and Shanno under the *Quasi Newton class* of algorithms and  will be discussed in the next chapter,
+  * `'dogleg'`: This is the *dogleg method* under the *trust-region class* of algorithms,
+  * `'trust-ncg'`: This is the *Newton Conjugate Gradient method* under the *trust-region class* of algorithms, 
+  * `'trust-krylov'`: This is the *Newton Genralised Lanczos method* under the *trust-region class* of algorithms,
+  * `'trust-exact'`: This is a *trust region method* to exactly compute the solution of unconstrained quadratic problems,
+  * `'Newton-CG'`: This is the *line search Newton-CG method* also known as the *truncated Newton method*,
+  * `'Nelder-Mead'`: This is the *downhill simplex method of Nelder and mead* under the *zero-order derivative class* of algorithms,
+  * `'Powell'`: This is *derivative free conjugate direction method of Powell* under the *zero-order derivative class* of algorithms,
+  * `'TNC'`: This is again the *truncated Newton algorithm* but is used to optimize objective functions with variables subject to bounds,
+  * `'L-BFGS-B'`: This is an extension of the *limited-memory BFGS algorithm* used for optimizing objective functions with variables subject to bounds,
+  * `'COBYLA'`: This is the *Constrained Optimization by Linear Approximation (COBYLA) method* falling under the *constratined optimization* category of algorithms,
+  * `'SLSQP'`: This is the *Sequential Least Squares Programming method* used for minimizing objective functions of multiple variables taking into consideration any combinations of bounds on the variables, any equality or inequality constrains imposed on them,
+  * `'trust-constr'`: This is the *trust-region method* for solving constrained optimization tasks, and
+  * Any custom optimization method with `callable` datatype can be passed too. 
+* `jac`: This is an optional parameter and denotes the gradient of the objective function, to be passed to the `minimize()` function and should either be of `callable` or `bool` datatype,
+* `hess`: This is optional too and denotes the Hessian matrix of the objective function, to be passed and should either be of `callable` or `bool` datatype,
+* `hessp`: This denotes the Hessian matrix of the objective function multiplied by an arbitrary vector $\mathbb{p}$ used for methods `'Newton-CG'`, `'trust-ncg'`, `'trust-krylov'`, and `'trust-constr'`. This is an optional parameter and is a `callable` datatype,
+* `bounds`: This denotes the bounds that are imposed on the methods dedicated to *bound-constrained minimization* techniques like `L-BFGS-B`, `TNC`, etc. This is an optional parameter and can be an instance of `Bounds` class provided by `scipy.optimize` module or a sequence of pairs i.e, `(min, max)` for each element of the iterate $\mathbb{x}$ or can be `None` too, indicating no bounds on the variables,
+* `constraints`: This is an optional parameter and represents the constraints required in solving constrained optimization tasks. It is either a Python dictionary or a list of dictionaries and can be used to denote both linear and non-linear constraints. Detailed discussion about these are out of scope of the present book,
+* `tol`: This optional parameter represents the termination tolerance value and is of `float` datatype. It is better to provide a solver-specific tolerance value to the `options` filed that we will discuss next,
+* `options`: This is an optional parameter and is a dictionary of options that a specific optimizer provides,
+* `args`: This is an optional parameter and is a tuple of extra arguments that might be passed to the objective function, its gradient or the Hessian matrix, and
+* `callback`: This is an optional parameter too and is called after each iteration in the optimization task. This is of `callable` data type.
+
+The `minimize()` function returns the optimization result as a `OptimizeResult` object similar to the `minimize_scalar()` function mentioned before.
+
+```{example}
+Till now we have been considering objective functions of two variables. For this example, let us work with an objective function of four variables, called *Wood's function*. It is defined as:
+\begin{align}
+    f(x_1, x_2, x_3, x_4) &= 100(x_2-x_1^2)^2+(1-x_1)^2+90(x_4-x_3^2)^2 \nonumber \\
+    &+(1-x_3)^2+10(x_2+x_4-2)^2+0.1(x_2-x_4)^2 (#eq:51)
+\end{align}
+```
+
+The minimizer of the objective function is at $\mathbb{x}^* = \begin{bmatrix} 1 \\ 1 \\ 1\\ 1 \end{bmatrix}$. We will use the `minimize()` function with the `method` parameter set to `'CG'` indicating that we will be finding the minimizer of the objective function using the *Polak-Ribiere conjugate gradient* optimization method. Let the initial point for starting the optimization be $\mathbb{x}_0 = \begin{bmatrix}-3 \\ -1 \\ -3 \\ -1 \end{bmatrix}$ and the tolerance be $10^-6$. Before starting we list down the important solver options that are provided by the `'CG'` method:
+
+* `disp`: This is of `bool` datatype and should be set to `True` to print out the relevant convergence messages,
+* `gtol`: This is a `float` and denotes the gradient tolerance
+* `return_all`: This is optional and is a `bool`. Should be set to `True` to print out the best solution at each of the optimization steps,
+* `maxiter`: This is an `int` and specifies the maximum number of iterations the optimizer needs to perform, and so on.
+
+Let us first define the objective function in Python and its gradient using the `autograd` package:
+
+```{python}
+def func(x): # Objective function
+    return 100*(x[1] - x[0]**2)**2 + (1 - x[0])**2 + 90*(x[3]- x[2]**2)**2 + (1 - x[2])**2 + 10*(x[1] + x[3] - 2)**2  + 0.1*(x[1] - x[3])**2   
+
+Df = grad(func) # Gradient of the objective function
+```
+
+Now use the minimize function and pass the relevant parameters as have been asked in the example to run the optimization:
+
+```{python}
+from scipy.optimize import minimize
+res=minimize(fun=func, x0=np.array([-3., -1., -3., -1.]), jac=Df, method='CG', options={'gtol':10**-6, 'disp':True, 'return_all':True})
+res.x, res.fun, res.jac
+```
+
+We notice that the solver was successful in computing the minimizer $\mathbb{x}^* \sim \begin{bmatrix}1 \\ 1\\ 1\\ 1\end{bmatrix}$ and $f(\mathbb{x}^*) \sim 0$. If the user wants to print out the optimization data, just write:
+
+```{python}
+for i in res.allvecs: print(i)
+```
+
+This completes our discussion of the *conjugate gradient methods* for optimization. In the next chapter we will study the *quasi Newton methods* elaborately. 
