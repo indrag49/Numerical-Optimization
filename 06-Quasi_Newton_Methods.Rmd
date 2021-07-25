@@ -1,0 +1,290 @@
+# Quasi-Newton Methods
+
+We introduce the **Quasi-Newton methods** in more detailed fashion in this chapter. We start with studying the **rank 1 update algorithm** of updating the approximate to the inverse of the Hessian matrix and then move on to studying the **rank 2 update algorithms**. The methods covered under the later category are the **Davidon-Fletcher-Powell algorithm**, the **Broyden-Fletcher-Goldfarb-Shanno algorithm** and more generally the **Huang's family of rank2 updates**.
+
+---
+
+## Introduction to Quasi-Newton Methods
+
+In the last part of the last chapter, the motivation to study *quasi-Newton methods* was introduced. To avoid high computational costs, the *quasi-Newton methods* adapt to using the inverse of the Hessian matrix of the objective function to compute the minimizer, unlike the *Newton method* where the inverse of the Hessian matrix is calculated at each iteration. The basic iterative formulation for the Newton's method is given by
+
+\begin{equation}
+\mathbb{x}_j = \mathbb{x}_{j-1} - [\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}), j = 1, 2, \ldots \nonumber 
+\end{equation}
+
+where, the descent direction at the $j^{th}$ step is given by
+\begin{equation}
+\mathbb{\delta_j} = - [\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) \nonumber
+\end{equation}
+
+If $\beta_j$ is the selected step length along the $j^{th}$ descent direction and $\mathbb{B}f(\mathbb{x}_j)$ is the approximation to the inverse of the Hessian, $[\mathbb{H}f(\mathbb{x}_{j})]^{-1}$, then The *Quasi-Newton method* is written as the given iteration formula:
+\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}-\beta_j[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) (#eq:1)
+\end{equation}
+
+where, the descent direction $\mathbb{\delta}_j$ is given by:
+\begin{equation}
+    \mathbb{\delta_j} = -[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) (#eq:2)
+\end{equation}
+
+Note that,
+\begin{equation}
+    [\mathbb{B}f](\mathbb{x}) \equiv [\mathbb{H}f]^{-1}(\mathbb{x}) \equiv [\mathbb{H}f(\mathbb{x})]^{-1} (#eq:3)
+\end{equation}
+
+## The Approximate Inverse Matrix
+
+Using Taylor's theorem to approximate the gradient of the Objective function, we can write:
+\begin{equation}
+    \nabla f(\mathbb{x}) \simeq \nabla f(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x})(\mathbb{x} - \mathbb{x}_0) (#eq:4)
+\end{equation}
+
+So at iterates $\mathbb{x}_j$ and $\mathbb{x}_{j-1}$ Eq.~\eqref{eq:6.4} can be written as:
+\begin{equation}
+    \nabla f(\mathbb{x}_j) = \nabla \mathbb{f}(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_j - \mathbb{x}_0) (#eq:5)
+\end{equation}
+
+and
+\begin{equation}
+    \nabla f(\mathbb{x}_{j-1}) = \nabla f(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_{j-1} - \mathbb{x}_0) (#eq:6)
+\end{equation}
+
+So, subtracting Eq. \@ref(eq:6) from Eq. \@ref(eq:5), we get,
+\begin{align}
+    &&\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) &= \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_j - \mathbb{x}_{j-1}) \nonumber \\
+    &\implies& \mathbb{H}f(\mathbb{x}_j)\mathbb{D}_j &= \mathbb{G}_j \nonumber \\
+    &\implies& \mathbb{D}_j &= [\mathbb{H}f(\mathbb{x}_j)]^{-1}\mathbb{G}_j\nonumber\\
+    &\implies& \mathbb{D}_j &= [\mathbb{B}f](\mathbb{x}_j)\mathbb{G}_j (#eq:7)
+\end{align}
+
+Eq. \@ref(eq:7) is the *secant equation*. Here, $[\mathbb{B}(\mathbb{x}_j)]$ is the approximate to the inverse of the Hessian matrix of the objective function $f$ at the $j^{th}$ iterate. As the iteration of the optimization technique advances in each step, it should be kept in mind that if $\mathbb{B}f(\mathbb{x}_{j-1})$ is symmetric and positive definite, then $\mathbb{B}f(\mathbb{x}_j)$ should be symmetric and positive definite. Various mechanisms have been developed for updating the inverse matrix, generally given by the formula:
+\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \mathbb{\Delta} (#eq:8)
+\end{equation}
+
+## Rank 1 Update Algorithm
+
+In the *rank 1 update algorithm*, the *update matrix* $\mathbb{\Delta}$ is a rank 1 matrix. the *rank* of a matrix is given by its maximal number of linearly independent columns. To formulate a rank 1 update, we write the \textit{update matrix} as:
+\begin{equation}
+    \mathbb{\Delta} = \sigma \mathbb{w} \otimes \mathbb{w} = \sigma \mathbb{w}\mathbb{w}^T (#eq:9)
+\end{equation}
+
+where, $\otimes$ is the outer product between two matrices/vectors. So, Eq. \@ref(eq:8) becomes:
+\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \sigma \mathbb{w}\mathbb{w}^T (#eq:10)
+\end{equation}
+
+Our task is to evaluate the explicit forms of the scalar constant $\sigma$ and the vector $\mathbb{w}$, where $\mathbb{w} \in \mathbb{R}^n$. Now, replacing $[\mathbb{B}f](\mathbb{x}_j)$ in Eq.~\eqref{eq:6.8} with the one in Eq.~\eqref{eq:6.10}, we have,
+\begin{align}
+    \mathbb{D}_j &= ([\mathbb{B}f](\mathbb{x}_{j-1}) + \sigma \mathbb{w}\mathbb{w}^T)\mathbb{G}_j \nonumber \\
+    &= [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j + \sigma \mathbb{w}(\mathbb{w}^T\mathbb{G}_j) (#eq:11)
+\end{align}
+
+This can be rearranged to write,
+\begin{equation}
+    \sigma \mathbb{w} = \frac{\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j}{\mathbb{w}^T\mathbb{G}_j} (#eq:12)
+\end{equation}
+
+As $\mathbb{w}^T\mathbb{G}_j$ is a scalar, we see that it can be taken to the denominator in Eq. \@ref(eq:12). Now, it is clearly evident that,
+\begin{equation}
+    \sigma = \frac{1}{\mathbb{w}^T\mathbb{G}_j} (#eq:13)
+\end{equation}
+and
+\begin{equation}
+    \mathbb{w} = \mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j (#eq:14)
+\end{equation}
+
+So, Eq. \@ref(eq:13) can now be written as:
+\begin{equation}
+    \sigma = \frac{1}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} (#eq:15)
+\end{equation}
+
+
+Eventually, the *update matrix* $\mathbb{\Delta}$ from Eq. \@ref(eq:9) turns out to be:
+\begin{equation}
+    \mathbb{\Delta} = \frac{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} (#eq:16)
+\end{equation}
+
+So, the rank 1 update formula is given by:
+\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \frac{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} (#eq:17)
+\end{equation}
+
+In the update formulation of the inverse matrix, most often $[\mathbb{B}f](x_0)$ is considered to be the $n \times n$ identity matrix. The iteration is continued until and unless the convergence criteria are satisfied. If $[\mathbb{B}f](\mathbb{x}_{j-1})$ is symmetric, then Eq. \@ref(eq:17) ensures that $[\mathbb{B}f](\mathbb{x}_j)$ is symmetric too and is then called a \textit{symmetric rank 1 update algorithm} or the *SR1 update algorithm*. Also, it can be seen that the columns of the *update matrix* $\mathbb{\Delta}$ are multiples of each other, making it a rank 1 matrix.
+
+The *rank 1 update algorithm* has an issue with the denominator in Eq. \@ref(eq:17). The denominator can vanish and sometimes there would be no symmetric rank 1 update in the inverse matrix, satisfying the secant equation given by Eq. \@ref(eq:7), even for a convex quadratic objective function. There are three cases that needs to be analyzed for a particular iterate $j$ in the optimization algorithm:
+
+* If $\mathbb{w}^T\mathbb{G}_j \neq 0$, then there is a unique rank 1 update for the inverse matrix, given by Eq. \@ref(eq:17),
+* If $\mathbb{D}_j = [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j$, then the update given by Eq. \@ref(eq:17) is skipped and we consider $[\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1})$, and
+* if $\mathbb{D}_j \neq [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j$ and $\mathbb{w}^T\mathbb{G}_j = 0$, then there is no rank 1 update technique available that satisfies the secant equation given by Eq. \@ref(eq:7).
+
+In view of the second case mentioned above, there is a necessity to introduce a *skipping criterion* which will prevent the *rank 1 update algorithm* from crashing. The update of the inverse matrix at a particular iterate $j$, given by Eq. \@ref(eq:17) must be applied if the following condition is satisfied: 
+\begin{equation}
+    |\mathbb{w}^T\mathbb{G}_j| \geq \alpha_3\|\mathbb{G}_j\| \|\mathbb{w}\| (#eq:18)
+\end{equation}
+
+otherwise no update in the inverse matrix must be made. Here $\alpha_3$ is a very small number usually taken as $\alpha_3 \sim 10^{-8}$. The last case in the above mentioned cases however gives the motivation to introduce a rank 2 update formulation for the inverse matrix, such that the singularity case defining the vanishing of the denominator can be avoided. The *rank 1 update algorithm* is given in below:
+
+![](img 24.png)
+
+```{example}
+Let us consider \textit{Branin function} as the objective function, given by:
+\begin{equation}
+    f(x_1, x_2) = a(x_2 - bx_1^2 + cx_1 - r)^2 + s(1-t)\cos(x_1)+s (#eq:19)
+\end{equation}
+where $a, b, c, r, s$ and $t$ are constants whose default values are given in the table below:
+
+| Constant | Value |
+| --- | --- |
+| $a$ | $1$ |
+| $b$ | $\frac{5.1}{4\pi^2}$ |
+| $c$ | $\frac{5}{\pi}$ |
+| $r$ | $6$ |
+| $s$ | $10$ |
+| $t$ | $\frac{1}{8\pi}$ |
+
+Considering the default constant values, \textit{Branin function} has four minimizers given by:
+
+* $f(-\pi, 12.275) \simeq 0.397887$,
+* $f(\pi, 2.275) \simeq 0.397887$,
+* $f(3\pi, 2.475) \simeq 0.397887$, and
+* $f(5\pi, 12.875) \simeq 0.397887$
+  
+We will use *Rank 1 update algorithm* to find out one of these four minimizers. Let the starting iterate be $\mathbb{x}_j = \begin{bmatrix}11 \\ 5.75 \end{bmatrix}$, the tolerance be $\epsilon = 10^{-5}$, and the constants to be used in determining the step length using the *strong Wolfe conditions* be $\alpha_1=10^{-4}$ and $\alpha_2=0.24$. Let us define *Branin function* and its gradient in Python:
+  
+```
+
+```{python}
+# import the required packages
+import matplotlib.pyplot as plt
+import numpy as np
+import autograd.numpy as au
+from autograd import grad, jacobian
+import scipy
+
+def func(x): # Objective function (Branin function)
+    return (x[1] - (5.1/(4*au.pi**2))*x[0]**2 + (5/au.pi)*x[0] - 6)**2 + 10*(1 - 1/(8*au.pi))*au.cos(x[0]) + 10
+    
+Df = grad(func) # Gradient of the objective function
+```
+
+We first draw the contour plot of the *Branin function* and then define the Python function `rank_1()` implementing *Rank 1 update algorithm*:
+
+```{python, results=FALSE}
+from scipy.optimize import line_search
+NORM = np.linalg.norm
+
+x1 = np.linspace(-5, 16, 100)
+x2 = np.linspace(-5, 16, 100)
+z = np.zeros(([len(x1), len(x2)]))
+for i in range(0, len(x1)):
+    for j in range(0, len(x2)):
+        z[j, i] = func([x1[i], x2[j]])
+
+contours=plt.contour(x1, x2, z, 100, cmap=plt.cm.gnuplot)
+plt.clabel(contours, inline=1, fontsize=10)
+plt.xlabel("$x_1$ ->")
+plt.ylabel("$x_2$ ->")
+
+def rank_1(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    Bf = np.eye(len(Xj))
+    
+    while True:
+        Grad = Df(Xj)
+        delta = -Bf.dot(Grad) # Selection of the direction of the steepest descent
+        
+        
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            plt.plot(x1, x2, "rx-", ms=5.5) # Plot the final collected data showing the trajectory of optimization
+            plt.show()
+            return X, func(X)
+        else:
+            Dj = X - Xj # See line 17 of the algorithm
+            Gj = Df(X) - Grad # See line 18 of the algorithm
+            w = Dj - Bf.dot(Gj) # See line 19 of the algorithm
+            wT = w.T # Transpose of w
+            sigma = 1/(wT.dot(Gj)) # See line 20 of the algorithm
+            W = np.outer(w, w) # Outer product between w and the transpose of w
+            Delta = sigma*W # See line 21 of the algorithm
+            if abs(wT.dot(Gj)) >= 10**-8*NORM(Gj)*NORM(w): # update criterion (See line 22-24)
+                Bf += Delta          
+            Xj = X # Update to the new iterate
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+```
+
+Make sure all the relevant Python packages (eg. `autograd` as `au`) have been imported and functions like `NORM()` have been already defined. Now, as asked in our example, we set our parameter values and pass them to the `rank_1()` function:
+
+```{python}
+rank_1(np.array([11.8, 5.75]), 10**-5, 10**-4, 0.24)
+```
+
+We see that for our choice of parameters, the algorithm has converged to the minimizer $\mathbb{x}^* \sim \begin{bmatrix}3\pi \\ 2.475 \end{bmatrix}$ where the function value is $f(\mathbb{x}^*) \simeq 0.397887$.
+
+```{python, echo=FALSE, results=FALSE}
+import pandas as pd
+from tabulate import tabulate
+
+def rank_1(Xj, tol, alpha_1, alpha_2):
+    x1 = [Xj[0]]
+    x2 = [Xj[1]]
+    Bf = np.eye(len(Xj))
+    F = [func(Xj)]
+    DF = [NORM(Df(Xj))]
+    
+    while True:
+        Grad = Df(Xj)
+        delta = -Bf.dot(Grad) # Selection of the direction of the steepest descent
+        
+        
+        start_point = Xj # Start point for step length selection 
+        beta = line_search(f=func, myfprime=Df, xk=start_point, pk=delta, c1=alpha_1, c2=alpha_2)[0] # Selecting the step length
+        if beta!=None:
+            X = Xj+ beta*delta
+        if NORM(Df(X)) < tol:
+            x1 += [X[0], ]
+            x2 += [X[1], ]
+            F += [func(X)]
+            DF += [NORM(Df(X))]
+            data = {'x_1': x1,
+            'x_2': x2,
+            'f(X)': F,
+            '||grad||': DF}
+            return data
+        else:
+            Dj = X - Xj # See line 17 of the algorithm
+            Gj = Df(X) - Grad # See line 18 of the algorithm
+            w = Dj - Bf.dot(Gj) # See line 19 of the algorithm
+            wT = w.T # Transpose of w
+            sigma = 1/(wT.dot(Gj)) # See line 20 of the algorithm
+            W = np.outer(w, w) # Outer product between w and the transpose of w
+            Delta = sigma*W # See line 21 of the algorithm
+            if abs(wT.dot(Gj)) >= 10**-8*NORM(Gj)*NORM(w): # update criterion (See line 22-24)
+                Bf += Delta          
+            Xj = X # Update to the new iterate
+            x1 += [Xj[0], ]
+            x2 += [Xj[1], ]
+            F += [func(Xj)]
+            DF += [NORM(Df(Xj))]
+
+data =rank_1(np.array([11.8, 5.75]), 10**-5, 10**-4, 0.24)
+
+df = pd.DataFrame(data, columns = ['x_1', 'x_2', 'f(X)', '||grad||'])
+```
+
+The optimization data has been collected and shown below:
+
+```{python, echo=FALSE}
+print(tabulate(df, headers='keys', tablefmt='psql'))
+```
+
+
+**This chapter is under construction**

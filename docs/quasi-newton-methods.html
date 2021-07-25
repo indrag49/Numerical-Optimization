@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Quasi-Newton Methods | Introduction to Mathematical Optimization</title>
+  <meta name="description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Quasi-Newton Methods | Introduction to Mathematical Optimization" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://indrag49.github.io/Numerical-Optimization/" />
+  
+  <meta property="og:description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Quasi-Newton Methods | Introduction to Mathematical Optimization" />
+  
+  <meta name="twitter:description" content="A book for teaching introductory numerical optimization algorithms with Python" />
+  
+
+<meta name="author" content="Indranil Ghosh" />
+
+
+<meta name="date" content="2021-07-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="conjugate-gradient-methods-1.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mathematical Optimization</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What is Numerical Optimization?</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#introduction-to-optimization"><i class="fa fa-check"></i><b>1.1</b> Introduction to Optimization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#a-solution"><i class="fa fa-check"></i><b>1.2</b> A Solution</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#maximization"><i class="fa fa-check"></i><b>1.3</b> Maximization</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#feasible-region"><i class="fa fa-check"></i><b>1.4</b> Feasible Region</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#discrete-optimization-problems"><i class="fa fa-check"></i><b>1.5</b> Discrete Optimization Problems</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#linear-programming-problems"><i class="fa fa-check"></i><b>1.6</b> Linear Programming Problems</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#stochastic-optimization-problems"><i class="fa fa-check"></i><b>1.7</b> Stochastic Optimization Problems</a></li>
+<li class="chapter" data-level="1.8" data-path="index.html"><a href="index.html#scaling-of-decision-variables"><i class="fa fa-check"></i><b>1.8</b> Scaling of Decision Variables</a></li>
+<li class="chapter" data-level="1.9" data-path="index.html"><a href="index.html#gradient-vector-and-hessian-matrix-of-the-objective-function"><i class="fa fa-check"></i><b>1.9</b> Gradient Vector and Hessian Matrix of the Objective Function</a></li>
+<li class="chapter" data-level="1.10" data-path="index.html"><a href="index.html#directional-derivative-of-the-objective-function"><i class="fa fa-check"></i><b>1.10</b> Directional Derivative of the Objective Function</a></li>
+<li class="chapter" data-level="1.11" data-path="index.html"><a href="index.html#positive-definite-and-positive-semi-definite-matrices"><i class="fa fa-check"></i><b>1.11</b> Positive Definite and Positive Semi-definite Matrices</a></li>
+<li class="chapter" data-level="1.12" data-path="index.html"><a href="index.html#what-is-convexity"><i class="fa fa-check"></i><b>1.12</b> What is Convexity?</a></li>
+<li class="chapter" data-level="1.13" data-path="index.html"><a href="index.html#numerical-optimization-algorithms"><i class="fa fa-check"></i><b>1.13</b> Numerical Optimization Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html"><i class="fa fa-check"></i><b>2</b> Introduction to Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#the-unconstrained-optimization-problem"><i class="fa fa-check"></i><b>2.1</b> The Unconstrained Optimization Problem</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#smooth-functions"><i class="fa fa-check"></i><b>2.2</b> Smooth Functions</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#taylors-theorem"><i class="fa fa-check"></i><b>2.3</b> Taylor’s Theorem</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#necessary-and-sufficient-conditions-for-local-minimizer-in-unconstrained-optimization"><i class="fa fa-check"></i><b>2.4</b> Necessary and Sufficient Conditions for Local Minimizer in Unconstrained Optimization</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#first-order-necessary-condition"><i class="fa fa-check"></i><b>2.4.1</b> First-Order Necessary Condition</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-necessary-conditions"><i class="fa fa-check"></i><b>2.4.2</b> Second-Order Necessary Conditions</a></li>
+<li class="chapter" data-level="2.4.3" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#second-order-sufficient-conditions"><i class="fa fa-check"></i><b>2.4.3</b> Second-Order Sufficient Conditions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-unconstrained-optimization.html"><a href="introduction-to-unconstrained-optimization.html#algorithms-for-solving-unconstrained-minimization-tasks"><i class="fa fa-check"></i><b>2.5</b> Algorithms for Solving Unconstrained Minimization Tasks</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html"><i class="fa fa-check"></i><b>3</b> Solving One Dimensional Optimization Problems</a><ul>
+<li class="chapter" data-level="3.1" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#one-dimensional-optimization-problems"><i class="fa fa-check"></i><b>3.1</b> One Dimensional Optimization Problems</a></li>
+<li class="chapter" data-level="3.2" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#what-is-a-unimodal-function"><i class="fa fa-check"></i><b>3.2</b> What is a Unimodal Function?</a></li>
+<li class="chapter" data-level="3.3" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#fibonacci-search-method"><i class="fa fa-check"></i><b>3.3</b> Fibonacci Search Method</a></li>
+<li class="chapter" data-level="3.4" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#golden-section-search-method"><i class="fa fa-check"></i><b>3.4</b> Golden Section Search Method</a></li>
+<li class="chapter" data-level="3.5" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#powells-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.5</b> Powell’s Quadratic Interpolation Method</a></li>
+<li class="chapter" data-level="3.6" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#inverse-quadratic-interpolation-method"><i class="fa fa-check"></i><b>3.6</b> Inverse Quadratic Interpolation Method</a></li>
+<li class="chapter" data-level="3.7" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#newtons-method"><i class="fa fa-check"></i><b>3.7</b> Newton’s Method</a></li>
+<li class="chapter" data-level="3.8" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#halleys-method"><i class="fa fa-check"></i><b>3.8</b> Halley’s Method</a></li>
+<li class="chapter" data-level="3.9" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#secant-method"><i class="fa fa-check"></i><b>3.9</b> Secant Method</a></li>
+<li class="chapter" data-level="3.10" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#bisection-method"><i class="fa fa-check"></i><b>3.10</b> Bisection Method</a></li>
+<li class="chapter" data-level="3.11" data-path="solving-one-dimensional-optimization-problems.html"><a href="solving-one-dimensional-optimization-problems.html#brents-method"><i class="fa fa-check"></i><b>3.11</b> Brent’s Method</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html"><i class="fa fa-check"></i><b>4</b> Line Search Descent Methods</a><ul>
+<li class="chapter" data-level="4.1" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#introduction-to-line-search-descent-methods-for-unconstrained-minimization"><i class="fa fa-check"></i><b>4.1</b> Introduction to Line Search Descent Methods for Unconstrained Minimization</a></li>
+<li class="chapter" data-level="4.2" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#selection-of-step-length"><i class="fa fa-check"></i><b>4.2</b> Selection of Step Length</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#the-wolfe-conditions"><i class="fa fa-check"></i><b>4.2.1</b> The Wolfe Conditions</a></li>
+<li class="chapter" data-level="4.2.2" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#an-algorithm-for-the-strong-wolfe-conditions"><i class="fa fa-check"></i><b>4.2.2</b> An Algorithm for the Strong Wolfe Conditions</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#first-order-line-search-gradient-descent-method-the-steepest-descent-algorithm"><i class="fa fa-check"></i><b>4.3</b> First Order Line Search Gradient Descent Method: The Steepest Descent Algorithm</a></li>
+<li class="chapter" data-level="4.4" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#conjugate-gradient-methods"><i class="fa fa-check"></i><b>4.4</b> Conjugate Gradient Methods</a></li>
+<li class="chapter" data-level="4.5" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#second-order-line-search-gradient-descent-method"><i class="fa fa-check"></i><b>4.5</b> Second Order Line Search Gradient Descent Method</a></li>
+<li class="chapter" data-level="4.6" data-path="line-search-descent-methods.html"><a href="line-search-descent-methods.html#marquardt-method"><i class="fa fa-check"></i><b>4.6</b> Marquardt Method</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html"><i class="fa fa-check"></i><b>5</b> Conjugate Gradient Methods</a><ul>
+<li class="chapter" data-level="5.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#introduction-to-conjugate-gradient-methods"><i class="fa fa-check"></i><b>5.1</b> Introduction to Conjugate Gradient Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#linear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.2</b> Linear Conjugate Gradient Algorithm</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#mutual-conjugacy"><i class="fa fa-check"></i><b>5.2.1</b> Mutual Conjugacy</a></li>
+<li class="chapter" data-level="5.2.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#conjugate-direction-algorithm"><i class="fa fa-check"></i><b>5.2.2</b> Conjugate Direction Algorithm</a></li>
+<li class="chapter" data-level="5.2.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#preliminary-algorithm"><i class="fa fa-check"></i><b>5.2.3</b> Preliminary Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#nonlinear-conjugate-gradient-algorithm"><i class="fa fa-check"></i><b>5.3</b> Nonlinear Conjugate Gradient Algorithm</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#feltcher-reeves-algorithm"><i class="fa fa-check"></i><b>5.3.1</b> Feltcher-Reeves Algorithm</a></li>
+<li class="chapter" data-level="5.3.2" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#polak-ribiere-algorithm"><i class="fa fa-check"></i><b>5.3.2</b> Polak-Ribiere Algorithm</a></li>
+<li class="chapter" data-level="5.3.3" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#hestenes-stiefel-algorithm"><i class="fa fa-check"></i><b>5.3.3</b> Hestenes-Stiefel Algorithm</a></li>
+<li class="chapter" data-level="5.3.4" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#dai-yuan-algorithm"><i class="fa fa-check"></i><b>5.3.4</b> Dai-Yuan Algorithm</a></li>
+<li class="chapter" data-level="5.3.5" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#hager-zhang-algorithm"><i class="fa fa-check"></i><b>5.3.5</b> Hager-Zhang Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="conjugate-gradient-methods-1.html"><a href="conjugate-gradient-methods-1.html#the-scipy.optimize.minimize-function"><i class="fa fa-check"></i><b>5.4</b> The <code>scipy.optimize.minimize()</code> Function</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html"><i class="fa fa-check"></i><b>6</b> Quasi-Newton Methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#introduction-to-quasi-newton-methods"><i class="fa fa-check"></i><b>6.1</b> Introduction to Quasi-Newton Methods</a></li>
+<li class="chapter" data-level="6.2" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#the-approximate-inverse-matrix"><i class="fa fa-check"></i><b>6.2</b> The Approximate Inverse Matrix</a></li>
+<li class="chapter" data-level="6.3" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#rank-1-update-algorithm"><i class="fa fa-check"></i><b>6.3</b> Rank 1 Update Algorithm</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to Mathematical Optimization</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="quasi-newton-methods" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Quasi-Newton Methods</h1>
+<p>We introduce the <strong>Quasi-Newton methods</strong> in more detailed fashion in this chapter. We start with studying the <strong>rank 1 update algorithm</strong> of updating the approximate to the inverse of the Hessian matrix and then move on to studying the <strong>rank 2 update algorithms</strong>. The methods covered under the later category are the <strong>Davidon-Fletcher-Powell algorithm</strong>, the <strong>Broyden-Fletcher-Goldfarb-Shanno algorithm</strong> and more generally the <strong>Huang’s family of rank2 updates</strong>.</p>
+<hr />
+<div id="introduction-to-quasi-newton-methods" class="section level2">
+<h2><span class="header-section-number">6.1</span> Introduction to Quasi-Newton Methods</h2>
+<p>In the last part of the last chapter, the motivation to study <em>quasi-Newton methods</em> was introduced. To avoid high computational costs, the <em>quasi-Newton methods</em> adapt to using the inverse of the Hessian matrix of the objective function to compute the minimizer, unlike the <em>Newton method</em> where the inverse of the Hessian matrix is calculated at each iteration. The basic iterative formulation for the Newton’s method is given by</p>
+<p><span class="math display">\[\begin{equation}
+\mathbb{x}_j = \mathbb{x}_{j-1} - [\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}), j = 1, 2, \ldots \nonumber 
+\end{equation}\]</span></p>
+<p>where, the descent direction at the <span class="math inline">\(j^{th}\)</span> step is given by
+<span class="math display">\[\begin{equation}
+\mathbb{\delta_j} = - [\mathbb{H}f]^{-1}(\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) \nonumber
+\end{equation}\]</span></p>
+<p>If <span class="math inline">\(\beta_j\)</span> is the selected step length along the <span class="math inline">\(j^{th}\)</span> descent direction and <span class="math inline">\(\mathbb{B}f(\mathbb{x}_j)\)</span> is the approximation to the inverse of the Hessian, <span class="math inline">\([\mathbb{H}f(\mathbb{x}_{j})]^{-1}\)</span>, then The <em>Quasi-Newton method</em> is written as the given iteration formula:
+<span class="math display" id="eq:1">\[\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1}-\beta_j[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) \tag{6.1}
+\end{equation}\]</span></p>
+<p>where, the descent direction <span class="math inline">\(\mathbb{\delta}_j\)</span> is given by:
+<span class="math display" id="eq:2">\[\begin{equation}
+    \mathbb{\delta_j} = -[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) \tag{6.2}
+\end{equation}\]</span></p>
+<p>Note that,
+<span class="math display" id="eq:3">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}) \equiv [\mathbb{H}f]^{-1}(\mathbb{x}) \equiv [\mathbb{H}f(\mathbb{x})]^{-1} \tag{6.3}
+\end{equation}\]</span></p>
+</div>
+<div id="the-approximate-inverse-matrix" class="section level2">
+<h2><span class="header-section-number">6.2</span> The Approximate Inverse Matrix</h2>
+<p>Using Taylor’s theorem to approximate the gradient of the Objective function, we can write:
+<span class="math display" id="eq:4">\[\begin{equation}
+    \nabla f(\mathbb{x}) \simeq \nabla f(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x})(\mathbb{x} - \mathbb{x}_0) \tag{6.4}
+\end{equation}\]</span></p>
+<p>So at iterates <span class="math inline">\(\mathbb{x}_j\)</span> and <span class="math inline">\(\mathbb{x}_{j-1}\)</span> Eq.~ can be written as:
+<span class="math display" id="eq:5">\[\begin{equation}
+    \nabla f(\mathbb{x}_j) = \nabla \mathbb{f}(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_j - \mathbb{x}_0) \tag{6.5}
+\end{equation}\]</span></p>
+<p>and
+<span class="math display" id="eq:6">\[\begin{equation}
+    \nabla f(\mathbb{x}_{j-1}) = \nabla f(\mathbb{x}_0) + \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_{j-1} - \mathbb{x}_0) \tag{6.6}
+\end{equation}\]</span></p>
+<p>So, subtracting Eq. <a href="quasi-newton-methods.html#eq:6">(6.6)</a> from Eq. <a href="quasi-newton-methods.html#eq:5">(6.5)</a>, we get,
+<span class="math display" id="eq:7">\[\begin{align}
+    &amp;&amp;\nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) &amp;= \mathbb{H}f(\mathbb{x}_j)(\mathbb{x}_j - \mathbb{x}_{j-1}) \nonumber \\
+    &amp;\implies&amp; \mathbb{H}f(\mathbb{x}_j)\mathbb{D}_j &amp;= \mathbb{G}_j \nonumber \\
+    &amp;\implies&amp; \mathbb{D}_j &amp;= [\mathbb{H}f(\mathbb{x}_j)]^{-1}\mathbb{G}_j\nonumber\\
+    &amp;\implies&amp; \mathbb{D}_j &amp;= [\mathbb{B}f](\mathbb{x}_j)\mathbb{G}_j \tag{6.7}
+\end{align}\]</span></p>
+<p>Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a> is the <em>secant equation</em>. Here, <span class="math inline">\([\mathbb{B}(\mathbb{x}_j)]\)</span> is the approximate to the inverse of the Hessian matrix of the objective function <span class="math inline">\(f\)</span> at the <span class="math inline">\(j^{th}\)</span> iterate. As the iteration of the optimization technique advances in each step, it should be kept in mind that if <span class="math inline">\(\mathbb{B}f(\mathbb{x}_{j-1})\)</span> is symmetric and positive definite, then <span class="math inline">\(\mathbb{B}f(\mathbb{x}_j)\)</span> should be symmetric and positive definite. Various mechanisms have been developed for updating the inverse matrix, generally given by the formula:
+<span class="math display" id="eq:8">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \mathbb{\Delta} \tag{6.8}
+\end{equation}\]</span></p>
+</div>
+<div id="rank-1-update-algorithm" class="section level2">
+<h2><span class="header-section-number">6.3</span> Rank 1 Update Algorithm</h2>
+<p>In the <em>rank 1 update algorithm</em>, the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> is a rank 1 matrix. the <em>rank</em> of a matrix is given by its maximal number of linearly independent columns. To formulate a rank 1 update, we write the  as:
+<span class="math display" id="eq:9">\[\begin{equation}
+    \mathbb{\Delta} = \sigma \mathbb{w} \otimes \mathbb{w} = \sigma \mathbb{w}\mathbb{w}^T \tag{6.9}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\(\otimes\)</span> is the outer product between two matrices/vectors. So, Eq. <a href="quasi-newton-methods.html#eq:8">(6.8)</a> becomes:
+<span class="math display" id="eq:10">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \sigma \mathbb{w}\mathbb{w}^T \tag{6.10}
+\end{equation}\]</span></p>
+<p>Our task is to evaluate the explicit forms of the scalar constant <span class="math inline">\(\sigma\)</span> and the vector <span class="math inline">\(\mathbb{w}\)</span>, where <span class="math inline">\(\mathbb{w} \in \mathbb{R}^n\)</span>. Now, replacing <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> in Eq.~ with the one in Eq.~, we have,
+<span class="math display" id="eq:11">\[\begin{align}
+    \mathbb{D}_j &amp;= ([\mathbb{B}f](\mathbb{x}_{j-1}) + \sigma \mathbb{w}\mathbb{w}^T)\mathbb{G}_j \nonumber \\
+    &amp;= [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j + \sigma \mathbb{w}(\mathbb{w}^T\mathbb{G}_j) \tag{6.11}
+\end{align}\]</span></p>
+<p>This can be rearranged to write,
+<span class="math display" id="eq:12">\[\begin{equation}
+    \sigma \mathbb{w} = \frac{\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j}{\mathbb{w}^T\mathbb{G}_j} \tag{6.12}
+\end{equation}\]</span></p>
+<p>As <span class="math inline">\(\mathbb{w}^T\mathbb{G}_j\)</span> is a scalar, we see that it can be taken to the denominator in Eq. <a href="quasi-newton-methods.html#eq:12">(6.12)</a>. Now, it is clearly evident that,
+<span class="math display" id="eq:13">\[\begin{equation}
+    \sigma = \frac{1}{\mathbb{w}^T\mathbb{G}_j} \tag{6.13}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:14">\[\begin{equation}
+    \mathbb{w} = \mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j \tag{6.14}
+\end{equation}\]</span></p>
+<p>So, Eq. <a href="quasi-newton-methods.html#eq:13">(6.13)</a> can now be written as:
+<span class="math display" id="eq:15">\[\begin{equation}
+    \sigma = \frac{1}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.15}
+\end{equation}\]</span></p>
+<p>Eventually, the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> from Eq. <a href="quasi-newton-methods.html#eq:9">(6.9)</a> turns out to be:
+<span class="math display" id="eq:16">\[\begin{equation}
+    \mathbb{\Delta} = \frac{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.16}
+\end{equation}\]</span></p>
+<p>So, the rank 1 update formula is given by:
+<span class="math display" id="eq:17">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \frac{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.17}
+\end{equation}\]</span></p>
+<p>In the update formulation of the inverse matrix, most often <span class="math inline">\([\mathbb{B}f](x_0)\)</span> is considered to be the <span class="math inline">\(n \times n\)</span> identity matrix. The iteration is continued until and unless the convergence criteria are satisfied. If <span class="math inline">\([\mathbb{B}f](\mathbb{x}_{j-1})\)</span> is symmetric, then Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a> ensures that <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> is symmetric too and is then called a  or the <em>SR1 update algorithm</em>. Also, it can be seen that the columns of the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> are multiples of each other, making it a rank 1 matrix.</p>
+<p>The <em>rank 1 update algorithm</em> has an issue with the denominator in Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a>. The denominator can vanish and sometimes there would be no symmetric rank 1 update in the inverse matrix, satisfying the secant equation given by Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a>, even for a convex quadratic objective function. There are three cases that needs to be analyzed for a particular iterate <span class="math inline">\(j\)</span> in the optimization algorithm:</p>
+<ul>
+<li>If <span class="math inline">\(\mathbb{w}^T\mathbb{G}_j \neq 0\)</span>, then there is a unique rank 1 update for the inverse matrix, given by Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a>,</li>
+<li>If <span class="math inline">\(\mathbb{D}_j = [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j\)</span>, then the update given by Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a> is skipped and we consider <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1})\)</span>, and</li>
+<li>if <span class="math inline">\(\mathbb{D}_j \neq [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j\)</span> and <span class="math inline">\(\mathbb{w}^T\mathbb{G}_j = 0\)</span>, then there is no rank 1 update technique available that satisfies the secant equation given by Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a>.</li>
+</ul>
+<p>In view of the second case mentioned above, there is a necessity to introduce a <em>skipping criterion</em> which will prevent the <em>rank 1 update algorithm</em> from crashing. The update of the inverse matrix at a particular iterate <span class="math inline">\(j\)</span>, given by Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a> must be applied if the following condition is satisfied:
+<span class="math display" id="eq:18">\[\begin{equation}
+    |\mathbb{w}^T\mathbb{G}_j| \geq \alpha_3\|\mathbb{G}_j\| \|\mathbb{w}\| \tag{6.18}
+\end{equation}\]</span></p>
+<p>otherwise no update in the inverse matrix must be made. Here <span class="math inline">\(\alpha_3\)</span> is a very small number usually taken as <span class="math inline">\(\alpha_3 \sim 10^{-8}\)</span>. The last case in the above mentioned cases however gives the motivation to introduce a rank 2 update formulation for the inverse matrix, such that the singularity case defining the vanishing of the denominator can be avoided. The <em>rank 1 update algorithm</em> is given in below:</p>
+<p><img src="img%2024.png" /></p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-1" class="example"><strong>Example 6.1  </strong></span>Let us consider  as the objective function, given by:
+<span class="math display" id="eq:19">\[\begin{equation}
+    f(x_1, x_2) = a(x_2 - bx_1^2 + cx_1 - r)^2 + s(1-t)\cos(x_1)+s \tag{6.19}
+\end{equation}\]</span>
+where <span class="math inline">\(a, b, c, r, s\)</span> and <span class="math inline">\(t\)</span> are constants whose default values are given in the table below:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(a\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(b\)</span></td>
+<td><span class="math inline">\(\frac{5.1}{4\pi^2}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(c\)</span></td>
+<td><span class="math inline">\(\frac{5}{\pi}\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(r\)</span></td>
+<td><span class="math inline">\(6\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(s\)</span></td>
+<td><span class="math inline">\(10\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t\)</span></td>
+<td><span class="math inline">\(\frac{1}{8\pi}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Considering the default constant values,  has four minimizers given by:</p>
+<ul>
+<li><span class="math inline">\(f(-\pi, 12.275) \simeq 0.397887\)</span>,</li>
+<li><span class="math inline">\(f(\pi, 2.275) \simeq 0.397887\)</span>,</li>
+<li><span class="math inline">\(f(3\pi, 2.475) \simeq 0.397887\)</span>, and</li>
+<li><span class="math inline">\(f(5\pi, 12.875) \simeq 0.397887\)</span></li>
+</ul>
+We will use <em>Rank 1 update algorithm</em> to find out one of these four minimizers. Let the starting iterate be <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}11 \\ 5.75 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span>, and the constants to be used in determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1=10^{-4}\)</span> and <span class="math inline">\(\alpha_2=0.24\)</span>. Let us define <em>Branin function</em> and its gradient in Python:
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="quasi-newton-methods.html#cb1-1"></a><span class="co"># import the required packages</span></span>
+<span id="cb1-2"><a href="quasi-newton-methods.html#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="quasi-newton-methods.html#cb1-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="quasi-newton-methods.html#cb1-4"></a><span class="im">import</span> autograd.numpy <span class="im">as</span> au</span>
+<span id="cb1-5"><a href="quasi-newton-methods.html#cb1-5"></a><span class="im">from</span> autograd <span class="im">import</span> grad, jacobian</span>
+<span id="cb1-6"><a href="quasi-newton-methods.html#cb1-6"></a><span class="im">import</span> scipy</span>
+<span id="cb1-7"><a href="quasi-newton-methods.html#cb1-7"></a></span>
+<span id="cb1-8"><a href="quasi-newton-methods.html#cb1-8"></a><span class="kw">def</span> func(x): <span class="co"># Objective function (Branin function)</span></span>
+<span id="cb1-9"><a href="quasi-newton-methods.html#cb1-9"></a>    <span class="cf">return</span> (x[<span class="dv">1</span>] <span class="op">-</span> (<span class="fl">5.1</span><span class="op">/</span>(<span class="dv">4</span><span class="op">*</span>au.pi<span class="op">**</span><span class="dv">2</span>))<span class="op">*</span>x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">5</span><span class="op">/</span>au.pi)<span class="op">*</span>x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">6</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">10</span><span class="op">*</span>(<span class="dv">1</span> <span class="op">-</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">8</span><span class="op">*</span>au.pi))<span class="op">*</span>au.cos(x[<span class="dv">0</span>]) <span class="op">+</span> <span class="dv">10</span></span>
+<span id="cb1-10"><a href="quasi-newton-methods.html#cb1-10"></a>    </span>
+<span id="cb1-11"><a href="quasi-newton-methods.html#cb1-11"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span></code></pre></div>
+<p>We first draw the contour plot of the <em>Branin function</em> and then define the Python function <code>rank_1()</code> implementing <em>Rank 1 update algorithm</em>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="quasi-newton-methods.html#cb2-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> line_search</span>
+<span id="cb2-2"><a href="quasi-newton-methods.html#cb2-2"></a>NORM <span class="op">=</span> np.linalg.norm</span>
+<span id="cb2-3"><a href="quasi-newton-methods.html#cb2-3"></a></span>
+<span id="cb2-4"><a href="quasi-newton-methods.html#cb2-4"></a>x1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">16</span>, <span class="dv">100</span>)</span>
+<span id="cb2-5"><a href="quasi-newton-methods.html#cb2-5"></a>x2 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">16</span>, <span class="dv">100</span>)</span>
+<span id="cb2-6"><a href="quasi-newton-methods.html#cb2-6"></a>z <span class="op">=</span> np.zeros(([<span class="bu">len</span>(x1), <span class="bu">len</span>(x2)]))</span>
+<span id="cb2-7"><a href="quasi-newton-methods.html#cb2-7"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x1)):</span>
+<span id="cb2-8"><a href="quasi-newton-methods.html#cb2-8"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x2)):</span>
+<span id="cb2-9"><a href="quasi-newton-methods.html#cb2-9"></a>        z[j, i] <span class="op">=</span> func([x1[i], x2[j]])</span>
+<span id="cb2-10"><a href="quasi-newton-methods.html#cb2-10"></a></span>
+<span id="cb2-11"><a href="quasi-newton-methods.html#cb2-11"></a>contours<span class="op">=</span>plt.contour(x1, x2, z, <span class="dv">100</span>, cmap<span class="op">=</span>plt.cm.gnuplot)</span>
+<span id="cb2-12"><a href="quasi-newton-methods.html#cb2-12"></a>plt.clabel(contours, inline<span class="op">=</span><span class="dv">1</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="quasi-newton-methods.html#cb3-1"></a>plt.xlabel(<span class="st">&quot;$x_1$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="quasi-newton-methods.html#cb4-1"></a>plt.ylabel(<span class="st">&quot;$x_2$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="quasi-newton-methods.html#cb5-1"></a><span class="kw">def</span> rank_1(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb5-2"><a href="quasi-newton-methods.html#cb5-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb5-3"><a href="quasi-newton-methods.html#cb5-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb5-4"><a href="quasi-newton-methods.html#cb5-4"></a>    Bf <span class="op">=</span> np.eye(<span class="bu">len</span>(Xj))</span>
+<span id="cb5-5"><a href="quasi-newton-methods.html#cb5-5"></a>    </span>
+<span id="cb5-6"><a href="quasi-newton-methods.html#cb5-6"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb5-7"><a href="quasi-newton-methods.html#cb5-7"></a>        Grad <span class="op">=</span> Df(Xj)</span>
+<span id="cb5-8"><a href="quasi-newton-methods.html#cb5-8"></a>        delta <span class="op">=</span> <span class="op">-</span>Bf.dot(Grad) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb5-9"><a href="quasi-newton-methods.html#cb5-9"></a>        </span>
+<span id="cb5-10"><a href="quasi-newton-methods.html#cb5-10"></a>        </span>
+<span id="cb5-11"><a href="quasi-newton-methods.html#cb5-11"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb5-12"><a href="quasi-newton-methods.html#cb5-12"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb5-13"><a href="quasi-newton-methods.html#cb5-13"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb5-14"><a href="quasi-newton-methods.html#cb5-14"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb5-15"><a href="quasi-newton-methods.html#cb5-15"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb5-16"><a href="quasi-newton-methods.html#cb5-16"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb5-17"><a href="quasi-newton-methods.html#cb5-17"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb5-18"><a href="quasi-newton-methods.html#cb5-18"></a>            plt.plot(x1, x2, <span class="st">&quot;rx-&quot;</span>, ms<span class="op">=</span><span class="fl">5.5</span>) <span class="co"># Plot the final collected data showing the trajectory of optimization</span></span>
+<span id="cb5-19"><a href="quasi-newton-methods.html#cb5-19"></a>            plt.show()</span>
+<span id="cb5-20"><a href="quasi-newton-methods.html#cb5-20"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb5-21"><a href="quasi-newton-methods.html#cb5-21"></a>        <span class="cf">else</span>:</span>
+<span id="cb5-22"><a href="quasi-newton-methods.html#cb5-22"></a>            Dj <span class="op">=</span> X <span class="op">-</span> Xj <span class="co"># See line 17 of the algorithm</span></span>
+<span id="cb5-23"><a href="quasi-newton-methods.html#cb5-23"></a>            Gj <span class="op">=</span> Df(X) <span class="op">-</span> Grad <span class="co"># See line 18 of the algorithm</span></span>
+<span id="cb5-24"><a href="quasi-newton-methods.html#cb5-24"></a>            w <span class="op">=</span> Dj <span class="op">-</span> Bf.dot(Gj) <span class="co"># See line 19 of the algorithm</span></span>
+<span id="cb5-25"><a href="quasi-newton-methods.html#cb5-25"></a>            wT <span class="op">=</span> w.T <span class="co"># Transpose of w</span></span>
+<span id="cb5-26"><a href="quasi-newton-methods.html#cb5-26"></a>            sigma <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>(wT.dot(Gj)) <span class="co"># See line 20 of the algorithm</span></span>
+<span id="cb5-27"><a href="quasi-newton-methods.html#cb5-27"></a>            W <span class="op">=</span> np.outer(w, w) <span class="co"># Outer product between w and the transpose of w</span></span>
+<span id="cb5-28"><a href="quasi-newton-methods.html#cb5-28"></a>            Delta <span class="op">=</span> sigma<span class="op">*</span>W <span class="co"># See line 21 of the algorithm</span></span>
+<span id="cb5-29"><a href="quasi-newton-methods.html#cb5-29"></a>            <span class="cf">if</span> <span class="bu">abs</span>(wT.dot(Gj)) <span class="op">&gt;=</span> <span class="dv">10</span><span class="op">**-</span><span class="dv">8</span><span class="op">*</span>NORM(Gj)<span class="op">*</span>NORM(w): <span class="co"># update criterion (See line 22-24)</span></span>
+<span id="cb5-30"><a href="quasi-newton-methods.html#cb5-30"></a>                Bf <span class="op">+=</span> Delta          </span>
+<span id="cb5-31"><a href="quasi-newton-methods.html#cb5-31"></a>            Xj <span class="op">=</span> X <span class="co"># Update to the new iterate</span></span>
+<span id="cb5-32"><a href="quasi-newton-methods.html#cb5-32"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb5-33"><a href="quasi-newton-methods.html#cb5-33"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>Make sure all the relevant Python packages (eg. <code>autograd</code> as <code>au</code>) have been imported and functions like <code>NORM()</code> have been already defined. Now, as asked in our example, we set our parameter values and pass them to the <code>rank_1()</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="quasi-newton-methods.html#cb6-1"></a>rank_1(np.array([<span class="fl">11.8</span>, <span class="fl">5.75</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.24</span>)</span></code></pre></div>
+<pre><code>## (array([9.42477808, 2.47500166]), 0.39788735773222506)</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We see that for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}3\pi \\ 2.475 \end{bmatrix}\)</span> where the function value is <span class="math inline">\(f(\mathbb{x}^*) \simeq 0.397887\)</span>.</p>
+<p>The optimization data has been collected and shown below:</p>
+<pre><code>## +----+----------+---------+-----------+-------------+
+## |    |      x_1 |     x_2 |      f(X) |    ||grad|| |
+## |----+----------+---------+-----------+-------------|
+## |  0 | 11.8     | 5.75    | 17.2121   | 5.19253     |
+## |  1 |  9.82388 | 5.32765 |  7.37966  | 5.08873     |
+## |  2 |  9.07562 | 4.18275 |  4.92358  | 7.4295      |
+## |  3 |  9.38053 | 2.89188 |  0.613355 | 1.48899     |
+## |  4 |  9.43071 | 2.47558 |  0.398076 | 0.0650854   |
+## |  5 |  9.42419 | 2.47427 |  0.397889 | 0.00530062  |
+## |  6 |  9.42478 | 2.475   |  0.397887 | 3.45511e-06 |
+## +----+----------+---------+-----------+-------------+</code></pre>
+<p><strong>This chapter is under construction</strong></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="conjugate-gradient-methods-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/indrag49/Numerical-Optimization/edit/master/06-Quasi_Newton_Methods.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/indrag49/Numerical-Optimization/blob/master/06-Quasi_Newton_Methods.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
