@@ -24,7 +24,7 @@
 <meta name="author" content="Indranil Ghosh" />
 
 
-<meta name="date" content="2021-07-25" />
+<meta name="date" content="2021-07-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -207,6 +207,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#introduction-to-quasi-newton-methods"><i class="fa fa-check"></i><b>6.1</b> Introduction to Quasi-Newton Methods</a></li>
 <li class="chapter" data-level="6.2" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#the-approximate-inverse-matrix"><i class="fa fa-check"></i><b>6.2</b> The Approximate Inverse Matrix</a></li>
 <li class="chapter" data-level="6.3" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#rank-1-update-algorithm"><i class="fa fa-check"></i><b>6.3</b> Rank 1 Update Algorithm</a></li>
+<li class="chapter" data-level="6.4" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#rank-2-update-algorithms"><i class="fa fa-check"></i><b>6.4</b> Rank 2 Update Algorithms</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#davidon-fletcher-powell-algorithm"><i class="fa fa-check"></i><b>6.4.1</b> Davidon-Fletcher-Powell Algorithm</a></li>
+<li class="chapter" data-level="6.4.2" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#broyden-fletcher-goldfarb-shanno-bfgs-algorithm"><i class="fa fa-check"></i><b>6.4.2</b> Broyden-Fletcher-Goldfarb-Shanno (BFGS) Algorithm</a></li>
+<li class="chapter" data-level="6.4.3" data-path="quasi-newton-methods.html"><a href="quasi-newton-methods.html#huangs-family-of-rank-2-update-formulae"><i class="fa fa-check"></i><b>6.4.3</b> Huang’s Family of Rank 2 Update Formulae</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -282,7 +287,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="rank-1-update-algorithm" class="section level2">
 <h2><span class="header-section-number">6.3</span> Rank 1 Update Algorithm</h2>
-<p>In the <em>rank 1 update algorithm</em>, the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> is a rank 1 matrix. the <em>rank</em> of a matrix is given by its maximal number of linearly independent columns. To formulate a rank 1 update, we write the  as:
+<p>In the <em>rank 1 update algorithm</em>, the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> is a rank 1 matrix. the <em>rank</em> of a matrix is given by its maximal number of linearly independent columns. To formulate a rank 1 update, we write the <em>update matrix</em> as:
 <span class="math display" id="eq:9">\[\begin{equation}
     \mathbb{\Delta} = \sigma \mathbb{w} \otimes \mathbb{w} = \sigma \mathbb{w}\mathbb{w}^T \tag{6.9}
 \end{equation}\]</span></p>
@@ -319,7 +324,7 @@ and
 <span class="math display" id="eq:17">\[\begin{equation}
     [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \frac{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{(\mathbb{D}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.17}
 \end{equation}\]</span></p>
-<p>In the update formulation of the inverse matrix, most often <span class="math inline">\([\mathbb{B}f](x_0)\)</span> is considered to be the <span class="math inline">\(n \times n\)</span> identity matrix. The iteration is continued until and unless the convergence criteria are satisfied. If <span class="math inline">\([\mathbb{B}f](\mathbb{x}_{j-1})\)</span> is symmetric, then Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a> ensures that <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> is symmetric too and is then called a  or the <em>SR1 update algorithm</em>. Also, it can be seen that the columns of the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> are multiples of each other, making it a rank 1 matrix.</p>
+<p>In the update formulation of the inverse matrix, most often <span class="math inline">\([\mathbb{B}f](x_0)\)</span> is considered to be the <span class="math inline">\(n \times n\)</span> identity matrix. The iteration is continued until and unless the convergence criteria are satisfied. If <span class="math inline">\([\mathbb{B}f](\mathbb{x}_{j-1})\)</span> is symmetric, then Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a> ensures that <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> is symmetric too and is then called a <em>symmetric rank 1 update algorithm</em> or the <em>SR1 update algorithm</em>. Also, it can be seen that the columns of the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> are multiples of each other, making it a rank 1 matrix.</p>
 <p>The <em>rank 1 update algorithm</em> has an issue with the denominator in Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a>. The denominator can vanish and sometimes there would be no symmetric rank 1 update in the inverse matrix, satisfying the secant equation given by Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a>, even for a convex quadratic objective function. There are three cases that needs to be analyzed for a particular iterate <span class="math inline">\(j\)</span> in the optimization algorithm:</p>
 <ul>
 <li>If <span class="math inline">\(\mathbb{w}^T\mathbb{G}_j \neq 0\)</span>, then there is a unique rank 1 update for the inverse matrix, given by Eq. <a href="quasi-newton-methods.html#eq:17">(6.17)</a>,</li>
@@ -334,7 +339,7 @@ and
 <p><img src="img%2024.png" /></p>
 
 <div class="example">
-<p><span id="exm:unnamed-chunk-1" class="example"><strong>Example 6.1  </strong></span>Let us consider  as the objective function, given by:
+<p><span id="exm:unnamed-chunk-1" class="example"><strong>Example 6.1  </strong></span>Let us consider <em>Branin function</em> as the objective function, given by:
 <span class="math display" id="eq:19">\[\begin{equation}
     f(x_1, x_2) = a(x_2 - bx_1^2 + cx_1 - r)^2 + s(1-t)\cos(x_1)+s \tag{6.19}
 \end{equation}\]</span>
@@ -373,7 +378,7 @@ where <span class="math inline">\(a, b, c, r, s\)</span> and <span class="math i
 </tr>
 </tbody>
 </table>
-<p>Considering the default constant values,  has four minimizers given by:</p>
+<p>Considering the default constant values, <em>Branin function</em> has four minimizers given by:</p>
 <ul>
 <li><span class="math inline">\(f(-\pi, 12.275) \simeq 0.397887\)</span>,</li>
 <li><span class="math inline">\(f(\pi, 2.275) \simeq 0.397887\)</span>,</li>
@@ -459,8 +464,424 @@ We will use <em>Rank 1 update algorithm</em> to find out one of these four minim
 ## |  5 |  9.42419 | 2.47427 |  0.397889 | 0.00530062  |
 ## |  6 |  9.42478 | 2.475   |  0.397887 | 3.45511e-06 |
 ## +----+----------+---------+-----------+-------------+</code></pre>
-<p><strong>This chapter is under construction</strong></p>
+<p>We now discuss the <em>Sherman-Morrison-Woodbury formula</em>, which states that, for a square non-singular matrix <span class="math inline">\(\mathbb{M}\)</span> encountering a rank 1 update, given by:
+<span class="math display" id="eq:20">\[\begin{equation}
+    \bar{\mathbb{M}} = \mathbb{M} + \mathbb{a}\mathbb{b}^T \tag{6.20}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\(\mathbb{M}, \bar{{\mathbb{M}}} \in \mathbb{R}^{n \times n}\)</span> and <span class="math inline">\(\mathbb{a}, \mathbb{b} \in \mathbb{R}^n\)</span>, then if <span class="math inline">\(\mathbb{M}\)</span> is nonsingular, the inverse of <span class="math inline">\(\bar{\mathbb{M}}\)</span> will be given by:
+<span class="math display" id="eq:21">\[\begin{equation}
+    \bar{\mathbb{M}}^{-1} = \mathbb{M}^{-1} - \frac{\mathbb{M}^{-1}\mathbb{ab}^T\mathbb{M}^{-1}}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \tag{6.21}
+\end{equation}\]</span>
+which is the <em>Sherman-Morrison-Woodbury formula</em>.</p>
 
+<div class="proof">
+ <span class="proof"><em>Proof. </em></span> To prove <a href="quasi-newton-methods.html#eq:21">(6.21)</a> we show that <span class="math inline">\(\bar{\mathbb{M}}\bar{\mathbb{M}}^{-1}=\mathbb{I}\)</span>.
+<span class="math display">\[\begin{align}
+\bar{\mathbb{M}}\bar{\mathbb{M}}^{-1} &amp;= (\mathbb{M} + \mathbb{ab}^T) \left( \mathbb{M}^{-1} - \frac{\mathbb{M}^{-1}\mathbb{ab}^T\mathbb{M}^{-1}}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \right) \nonumber \\
+&amp;= \mathbb{MM}^{-1} + \mathbb{ab}^T\mathbb{M}^{-1} - \frac{\mathbb{MM}^{-1}\mathbb{ab}^T\mathbb{M}^{-1} + \mathbb{ab}^T\mathbb{M}^{-1}\mathbb{ab}^T\mathbb{M}^{-1}}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \nonumber \\
+&amp;= \mathbb{I}+\mathbb{ab}^T\mathbb{M}^{-1} - \frac{\mathbb{ab}^T\mathbb{M}^{-1}\mathbb{ab}^T\mathbb{M}^{-1}\mathbb{ab}^T\mathbb{M}^{-1}}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \nonumber \\
+&amp;= \mathbb{I}+\mathbb{ab}^T\mathbb{M}^{-1} - \frac{\mathbb{a}(\mathbb{b}^T\mathbb{M}^{-1} + \mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}\mathbb{b}^T\mathbb{M}^{-1})}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \nonumber \\
+&amp;= \mathbb{I}+\mathbb{ab}^T\mathbb{M}^{-1} - \frac{\mathbb{a}(1 + \mathbb{b}^T\mathbb{M}^{-1}\mathbb{a})\mathbb{b}^T\mathbb{M}^{-1}}{1+\mathbb{b}^T\mathbb{M}^{-1}\mathbb{a}} \nonumber \\
+&amp;= \mathbb{I} + \mathbb{ab}^T\mathbb{M}^{-1} - \mathbb{ab}^T\mathbb{M}^{-1} \nonumber \\
+&amp;= \mathbb{I} \nonumber 
+\end{align}\]</span>
+This completes the proof.
+</div>
+
+<p>If the <em>Sherman-Morrison-Woodbury formula</em> is applied on Eq. @(eq:17), we will have,
+<span class="math display" id="eq:22">\[\begin{equation}
+    [\mathbb{H}f](\mathbb{x}_j) = [\mathbb{H}f](\mathbb{x}_{j-1}) + \frac{[\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j][\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j]^T}{(\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_j} \tag{6.22}
+\end{equation}\]</span></p>
+<p>where, <span class="math inline">\([\mathbb{H}f](\mathbb{x}) = [\mathbb{B}f]^{-1}(\mathbb{x})\)</span>.</p>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-8" class="theorem"><strong>Theorem 6.1  </strong></span>For a strongly convex quadratic function given by <span class="math inline">\(f(\mathbb{x}) = \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{b}^T\mathbb{x}\)</span>, with <span class="math inline">\(\mathbb{x}\in \mathbb{R}^n\)</span>, and <span class="math inline">\(\mathbb{A}\)</span> a symmetric positive definite matrix, having the starting point <span class="math inline">\(\mathbb{x}_0\)</span> and the symmetric starting Hessian matrix <span class="math inline">\(\mathbb{H}f(\mathbb{x}_0)\)</span>, the sequence of iterates <span class="math inline">\(\{\mathbb{x}_j\}\)</span> generated by the <em>Rank 1 Update Algorithm</em> converge to the minimizer in at most <span class="math inline">\(n\)</span> steps, provided that <span class="math inline">\((\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_j\neq 0\ \forall j\)</span>.
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> The rank 1 update is well defined, as we have assumed the non-singularity <span class="math inline">\((\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_j\neq 0\)</span>. We will first show an inductive proof of:
+<span class="math display" id="eq:23">\[\begin{equation}
+    [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_i = \mathbb{G}_i,\ i = 0, 1, \ldots, j-1 \tag{6.23}
+\end{equation}\]</span></p>
+<p>Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a> provides with the fact that the <em>secant equation</em> is satisfied along all the search directions. We first show the base case for the inductive proof. The rank 1 update mechanism satisfies the <em>secant equation</em> by default, i.e, for <span class="math inline">\(j=1\)</span>,
+<span class="math display" id="eq:24">\[\begin{equation}
+    [\mathbb{H}f](\mathbb{x}_0)\mathbb{D}_0 = \mathbb{G}_0 \tag{6.24}
+\end{equation}\]</span>
+Now, for the inductive case, we assume that Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a> holds for <span class="math inline">\(j&gt;1\)</span> and we will show that it holds true for <span class="math inline">\(j+1\)</span> too. From Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a> we have:
+<span class="math display" id="eq:25">\[\begin{align}
+    (\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_i &amp;= \mathbb{G}_j^T\mathbb{D}_i - ([\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_i \nonumber \\
+    &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{D}_j^T([\mathbb{H}f](\mathbb{x}_{j-1}))^T\mathbb{D}_i \nonumber \\
+    &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{D}_j^T[\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_i \nonumber \\
+    &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{D}_j^T\mathbb{G}_i \tag{6.25}
+\end{align}\]</span></p>
+<p>Now, from the quadratic form, we can say that, <span class="math inline">\(\mathbb{D}_k = \mathbb{A}\mathbb{G}_k\)</span>, which implies that <span class="math inline">\(\mathbb{D}_k^T = \mathbb{G}_k^T\mathbb{A}\)</span>, as <span class="math inline">\(\mathbb{A}\)</span> is symmetric. So, Eq. <a href="quasi-newton-methods.html#eq:25">(6.25)</a> can be written as:</p>
+<p><span class="math display" id="eq:26">\[\begin{align}
+    (\mathbb{G}_j - [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_i &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{D}_j^T\mathbb{G}_i \nonumber \\
+    &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{G}_j^T\mathbb{A}\mathbb{G}_i \nonumber \\
+    &amp;= \mathbb{G}_j^T\mathbb{D}_i - \mathbb{G}_j^T\mathbb{D}_i \nonumber \\
+    &amp;= 0\ \forall i &lt; j-1 \tag{6.26}
+\end{align}\]</span>
+By using Eq. <a href="quasi-newton-methods.html#eq:26">(6.26)</a> and Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a> in Eq. <a href="quasi-newton-methods.html#eq:22">(6.22)</a>, we will have,
+<span class="math display" id="eq:27">\[\begin{equation}
+    [\mathbb{H}f](\mathbb{x}_j)\mathbb{D}_i = [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_i = \mathbb{G}_i,\ \forall i&lt;j-1 \tag{6.27}
+\end{equation}\]</span></p>
+<p>As, by the <em>secant equation</em>, <span class="math inline">\([\mathbb{H}f](\mathbb{x}_{j+1})\mathbb{D}_j = \mathbb{G}_j\)</span>, we have shown that Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a> holds when <span class="math inline">\(j\)</span> is substituted by <span class="math inline">\(j+1\)</span>. This completes the inductive proof. Now, if the algorithm takes <span class="math inline">\(n\)</span> steps to find the minimizer, and if these steps <span class="math inline">\(\{\mathbb{G}_i\}\)</span> are linearly independent, we will have,
+<span class="math display" id="eq:28">\[\begin{align}
+    &amp; \mathbb{G}_i = [\mathbb{H}f](\mathbb{x}_n)\mathbb{D}_i = [\mathbb{H}f](\mathbb{x}_n)\mathbb{A}\mathbb{G}_i,\ \forall i=0, 1, \ldots, n-1 \nonumber \\
+    &amp;\implies [\mathbb{H}f](\mathbb{x}_n)\mathbb{A} = \mathbb{I} \nonumber \\
+    &amp;\implies [\mathbb{H}f](\mathbb{x}_n) = \mathbb{A}^{-1} \tag{6.28}
+\end{align}\]</span></p>
+<p>We see that it is a newton step at the iterate <span class="math inline">\(\mathbb{x}_n\)</span> and thus, the next iterate <span class="math inline">\(\mathbb{x}_{n+1}\)</span> will be the solution leading to the termination of the algorithm. Now, considering the case where the steps are linearly dependent, let us assume <span class="math inline">\(\mathbb{G}_j\)</span> to be a linear combination of all the previous steps, given by:
+<span class="math display" id="eq:29">\[\begin{equation}
+    \mathbb{G}_j = \zeta_0\mathbb{G}_0 + \zeta_1\mathbb{G}_1 + \ldots + \zeta_{j-1}\mathbb{G}_{j-1} \tag{6.29}
+\end{equation}\]</span>
+where, <span class="math inline">\(\zeta\)</span>’s are scalars. From Eq. <a href="quasi-newton-methods.html#eq:29">(6.29)</a> and Eq. <a href="quasi-newton-methods.html#eq:23">(6.23)</a>, we have,
+<span class="math display" id="eq:30">\[\begin{align}
+    [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j &amp;= [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{A}\mathbb{G}_j\nonumber \\
+    &amp;= \zeta_0[\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{A}\mathbb{G}_0 +  \ldots + \zeta_{j-1}[\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{A}\mathbb{G}_{j-1} \nonumber \\
+    &amp;= \zeta_0[\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_0 +  \ldots + \zeta_{j-1}[\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_{j-1} \nonumber \\
+    &amp;= \zeta_0\mathbb{G}_0 +  \ldots + \zeta_{j-1}\mathbb{G}_{j-1} \nonumber \\
+    &amp;= \mathbb{G}_j \tag{6.30}
+\end{align}\]</span></p>
+From Eq. <a href="quasi-newton-methods.html#eq:2">(6.2)</a> we have <span class="math inline">\(\mathbb{\delta}_j = -[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1})\)</span>. If we consider a step of unit length, we will have <span class="math inline">\(\mathbb{x}_j = \mathbb{x}_{j-1} + \mathbb{\delta}_j\)</span>, implying <span class="math inline">\(\mathbb{\delta}_j = \mathbb{x}_j - \mathbb{x}_{j-1} = \mathbb{D}_j\)</span>. Since <span class="math inline">\(\mathbb{G}_j = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1})\)</span> and <span class="math inline">\(\mathbb{D}_j = \mathbb{\delta}_j = -[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1})\)</span>, Eq. <a href="quasi-newton-methods.html#eq:30">(6.30)</a> implies that:
+<span class="math display" id="eq:31">\[\begin{align}
+    &amp;  [\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j = \mathbb{G}_j \nonumber \\
+    &amp;\implies -[\mathbb{H}f](\mathbb{x}_{j-1})[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1}) = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) \nonumber \\
+    &amp;\implies -\nabla f(\mathbb{x}_{j-1}) = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) \nonumber \\
+    &amp;\implies \nabla f(\mathbb{x}_j) = 0 \tag{6.31}
+\end{align}\]</span>
+This says that <span class="math inline">\(\mathbb{x}_j\)</span> is the solution, completing the proof.
+</div>
+
+</div>
+<div id="rank-2-update-algorithms" class="section level2">
+<h2><span class="header-section-number">6.4</span> Rank 2 Update Algorithms</h2>
+<p>We will be discussing the following algorithms under this category:</p>
+<ul>
+<li><em>Davidon-Fletcher-Powell</em> (DFP) algorithm,</li>
+<li><em>Broyden-Fletcher-Goldfarb-Shanno</em> (BFGS) algorithm, and</li>
+<li><em>Huang’s family of rank 2 updates</em>.</li>
+</ul>
+<div id="davidon-fletcher-powell-algorithm" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Davidon-Fletcher-Powell Algorithm</h3>
+<p>Eq. <a href="quasi-newton-methods.html#eq:8">(6.8)</a> gives the updating mechanism of the approximation to the inverse of the Hessian matrix of our objective function and Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a> gives the <em>secant equation</em>. In rank 2 updates, the <em>update matrix</em> <span class="math inline">\(\mathbb{\Delta}\)</span> is expressed as the sum of two rank 1 updates, given by:
+<span class="math display" id="eq:32">\[\begin{equation}
+    \mathbb{\Delta} = \sigma_1\mathbb{w}_1 \otimes \mathbb{w}_1 + \sigma_2\mathbb{w}_2 \otimes \mathbb{w}_2 = \sigma_1\mathbb{w}_1\mathbb{w}_1^T + \sigma_2\mathbb{w}_2\mathbb{w}_2^T \tag{6.32}
+\end{equation}\]</span></p>
+<p>such that, Eq. <a href="quasi-newton-methods.html#eq:8">(6.8)</a> becomes:
+<span class="math display" id="eq:33">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) +  \sigma_1\mathbb{w}_1\mathbb{w}_1^T + \sigma_2\mathbb{w}_2\mathbb{w}_2^T \tag{6.33}
+\end{equation}\]</span></p>
+<p>Here, <span class="math inline">\(\sigma_1\)</span> and <span class="math inline">\(\sigma_2\)</span> are scalars and <span class="math inline">\(\mathbb{w}_1, \mathbb{w}_2 \in \mathbb{R}^n\)</span>. Now, Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a> becomes:
+<span class="math display" id="eq:34">\[\begin{equation}
+    \mathbb{D}_j = [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j + \sigma_1\mathbb{w}_1(\mathbb{w}_1^T\mathbb{G}_j) + \sigma_2\mathbb{w}_2(\mathbb{w}_2^T\mathbb{G}_j) \tag{6.34}
+\end{equation}\]</span></p>
+<p>We notice that <span class="math inline">\(\mathbb{w}_1^T\mathbb{G}_j\)</span> and <span class="math inline">\(\mathbb{w}_2^T\mathbb{G}_j\)</span> are scalars. One of the non-unique combinations of choices that satisfy Eq. <a href="quasi-newton-methods.html#eq:34">(6.34)</a> is:
+<span class="math display" id="eq:38" id="eq:37" id="eq:36" id="eq:35">\[\begin{align}
+    \mathbb{w}_1 &amp;= \mathbb{D}_j \tag{6.35}\\
+    \mathbb{w}_2 &amp;= [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j \tag{6.36}\\
+    \sigma_1 &amp;= \frac{1}{\mathbb{w}_1^T\mathbb{G}_j} \tag{6.37} \\
+    \sigma_2 &amp;= -\frac{1}{\mathbb{w}_2^T\mathbb{G}_j} \tag{6.38}
+\end{align}\]</span></p>
+<p>Eq. <a href="quasi-newton-methods.html#eq:37">(6.37)</a> and Eq. <a href="quasi-newton-methods.html#eq:38">(6.38)</a> can be rewritten as:
+<span class="math display" id="eq:40" id="eq:39">\[\begin{align}
+    \sigma_1 &amp;= \frac{1}{\mathbb{D}_j^T\mathbb{G}_j} \tag{6.39} \\
+    \sigma_2 &amp;= - \frac{1}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.40}
+\end{align}\]</span></p>
+<p>So Eq. <a href="quasi-newton-methods.html#eq:32">(6.32)</a> becomes:</p>
+<p><span class="math display" id="eq:41">\[\begin{equation}
+    \mathbb{\Delta} = \frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} - \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.41}
+\end{equation}\]</span></p>
+<p>Finally, the <em>DFP</em> update mechanism is given by:
+<span class="math display" id="eq:42">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j) = [\mathbb{B}f](\mathbb{x}_{j-1}) + \frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} - \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \tag{6.42}
+\end{equation}\]</span></p>
+<p>In the update formulation, we will again consider <span class="math inline">\([\mathbb{B}f](\mathbb{x}_0)\)</span> to be the <span class="math inline">\(n \times n\)</span> identity matrix and the iteration is continued until and unless the convergence criterion is satisfied. The last two terms in Eq. <a href="quasi-newton-methods.html#eq:42">(6.42)</a> are rank 1 updates, overall fetching a rank 2 update strategy. Note that the updated inverse matrix <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> is positive definite only if the optimal step length <span class="math inline">\(\beta_j\)</span> is computed accurately. The <em>DFP</em> algorithm is given below:</p>
+<p><img src="img%2025.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-10" class="example"><strong>Example 6.2  </strong></span>Let us consider <em>Booth’s function</em> as the objective function, given by:
+<span class="math display" id="eq:43">\[\begin{equation}
+    f(x_1, x_2) = (x_1+2x_2-7)^2+(2x_1+x_2-5)^2 \tag{6.43}
+\end{equation}\]</span>
+</div>
+
+<p>The minimizer is at <span class="math inline">\(\mathbb{x}^* = \begin{bmatrix}1\\3\end{bmatrix}\)</span> and the function value at the minimizer is <span class="math inline">\(0\)</span>. We will use <em>DFP</em> algorithm to find out the minimizer. Let the starting iterate be <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}-7.8 \\ -3.75 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span>, and the constants to be used in determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1 = 10^{-4}\)</span> and <span class="math inline">\(\alpha_2 = 3.82\)</span>. Let us first define <em>Booth’s function</em> and its gradient in Python:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="quasi-newton-methods.html#cb9-1"></a><span class="kw">def</span> func(x): <span class="co"># Objective function (Booth&#39;s function)</span></span>
+<span id="cb9-2"><a href="quasi-newton-methods.html#cb9-2"></a>    <span class="cf">return</span> (x[<span class="dv">0</span>]<span class="op">+</span><span class="dv">2</span><span class="op">*</span>x[<span class="dv">1</span>]<span class="op">-</span><span class="dv">7</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">2</span><span class="op">*</span>x[<span class="dv">0</span>]<span class="op">+</span>x[<span class="dv">1</span>]<span class="op">-</span><span class="dv">5</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb9-3"><a href="quasi-newton-methods.html#cb9-3"></a>    </span>
+<span id="cb9-4"><a href="quasi-newton-methods.html#cb9-4"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span></code></pre></div>
+<p>Next, we define the Python function <code>DFP()</code> implementing the <em>DFP</em> algorithm:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="quasi-newton-methods.html#cb10-1"></a><span class="co"># draw the contour plot first</span></span>
+<span id="cb10-2"><a href="quasi-newton-methods.html#cb10-2"></a>x1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb10-3"><a href="quasi-newton-methods.html#cb10-3"></a>x2 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb10-4"><a href="quasi-newton-methods.html#cb10-4"></a>z <span class="op">=</span> np.zeros(([<span class="bu">len</span>(x1), <span class="bu">len</span>(x2)]))</span>
+<span id="cb10-5"><a href="quasi-newton-methods.html#cb10-5"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x1)):</span>
+<span id="cb10-6"><a href="quasi-newton-methods.html#cb10-6"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x2)):</span>
+<span id="cb10-7"><a href="quasi-newton-methods.html#cb10-7"></a>        z[j, i] <span class="op">=</span> func([x1[i], x2[j]])</span>
+<span id="cb10-8"><a href="quasi-newton-methods.html#cb10-8"></a></span>
+<span id="cb10-9"><a href="quasi-newton-methods.html#cb10-9"></a>contours<span class="op">=</span>plt.contour(x1, x2, z, <span class="dv">100</span>, cmap<span class="op">=</span>plt.cm.gnuplot)</span>
+<span id="cb10-10"><a href="quasi-newton-methods.html#cb10-10"></a>plt.clabel(contours, inline<span class="op">=</span><span class="dv">1</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="quasi-newton-methods.html#cb11-1"></a>plt.xlabel(<span class="st">&quot;$x_1$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="quasi-newton-methods.html#cb12-1"></a>plt.ylabel(<span class="st">&quot;$x_2$ -&gt;&quot;</span>)</span>
+<span id="cb12-2"><a href="quasi-newton-methods.html#cb12-2"></a></span>
+<span id="cb12-3"><a href="quasi-newton-methods.html#cb12-3"></a><span class="co"># define DFP()</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="quasi-newton-methods.html#cb13-1"></a><span class="kw">def</span> DFP(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb13-2"><a href="quasi-newton-methods.html#cb13-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb13-3"><a href="quasi-newton-methods.html#cb13-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb13-4"><a href="quasi-newton-methods.html#cb13-4"></a>    Bf <span class="op">=</span> np.eye(<span class="bu">len</span>(Xj))</span>
+<span id="cb13-5"><a href="quasi-newton-methods.html#cb13-5"></a>    </span>
+<span id="cb13-6"><a href="quasi-newton-methods.html#cb13-6"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb13-7"><a href="quasi-newton-methods.html#cb13-7"></a>        Grad <span class="op">=</span> Df(Xj)</span>
+<span id="cb13-8"><a href="quasi-newton-methods.html#cb13-8"></a>        delta <span class="op">=</span> <span class="op">-</span>Bf.dot(Grad) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb13-9"><a href="quasi-newton-methods.html#cb13-9"></a>        </span>
+<span id="cb13-10"><a href="quasi-newton-methods.html#cb13-10"></a>        </span>
+<span id="cb13-11"><a href="quasi-newton-methods.html#cb13-11"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb13-12"><a href="quasi-newton-methods.html#cb13-12"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb13-13"><a href="quasi-newton-methods.html#cb13-13"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb13-14"><a href="quasi-newton-methods.html#cb13-14"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb13-15"><a href="quasi-newton-methods.html#cb13-15"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb13-16"><a href="quasi-newton-methods.html#cb13-16"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb13-17"><a href="quasi-newton-methods.html#cb13-17"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb13-18"><a href="quasi-newton-methods.html#cb13-18"></a>            plt.plot(x1, x2, <span class="st">&quot;rx-&quot;</span>, ms<span class="op">=</span><span class="fl">5.5</span>) <span class="co"># Plot the final collected data showing the trajectory of optimization</span></span>
+<span id="cb13-19"><a href="quasi-newton-methods.html#cb13-19"></a>            plt.show()</span>
+<span id="cb13-20"><a href="quasi-newton-methods.html#cb13-20"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb13-21"><a href="quasi-newton-methods.html#cb13-21"></a>        <span class="cf">else</span>:</span>
+<span id="cb13-22"><a href="quasi-newton-methods.html#cb13-22"></a>            Dj <span class="op">=</span> X <span class="op">-</span> Xj <span class="co"># See line 16 of the algorithm</span></span>
+<span id="cb13-23"><a href="quasi-newton-methods.html#cb13-23"></a>            Gj <span class="op">=</span> Df(X) <span class="op">-</span> Grad <span class="co"># See line 17 of the algorithm</span></span>
+<span id="cb13-24"><a href="quasi-newton-methods.html#cb13-24"></a>            w1 <span class="op">=</span> Dj <span class="co"># See line 18 of the algorithm</span></span>
+<span id="cb13-25"><a href="quasi-newton-methods.html#cb13-25"></a>            w2 <span class="op">=</span> Bf.dot(Gj) <span class="co"># See line 19 of the algorithm</span></span>
+<span id="cb13-26"><a href="quasi-newton-methods.html#cb13-26"></a>            w1T <span class="op">=</span> w1.T</span>
+<span id="cb13-27"><a href="quasi-newton-methods.html#cb13-27"></a>            w2T <span class="op">=</span> w2.T</span>
+<span id="cb13-28"><a href="quasi-newton-methods.html#cb13-28"></a>            sigma1 <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>(w1T.dot(Gj)) <span class="co"># See line 20 of the algorithm</span></span>
+<span id="cb13-29"><a href="quasi-newton-methods.html#cb13-29"></a>            sigma2 <span class="op">=</span> <span class="dv">-1</span><span class="op">/</span>(w2T.dot(Gj)) <span class="co"># See line 21 of the algorithm</span></span>
+<span id="cb13-30"><a href="quasi-newton-methods.html#cb13-30"></a>            W1 <span class="op">=</span> np.outer(w1, w1)</span>
+<span id="cb13-31"><a href="quasi-newton-methods.html#cb13-31"></a>            W2 <span class="op">=</span> np.outer(w2, w2)</span>
+<span id="cb13-32"><a href="quasi-newton-methods.html#cb13-32"></a>            Delta <span class="op">=</span> sigma1<span class="op">*</span>W1 <span class="op">+</span> sigma2<span class="op">*</span>W2 <span class="co"># See line 22 of the algorithm</span></span>
+<span id="cb13-33"><a href="quasi-newton-methods.html#cb13-33"></a>            Bf <span class="op">+=</span> Delta <span class="co"># See line 23 of the algorithm</span></span>
+<span id="cb13-34"><a href="quasi-newton-methods.html#cb13-34"></a>            Xj <span class="op">=</span> X <span class="co"># Update to the new iterate</span></span>
+<span id="cb13-35"><a href="quasi-newton-methods.html#cb13-35"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb13-36"><a href="quasi-newton-methods.html#cb13-36"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>Finally, we set our parameter values and pass them to the <code>DFP()</code> function:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="quasi-newton-methods.html#cb14-1"></a>DFP(np.array([<span class="op">-</span><span class="fl">7.8</span>, <span class="fl">-3.75</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">3.82</span>)</span></code></pre></div>
+<pre><code>## (array([1., 3.]), 1.5777218104420236e-30)</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
+<p>The optimization data has been collected and shown in the table below:</p>
+<pre><code>## +----+------------+----------+----------------+---------------+
+## |    |        x_1 |      x_2 |           f(X) |      ||grad|| |
+## |----+------------+----------+----------------+---------------|
+## |  0 | -7.8       | -3.75    | 1090.21        | 197.94        |
+## |  1 |  0.0903935 |  3.91257 |    1.66021     |   2.57723     |
+## |  2 |  1         |  3       |    1.57772e-30 |   7.53644e-15 |
+## +----+------------+----------+----------------+---------------+</code></pre>
+
+<div class="theorem">
+<span id="thm:unnamed-chunk-16" class="theorem"><strong>Theorem 6.2  </strong></span>The <em>Davidon-Fletcher-Powell</em> method is a conjugate gradient method.
+</div>
+
+
+<div class="proof">
+<p> <span class="proof"><em>Proof. </em></span> Let us consider the quadratic equation <span class="math inline">\(f(\mathbb{x}) = \frac{1}{2}\mathbb{x}^T\mathbb{A}\mathbb{x} + \mathbb{b}^T\mathbb{x}\)</span>, having the gradient, <span class="math inline">\(\nabla f(\mathbb{x}) = \mathbb{A}\mathbb{x} + b\)</span>. Now, we know
+<span class="math display" id="eq:44">\[\begin{equation}
+    \mathbb{G}_j = \nabla f(\mathbb{x}_j) - \nabla f(\mathbb{x}_{j-1}) = \mathbb{A}(\mathbb{x}_j - \mathbb{x}_{j-1}) \tag{6.44}
+\end{equation}\]</span>
+Now, as
+<span class="math display" id="eq:45">\[\begin{equation}
+    \mathbb{x}_j = \mathbb{x}_{j-1} + \beta_j \mathbb{\delta}_j \tag{6.45}
+\end{equation}\]</span></p>
+<p>So, from Eq. <a href="quasi-newton-methods.html#eq:44">(6.44)</a> and Eq.<a href="quasi-newton-methods.html#eq:45">(6.45)</a>, we will have,
+<span class="math display" id="eq:46">\[\begin{equation}
+    \mathbb{G}_j = \beta_j \mathbb{A}\mathbb{\delta}_j \tag{6.46}
+\end{equation}\]</span></p>
+<p>where,
+<span class="math display" id="eq:47">\[\begin{equation}
+    \mathbb{A}\mathbb{\delta}_j = \frac{1}{\beta_j}\mathbb{G}_j \tag{6.47}
+\end{equation}\]</span></p>
+<p>Now, premultiplying Eq.~ with Eq.~, we have
+<span class="math display" id="eq:48">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j)\mathbb{A}\mathbb{\delta}_j = \frac{1}{\beta_j}\left([\mathbb{B}f](\mathbb{x}_{j-1}) + \frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} - \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j}\right)\mathbb{G}_j \tag{6.48}
+\end{equation}\]</span></p>
+<p>We know, <span class="math inline">\(\mathbb{D}_j = \mathbb{x}_j - \mathbb{x}_{j-1} = \beta_j\mathbb{\delta}_j\)</span>. So,
+<span class="math display" id="eq:49">\[\begin{equation}
+    \frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} = \beta_j\frac{\mathbb{\delta}_j\mathbb{\delta}_j^T}{\mathbb{\delta}_j^T\mathbb{G}_j} \tag{6.49}
+\end{equation}\]</span></p>
+<p>and
+<span class="math display" id="eq:50">\[\begin{equation}
+    \beta_j\left(\frac{\mathbb{\delta}_j\mathbb{\delta}_j^T}{\mathbb{\delta}_j^T\mathbb{G}_j}\right)\mathbb{G}_j = \beta_j\frac{\mathbb{\delta}_j(\mathbb{\delta}_j^T\mathbb{G}_j)}{\mathbb{\delta}_j^T\mathbb{G}_j} = \beta_j\mathbb{\delta}_j \tag{6.50}
+\end{equation}\]</span></p>
+<p>Also,
+<span class="math display" id="eq:51">\[\begin{equation}
+    \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} \mathbb{G}_j = [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j \tag{6.51}
+\end{equation}\]</span></p>
+<p>Using Eq. <a href="quasi-newton-methods.html#eq:49">(6.49)</a> - Eq. <a href="quasi-newton-methods.html#eq:51">(6.51)</a> in Eq. <a href="quasi-newton-methods.html#eq:48">(6.48)</a>, we get,
+<span class="math display" id="eq:52">\[\begin{equation}
+    [\mathbb{B}f](\mathbb{x}_j)\mathbb{A}\mathbb{\delta}_j = \frac{1}{\beta_j}([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j + \beta_j\mathbb{\delta}_j - [\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j) = \mathbb{\delta}_j \tag{6.52}
+\end{equation}\]</span></p>
+<p>From Eq. <a href="quasi-newton-methods.html#eq:2">(6.2)</a> we know that <span class="math inline">\(\mathbb{\delta}_j = -[\mathbb{B}f](\mathbb{x}_{j-1})\nabla f(\mathbb{x}_{j-1})\)</span>. As a result, we can write,</p>
+<p><span class="math display" id="eq:53">\[\begin{align}
+    \mathbb{\delta}_{j+1}^T\mathbb{A}\mathbb{\delta}_j &amp;= -([\mathbb{B}f](\mathbb{x}_j)\nabla f(\mathbb{x}_j))^T\mathbb{A}\mathbb{\delta}_j \nonumber \\
+    &amp;= -\nabla f(\mathbb{x}_j)^T[\mathbb{B}f](\mathbb{x}_j)\mathbb{A}\mathbb{\delta}_j \nonumber \\
+    &amp;= - \nabla f(\mathbb{x}_j)^T\mathbb{\delta}_j \nonumber \\
+    &amp;= 0 \tag{6.53}
+\end{align}\]</span></p>
+<p>This is <span class="math inline">\(0\)</span> because the minimizing step in the direction of <span class="math inline">\(\mathbb{\delta}_j\)</span> is <span class="math inline">\(\beta_j^*\)</span>. This shows that the successive directions that the <em>Davidon-Fletcher-Powell</em> method generates are conjugate to each other. This completes the proof that the <em>Davidon-Fletcher-Powell</em> method is a <em>conjugate gradient</em> method.</p>
+</div>
+
+</div>
+<div id="broyden-fletcher-goldfarb-shanno-bfgs-algorithm" class="section level3">
+<h3><span class="header-section-number">6.4.2</span> Broyden-Fletcher-Goldfarb-Shanno (BFGS) Algorithm</h3>
+<p>In the <em>BFGS</em> algorithm, it is the Hessian matrix (instead of the approximate inverse of the Hessian) that gets updated iteratively at each step. Eq. <a href="quasi-newton-methods.html#eq:7">(6.7)</a> can be written as:</p>
+<p><span class="math display" id="eq:54">\[\begin{equation}
+    \mathbb{G}_j = [\mathbb{H}f](\mathbb{x}_j)\mathbb{D}_j \tag{6.54}
+\end{equation}\]</span>
+In Eq. <a href="quasi-newton-methods.html#eq:42">(6.42)</a>, <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span>, <span class="math inline">\(\mathbb{D}_j\)</span> and <span class="math inline">\(\mathbb{G}_j\)</span> are replaced by <span class="math inline">\([\mathbb{H}f](\mathbb{x}_j)\)</span>, <span class="math inline">\(\mathbb{G}_j\)</span> and <span class="math inline">\(\mathbb{D}_j\)</span> respectively, giving,
+<span class="math display" id="eq:55">\[\begin{equation}
+     [\mathbb{H}f](\mathbb{x}_j) = [\mathbb{H}f](\mathbb{x}_{j-1}) + \frac{\mathbb{G}_j\mathbb{G}_j^T}{\mathbb{G}_j^T\mathbb{D}_j} - \frac{([\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)([\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T}{([\mathbb{H}f](\mathbb{x}_{j-1})\mathbb{D}_j)^T\mathbb{D}_j} \tag{6.55}
+\end{equation}\]</span></p>
+<p>But, for practical implementations, we use the following update rule for the inverse matrix:
+<span class="math display" id="eq:56">\[\begin{align}
+    [\mathbb{B}f](\mathbb{x}_j) &amp;= [\mathbb{B}f](\mathbb{x}_{j-1}) + \left(1 + \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j}{\mathbb{D}_j^T\mathbb{G}_j} \right)\frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} \nonumber \\
+    &amp;- \frac{\mathbb{D}_j([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{\mathbb{D}_j^T\mathbb{G}_j} - \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j} \tag{6.56}
+\end{align}\]</span></p>
+<p>The <em>BFGS</em> algorithm demonstrates a superlinear convergence near the minimizer [ref, Nocedal, Wright]. It can be considered the dual of the <em>DFP</em> algorithm and is a conjugate gradient method too. The <em>BFGS</em> algorithm is given below:</p>
+<p><img src="img%2026.png" /></p>
+
+<div class="example">
+<span id="exm:unnamed-chunk-18" class="example"><strong>Example 6.3  </strong></span>We will consider the <em>Branin function</em> given in Eq. <a href="quasi-newton-methods.html#eq:19">(6.19)</a> as the objective function. We will use our <em>BFGS</em> algorithm to find out one of the four minimizers of <em>Branin function</em>. Let the starting iterate be <span class="math inline">\(\mathbb{x}_j = \begin{bmatrix}1.5 \\ 7.75 \end{bmatrix}\)</span>, the tolerance be <span class="math inline">\(\epsilon = 10^{-5}\)</span> and the constant to be used in determining the step length using the <em>strong Wolfe conditions</em> be <span class="math inline">\(\alpha_1 = 10^{-4}\)</span> and <span class="math inline">\(\alpha_2 = 0.25\)</span>. The Python function <code>BFGS()</code> implementing the <em>BFGS</em> algorithm is given below:
+</div>
+
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="quasi-newton-methods.html#cb17-1"></a><span class="co"># draw the contour plot first</span></span>
+<span id="cb17-2"><a href="quasi-newton-methods.html#cb17-2"></a>x1 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb17-3"><a href="quasi-newton-methods.html#cb17-3"></a>x2 <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb17-4"><a href="quasi-newton-methods.html#cb17-4"></a>z <span class="op">=</span> np.zeros(([<span class="bu">len</span>(x1), <span class="bu">len</span>(x2)]))</span>
+<span id="cb17-5"><a href="quasi-newton-methods.html#cb17-5"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x1)):</span>
+<span id="cb17-6"><a href="quasi-newton-methods.html#cb17-6"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(x2)):</span>
+<span id="cb17-7"><a href="quasi-newton-methods.html#cb17-7"></a>        z[j, i] <span class="op">=</span> func([x1[i], x2[j]])</span>
+<span id="cb17-8"><a href="quasi-newton-methods.html#cb17-8"></a></span>
+<span id="cb17-9"><a href="quasi-newton-methods.html#cb17-9"></a>contours<span class="op">=</span>plt.contour(x1, x2, z, <span class="dv">100</span>, cmap<span class="op">=</span>plt.cm.gnuplot)</span>
+<span id="cb17-10"><a href="quasi-newton-methods.html#cb17-10"></a>plt.clabel(contours, inline<span class="op">=</span><span class="dv">1</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="quasi-newton-methods.html#cb18-1"></a>plt.xlabel(<span class="st">&quot;$x_1$ -&gt;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="quasi-newton-methods.html#cb19-1"></a>plt.ylabel(<span class="st">&quot;$x_2$ -&gt;&quot;</span>)</span>
+<span id="cb19-2"><a href="quasi-newton-methods.html#cb19-2"></a></span>
+<span id="cb19-3"><a href="quasi-newton-methods.html#cb19-3"></a><span class="co"># define BFGS()</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="quasi-newton-methods.html#cb20-1"></a><span class="kw">def</span> BFGS(Xj, tol, alpha_1, alpha_2):</span>
+<span id="cb20-2"><a href="quasi-newton-methods.html#cb20-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb20-3"><a href="quasi-newton-methods.html#cb20-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb20-4"><a href="quasi-newton-methods.html#cb20-4"></a>    Bf <span class="op">=</span> np.eye(<span class="bu">len</span>(Xj))</span>
+<span id="cb20-5"><a href="quasi-newton-methods.html#cb20-5"></a>    </span>
+<span id="cb20-6"><a href="quasi-newton-methods.html#cb20-6"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb20-7"><a href="quasi-newton-methods.html#cb20-7"></a>        Grad <span class="op">=</span> Df(Xj)</span>
+<span id="cb20-8"><a href="quasi-newton-methods.html#cb20-8"></a>        delta <span class="op">=</span> <span class="op">-</span>Bf.dot(Grad) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb20-9"><a href="quasi-newton-methods.html#cb20-9"></a>                </span>
+<span id="cb20-10"><a href="quasi-newton-methods.html#cb20-10"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb20-11"><a href="quasi-newton-methods.html#cb20-11"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb20-12"><a href="quasi-newton-methods.html#cb20-12"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb20-13"><a href="quasi-newton-methods.html#cb20-13"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb20-14"><a href="quasi-newton-methods.html#cb20-14"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb20-15"><a href="quasi-newton-methods.html#cb20-15"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb20-16"><a href="quasi-newton-methods.html#cb20-16"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb20-17"><a href="quasi-newton-methods.html#cb20-17"></a>            plt.plot(x1, x2, <span class="st">&quot;rx-&quot;</span>, ms<span class="op">=</span><span class="fl">5.5</span>) <span class="co"># Plot the final collected data showing the trajectory of optimization</span></span>
+<span id="cb20-18"><a href="quasi-newton-methods.html#cb20-18"></a>            plt.show()</span>
+<span id="cb20-19"><a href="quasi-newton-methods.html#cb20-19"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb20-20"><a href="quasi-newton-methods.html#cb20-20"></a>        <span class="cf">else</span>:</span>
+<span id="cb20-21"><a href="quasi-newton-methods.html#cb20-21"></a>            Dj <span class="op">=</span> X <span class="op">-</span> Xj <span class="co"># See line 16 of the algorithm</span></span>
+<span id="cb20-22"><a href="quasi-newton-methods.html#cb20-22"></a>            Gj <span class="op">=</span> Df(X) <span class="op">-</span> Grad <span class="co"># See line 17 of the algorithm</span></span>
+<span id="cb20-23"><a href="quasi-newton-methods.html#cb20-23"></a>            </span>
+<span id="cb20-24"><a href="quasi-newton-methods.html#cb20-24"></a>            den <span class="op">=</span> Dj.dot(Gj)</span>
+<span id="cb20-25"><a href="quasi-newton-methods.html#cb20-25"></a>            num <span class="op">=</span> Bf.dot(Gj)</span>
+<span id="cb20-26"><a href="quasi-newton-methods.html#cb20-26"></a>            </span>
+<span id="cb20-27"><a href="quasi-newton-methods.html#cb20-27"></a>            L <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> num.dot(Gj)<span class="op">/</span>den</span>
+<span id="cb20-28"><a href="quasi-newton-methods.html#cb20-28"></a>            M <span class="op">=</span> np.outer(Dj, Dj)<span class="op">/</span>den</span>
+<span id="cb20-29"><a href="quasi-newton-methods.html#cb20-29"></a>            N <span class="op">=</span> np.outer(Dj, num)<span class="op">/</span>den</span>
+<span id="cb20-30"><a href="quasi-newton-methods.html#cb20-30"></a>            O <span class="op">=</span> np.outer(num, Dj)<span class="op">/</span>den</span>
+<span id="cb20-31"><a href="quasi-newton-methods.html#cb20-31"></a>            </span>
+<span id="cb20-32"><a href="quasi-newton-methods.html#cb20-32"></a>            Delta <span class="op">=</span> L<span class="op">*</span>M <span class="op">-</span> N <span class="op">-</span> O</span>
+<span id="cb20-33"><a href="quasi-newton-methods.html#cb20-33"></a>            Bf <span class="op">+=</span> Delta <span class="co"># See line 18 and line 19 of the algorithm</span></span>
+<span id="cb20-34"><a href="quasi-newton-methods.html#cb20-34"></a>            Xj <span class="op">=</span> X <span class="co"># Update to the new iterate</span></span>
+<span id="cb20-35"><a href="quasi-newton-methods.html#cb20-35"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb20-36"><a href="quasi-newton-methods.html#cb20-36"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>Now, as asked in our example, we set our parameter values and pass them to the <code>BFGS()</code> function:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="quasi-newton-methods.html#cb21-1"></a>BFGS(np.array([<span class="fl">1.5</span>, <span class="fl">7.75</span>]), <span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="dv">10</span><span class="op">**-</span><span class="dv">4</span>, <span class="fl">0.25</span>)</span></code></pre></div>
+<pre><code>## (array([1., 3.]), 0.0)</code></pre>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-2-5.png" width="672" /></p>
+<p>We notice that for our choice of parameters, the algorithm has converged to the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}\pi \\ 2.275 \end{bmatrix}\)</span>, with <span class="math inline">\(f(\mathbb{x}^*) \sim 0.397887\)</span>. The user can collect the data and show as a atble like we have been doing till now with the previous implementations.</p>
+<p>Besides writing our own function <code>BFGS()</code>, we can use the <code>minimize()</code> function provided by the <code>scipy.optimize</code> module and pass the relevant parameters along with mentioning <code>method='BFGS'</code> to run the optimization using the <em>BFGS</em> algorithm. According to our example:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="quasi-newton-methods.html#cb23-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb23-2"><a href="quasi-newton-methods.html#cb23-2"></a></span>
+<span id="cb23-3"><a href="quasi-newton-methods.html#cb23-3"></a><span class="kw">def</span> func(x): <span class="co"># Objective function</span></span>
+<span id="cb23-4"><a href="quasi-newton-methods.html#cb23-4"></a>    <span class="cf">return</span> (x[<span class="dv">1</span>] <span class="op">-</span> (<span class="fl">5.1</span><span class="op">/</span>(<span class="dv">4</span><span class="op">*</span>au.pi<span class="op">**</span><span class="dv">2</span>))<span class="op">*</span>x[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">5</span><span class="op">/</span>au.pi)<span class="op">*</span>x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">6</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">10</span><span class="op">*</span>(<span class="dv">1</span> <span class="op">-</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">8</span><span class="op">*</span>au.pi))<span class="op">*</span>au.cos(x[<span class="dv">0</span>]) <span class="op">+</span> <span class="dv">10</span></span>
+<span id="cb23-5"><a href="quasi-newton-methods.html#cb23-5"></a></span>
+<span id="cb23-6"><a href="quasi-newton-methods.html#cb23-6"></a>Df <span class="op">=</span> grad(func) <span class="co"># Gradient of the objective function</span></span>
+<span id="cb23-7"><a href="quasi-newton-methods.html#cb23-7"></a></span>
+<span id="cb23-8"><a href="quasi-newton-methods.html#cb23-8"></a>res<span class="op">=</span>minimize(fun<span class="op">=</span>func, x0<span class="op">=</span>np.array([<span class="fl">1.5</span>, <span class="fl">7.75</span>]), jac<span class="op">=</span>Df, method<span class="op">=</span><span class="st">&#39;BFGS&#39;</span>, options<span class="op">=</span>{<span class="st">&#39;gtol&#39;</span>:<span class="dv">10</span><span class="op">**-</span><span class="dv">5</span>, <span class="st">&#39;disp&#39;</span>:<span class="va">True</span>, <span class="st">&#39;return_all&#39;</span>:<span class="va">True</span>})</span></code></pre></div>
+<pre><code>## Optimization terminated successfully.
+##          Current function value: 0.397887
+##          Iterations: 8
+##          Function evaluations: 9
+##          Gradient evaluations: 9</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="quasi-newton-methods.html#cb25-1"></a>res.x, res.fun, res.jac</span></code></pre></div>
+<pre><code>## (array([3.14159224, 2.27500172]), 0.39788735773253414, array([-1.83062407e-06,  2.79763777e-06]))</code></pre>
+<p>We notice that the solver is successful in computing the minimizer <span class="math inline">\(\mathbb{x}^* \sim \begin{bmatrix}\pi \\ 2.275 \end{bmatrix}\)</span>, with <span class="math inline">\(f(\mathbb{x}^*) \sim 0.397887\)</span>. If the user wants to print out the optimization data, just type:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="quasi-newton-methods.html#cb27-1"></a><span class="cf">for</span> i <span class="kw">in</span> res.allvecs: <span class="bu">print</span>(i)</span></code></pre></div>
+<pre><code>## [1.5  7.75]
+## [1.54136343 6.74084735]
+## [2.74524225 4.90614431]
+## [3.98569038 1.30071065]
+## [3.26267579 1.91706949]
+## [3.13418776 2.3139674 ]
+## [3.14054173 2.27403772]
+## [3.14184526 2.27502139]
+## [3.14159224 2.27500172]</code></pre>
+</div>
+<div id="huangs-family-of-rank-2-update-formulae" class="section level3">
+<h3><span class="header-section-number">6.4.3</span> Huang’s Family of Rank 2 Update Formulae</h3>
+<p>In the <em>Huang’s family of rank 2 updates</em>, the approximate to the inverse of the Hessian matrix is updated as the following:
+<span class="math display">\[\begin{align}
+    [\mathbb{B}f](\mathbb{x}_j) &amp;= \phi \left([\mathbb{B}f](\mathbb{x}_{j-1}) - \frac{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j} + \theta \mathbb{S}_j\mathbb{S}_j^T \right) \nonumber \\
+    &amp;+ \frac{\mathbb{D}_j\mathbb{D}_j^T}{\mathbb{D}_j^T\mathbb{G}_j}
+\end{align}\]</span></p>
+<p>where, <span class="math inline">\(\mathbb{S}_j\)</span> is given by:
+<span class="math display">\[\begin{equation}
+    \mathbb{S}_j = \sqrt{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j}\left(\frac{\mathbb{D}_j}{\mathbb{D}_j^T\mathbb{G}_j} - \frac{[\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j}{([\mathbb{B}f](\mathbb{x}_{j-1})\mathbb{G}_j)^T\mathbb{G}_j}\right)
+\end{equation}\]</span></p>
+<p><span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are constant parameters and <span class="math inline">\([\mathbb{B}f](\mathbb{x}_j)\)</span> is positive definite if <span class="math inline">\([\mathbb{B}f](\mathbb{x}_{j-1})\)</span> is positive definite. The constants <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are varied to procure us different rank 2 algorithms. The special cases are: when <span class="math inline">\(\phi=1\)</span> and <span class="math inline">\(\theta=0\)</span>, we obtain the <em>Davidon-Fletcher-Powell (DFP)</em> algorithm and when <span class="math inline">\(\phi=1\)</span> and <span class="math inline">\(\theta=1\)</span>, we obtain the <em>Broyden-Fletcher-Goldfarb-Shanno (BFGS)</em> algorithm. The value of <span class="math inline">\(\theta\)</span> is usually restricted such that <span class="math inline">\(\theta \in [0,1]\)</span>. The algorithm for <em>Huang’s family of rank 2 updates</em> is given below:</p>
+<p><img src="img%2027.png" /></p>
+<p>We define a Python function <code>huang()</code> implementing <em>Huang’s family of rank 2 updates</em> . All the other necessary functions and Python codes are left for the reader to fill up according to any example they chose to explore.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="quasi-newton-methods.html#cb29-1"></a><span class="kw">def</span> huang(Xj, tol, alpha_1, alpha_2, phi, theta):</span>
+<span id="cb29-2"><a href="quasi-newton-methods.html#cb29-2"></a>    x1 <span class="op">=</span> [Xj[<span class="dv">0</span>]]</span>
+<span id="cb29-3"><a href="quasi-newton-methods.html#cb29-3"></a>    x2 <span class="op">=</span> [Xj[<span class="dv">1</span>]]</span>
+<span id="cb29-4"><a href="quasi-newton-methods.html#cb29-4"></a>    Bf <span class="op">=</span> np.eye(<span class="bu">len</span>(Xj))</span>
+<span id="cb29-5"><a href="quasi-newton-methods.html#cb29-5"></a>    </span>
+<span id="cb29-6"><a href="quasi-newton-methods.html#cb29-6"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb29-7"><a href="quasi-newton-methods.html#cb29-7"></a>        Grad <span class="op">=</span> Df(Xj)</span>
+<span id="cb29-8"><a href="quasi-newton-methods.html#cb29-8"></a>        delta <span class="op">=</span> <span class="op">-</span>Bf.dot(Grad) <span class="co"># Selection of the direction of the steepest descent</span></span>
+<span id="cb29-9"><a href="quasi-newton-methods.html#cb29-9"></a>                </span>
+<span id="cb29-10"><a href="quasi-newton-methods.html#cb29-10"></a>        start_point <span class="op">=</span> Xj <span class="co"># Start point for step length selection </span></span>
+<span id="cb29-11"><a href="quasi-newton-methods.html#cb29-11"></a>        beta <span class="op">=</span> line_search(f<span class="op">=</span>func, myfprime<span class="op">=</span>Df, xk<span class="op">=</span>start_point, pk<span class="op">=</span>delta, c1<span class="op">=</span>alpha_1, c2<span class="op">=</span>alpha_2)[<span class="dv">0</span>] <span class="co"># Selecting the step length</span></span>
+<span id="cb29-12"><a href="quasi-newton-methods.html#cb29-12"></a>        <span class="cf">if</span> beta<span class="op">!=</span><span class="va">None</span>:</span>
+<span id="cb29-13"><a href="quasi-newton-methods.html#cb29-13"></a>            X <span class="op">=</span> Xj<span class="op">+</span> beta<span class="op">*</span>delta</span>
+<span id="cb29-14"><a href="quasi-newton-methods.html#cb29-14"></a>        <span class="cf">if</span> NORM(Df(X)) <span class="op">&lt;</span> tol:</span>
+<span id="cb29-15"><a href="quasi-newton-methods.html#cb29-15"></a>            x1 <span class="op">+=</span> [X[<span class="dv">0</span>], ]</span>
+<span id="cb29-16"><a href="quasi-newton-methods.html#cb29-16"></a>            x2 <span class="op">+=</span> [X[<span class="dv">1</span>], ]</span>
+<span id="cb29-17"><a href="quasi-newton-methods.html#cb29-17"></a>            plt.plot(x1, x2, <span class="st">&quot;rx-&quot;</span>, ms<span class="op">=</span><span class="fl">5.5</span>) <span class="co"># Plot the final collected data showing the trajectory of optimization</span></span>
+<span id="cb29-18"><a href="quasi-newton-methods.html#cb29-18"></a>            plt.show()</span>
+<span id="cb29-19"><a href="quasi-newton-methods.html#cb29-19"></a>            <span class="cf">return</span> X, func(X)</span>
+<span id="cb29-20"><a href="quasi-newton-methods.html#cb29-20"></a>        <span class="cf">else</span>:</span>
+<span id="cb29-21"><a href="quasi-newton-methods.html#cb29-21"></a>            Dj <span class="op">=</span> X <span class="op">-</span> Xj <span class="co"># See line 17 of the algorithm</span></span>
+<span id="cb29-22"><a href="quasi-newton-methods.html#cb29-22"></a>            Gj <span class="op">=</span> Df(X) <span class="op">-</span> Grad <span class="co"># See line 18 of the algorithm</span></span>
+<span id="cb29-23"><a href="quasi-newton-methods.html#cb29-23"></a>            </span>
+<span id="cb29-24"><a href="quasi-newton-methods.html#cb29-24"></a>            den <span class="op">=</span> Dj.dot(Gj)</span>
+<span id="cb29-25"><a href="quasi-newton-methods.html#cb29-25"></a>            num <span class="op">=</span> Bf.dot(Gj)</span>
+<span id="cb29-26"><a href="quasi-newton-methods.html#cb29-26"></a>            </span>
+<span id="cb29-27"><a href="quasi-newton-methods.html#cb29-27"></a>            Sj <span class="op">=</span> au.sqrt(num.dot(Gj))<span class="op">*</span>(Dj<span class="op">/</span>den <span class="op">-</span> num<span class="op">/</span>(num.dot(Gj))) <span class="co"># See line 19 of algorithm</span></span>
+<span id="cb29-28"><a href="quasi-newton-methods.html#cb29-28"></a>            Bf <span class="op">=</span> phi<span class="op">*</span>(Bf <span class="op">-</span> np.outer(num, num)<span class="op">/</span>(num.dot(Gj)) <span class="op">+</span> theta<span class="op">*</span>np.outer(Sj, Sj)) <span class="op">+</span> np.outer(Dj, Dj)<span class="op">/</span>(Dj.dot(Gj))</span>
+<span id="cb29-29"><a href="quasi-newton-methods.html#cb29-29"></a>            Xj <span class="op">=</span> X <span class="co"># Update to the new iterate</span></span>
+<span id="cb29-30"><a href="quasi-newton-methods.html#cb29-30"></a>            x1 <span class="op">+=</span> [Xj[<span class="dv">0</span>], ]</span>
+<span id="cb29-31"><a href="quasi-newton-methods.html#cb29-31"></a>            x2 <span class="op">+=</span> [Xj[<span class="dv">1</span>], ]</span></code></pre></div>
+<p>This completes our discussion of <em>Quasi-Newton methods</em> and overall discussion of <em>line-search descent methods</em>.</p>
+
+</div>
 </div>
 </div>
             </section>
