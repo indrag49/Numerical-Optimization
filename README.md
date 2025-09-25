@@ -16,7 +16,7 @@ This book aims to cover the following:
 - Conjugate Gradient Methods
 - Quasi-Newton Methods
 
-# Star history
+# Star History
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=indrag49/Numerical-Optimization&type=Date&theme=dark" />
