@@ -16,6 +16,14 @@ This book aims to cover the following:
 - Conjugate Gradient Methods
 - Quasi-Newton Methods
 
+# Star history
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=indrag49/Numerical-Optimization&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=indrag49/Numerical-Optimization&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=indrag49/Numerical-Optimization&type=Date" />
+</picture>
+
 # Licence
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
